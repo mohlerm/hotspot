@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hotspot_log version='160 1' process='28692' time_ms='1425552624266'>
+<vm_version>
+<name>
+OpenJDK 64-Bit Server VM
+</name>
+<release>
+1.9.0-internal-fastdebug-marcel_2015_03_02_01_22-b00
+</release>
+<info>
+OpenJDK 64-Bit Server VM (1.9.0-internal-fastdebug-marcel_2015_03_02_01_22-b00) for linux-amd64 JRE (1.9.0-internal-marcel_2015_03_02_01_22-b00), built on Mar  2 2015 01:35:13 by &quot;marcel&quot; with gcc 4.9.2 20150204 (prerelease)
+</info>
+</vm_version>
+<vm_arguments>
+<args>
+-Xms8m -Xmx32m -XX:MetaspaceSize=4m -XX:MaxMetaspaceSize=16m -XX:InitialCodeCacheSize=512k -XX:ReservedCodeCacheSize=4m -XX:ThreadStackSize=512 -XX:VMThreadStackSize=512 -XX:CompilerThreadStackSize=512 -XX:ParallelGCThreads=1 -XX:CICompilerCount=2 -Xcomp -XX:CICrashAt=1 -XX:+CreateMinidumpOnCrash -XX:+DumpReplayDataOnError -XX:-TransmitErrorReport -XX:+PreferInterpreterNativeStubs -XX:+PrintCompilation -XX:ReplayDataFile=test_replay.txt 
+</args>
+<launcher>
+SUN_STANDARD
+</launcher>
+<properties>
+java.vm.specification.name=Java Virtual Machine Specification
+java.vm.version=1.9.0-internal-fastdebug-marcel_2015_03_02_01_22-b00
+java.vm.name=OpenJDK 64-Bit Server VM
+java.vm.info=compiled mode, sharing
+sun.boot.library.path=/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk/lib/amd64
+java.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.home=/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk
+java.class.path=.:.:
+sun.boot.class.path=/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk/modules/java.rmi:/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk/modules/jdk.security.auth:/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk/modules/jdk.jcmd:/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk/modules/jdk.attach:/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk/modules/java.transaction:/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk/modules/java.security.jgss:/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk/modules/jdk.hprof.agent:/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk/modules/jdk.zipfs:/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk/modules/jdk.jvmstat:/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk/modules/java.sql.rowset:/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk/modules/jdk.security.jgss:/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk/modules/jdk.hotspot.agent:/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk/modules/java.datatransfer:/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk/modules/java.scripting:/home/marcel/ownCloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-s
+java.vm.specification.vendor=Oracle Corporation
+java.vm.specification.version=1.9
+java.vm.vendor=Oracle Corporation
+sun.java.launcher=SUN_STANDARD
+</properties>
+</vm_arguments>
+<tty>
+<writer thread='140713117533952'/>
+    125    1   !b  3       java.lang.invoke.MethodHandle::&lt;clinit&gt; (45 bytes)
+<tty_done stamp='0.144'/>
+</tty>
+<hotspot_log_done stamp='0.144'/>
+</hotspot_log>

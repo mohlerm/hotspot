@@ -1246,7 +1246,7 @@ void ciEnv::dump_replay_data(outputStream* out) {
 
 void ciEnv::dump_replay_data(int compile_id) {
   static char buffer[O_BUFLEN];
-  int ret = jio_snprintf(buffer, O_BUFLEN, "replay_pid%p_compid%d.log", os::current_process_id(), compile_id);
+  int ret = jio_snprintf(buffer, O_BUFLEN, "replay_pid%d_compid%d.log", os::current_process_id(), compile_id);
   if (ret > 0) {
     int fd = open(buffer, O_RDWR | O_CREAT | O_TRUNC, 0666);
     if (fd != -1) {
@@ -1265,7 +1265,7 @@ void ciEnv::dump_replay_data(int compile_id) {
 
 void ciEnv::dump_inline_data(int compile_id) {
   static char buffer[O_BUFLEN];
-  int ret = jio_snprintf(buffer, O_BUFLEN, "inline_pid%p_compid%d.log", os::current_process_id(), compile_id);
+  int ret = jio_snprintf(buffer, O_BUFLEN, "inline_pid%d_compid%d.log", os::current_process_id(), compile_id);
   if (ret > 0) {
     int fd = open(buffer, O_RDWR | O_CREAT | O_TRUNC, 0666);
     if (fd != -1) {
@@ -1312,7 +1312,7 @@ void ciEnv::dump_cache_profiles(outputStream* out) {
 
 void ciEnv::dump_cache_profiles(int compile_id) {
   static char buffer[O_BUFLEN];
-  int ret = jio_snprintf(buffer, O_BUFLEN, "profiles_pid%p_compid%d.log", os::current_process_id(), compile_id);
+  int ret = jio_snprintf(buffer, O_BUFLEN, "profiles_pid%d_compid%d.log", os::current_process_id(), compile_id);
   if (ret > 0) {
     int fd = open(buffer, O_RDWR | O_CREAT | O_TRUNC, 0666);
     if (fd != -1) {

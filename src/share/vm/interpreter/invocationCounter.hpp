@@ -41,6 +41,7 @@
 class InvocationCounter VALUE_OBJ_CLASS_SPEC {
   friend class VMStructs;
   friend class ciReplay;
+  friend class ciCacheProfiles;
  private:                             // bit no: |31  3|  2  | 1 0 |
   unsigned int _counter;              // format: [count|carry|state]
 

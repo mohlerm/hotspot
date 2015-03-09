@@ -26,6 +26,7 @@
 #include "ci/ciMetadata.hpp"
 #include "ci/ciMethodData.hpp"
 #include "ci/ciReplay.hpp"
+#include "ci/ciCacheProfiles.hpp"
 #include "ci/ciUtilities.hpp"
 #include "memory/allocation.inline.hpp"
 #include "memory/resourceArea.hpp"
@@ -180,6 +181,9 @@ void ciMethodData::load_data() {
 #ifndef PRODUCT
   if (ReplayCompiles) {
     ciReplay::initialize(this);
+  }
+  if (CacheProfiles) {
+	ciCacheProfiles::initialize(this);
   }
 #endif
 }

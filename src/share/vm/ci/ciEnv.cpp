@@ -31,6 +31,7 @@
 #include "ci/ciMethod.hpp"
 #include "ci/ciNullObject.hpp"
 #include "ci/ciReplay.hpp"
+#include "ci/ciCacheProfiles.hpp"
 #include "ci/ciUtilities.hpp"
 #include "classfile/systemDictionary.hpp"
 #include "classfile/vmSymbols.hpp"
@@ -1261,6 +1262,7 @@ void ciEnv::dump_replay_data(int compile_id) {
   }
 }
 
+
 void ciEnv::dump_inline_data(int compile_id) {
   static char buffer[O_BUFLEN];
   int ret = jio_snprintf(buffer, O_BUFLEN, "inline_pid%p_compid%d.log", os::current_process_id(), compile_id);
@@ -1279,6 +1281,48 @@ void ciEnv::dump_inline_data(int compile_id) {
         tty->print_cr("%s", buffer);
       } else {
         tty->print_cr("# Can't open file to dump inline data.");
+      }
+    }
+  }
+}
+
+void ciEnv::dump_cache_profiles_unsafe(outputStream* out) {
+  ResourceMark rm;
+#if INCLUDE_JVMTI
+  out->print_cr("JvmtiExport can_access_local_variables %d",     _jvmti_can_access_local_variables);
+  out->print_cr("JvmtiExport can_hotswap_or_post_breakpoint %d", _jvmti_can_hotswap_or_post_breakpoint);
+  out->print_cr("JvmtiExport can_post_on_exceptions %d",         _jvmti_can_post_on_exceptions);
+#endif // INCLUDE_JVMTI
+
+  GrowableArray<ciMetadata*>* objects = _factory->get_ci_metadata();
+  out->print_cr("# %d ciObject found", objects->length());
+  for (int i = 0; i < objects->length(); i++) {
+    objects->at(i)->dump_replay_data(out);
+  }
+  dump_compile_data(out);
+  out->flush();
+}
+
+void ciEnv::dump_cache_profiles(outputStream* out) {
+  GUARDED_VM_ENTRY(
+    MutexLocker ml(Compile_lock);
+    dump_replay_data_unsafe(out);
+  )
+}
+
+void ciEnv::dump_cache_profiles(int compile_id) {
+  static char buffer[O_BUFLEN];
+  int ret = jio_snprintf(buffer, O_BUFLEN, "profiles_pid%p_compid%d.log", os::current_process_id(), compile_id);
+  if (ret > 0) {
+    int fd = open(buffer, O_RDWR | O_CREAT | O_TRUNC, 0666);
+    if (fd != -1) {
+      FILE* replay_data_file = os::open(fd, "w");
+      if (replay_data_file != NULL) {
+        fileStream replay_data_stream(replay_data_file, /*need_close=*/true);
+        dump_replay_data(&replay_data_stream);
+        tty->print_cr("# Compiler cached profile is saved as: %s", buffer);
+      } else {
+        tty->print_cr("# Can't open file to dump cached profile.");
       }
     }
   }

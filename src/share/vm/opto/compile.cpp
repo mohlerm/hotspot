@@ -26,6 +26,7 @@
 #include "asm/macroAssembler.hpp"
 #include "asm/macroAssembler.inline.hpp"
 #include "ci/ciReplay.hpp"
+#include "ci/ciCacheProfiles.hpp"
 #include "classfile/systemDictionary.hpp"
 #include "code/exceptionHandlerTable.hpp"
 #include "code/nmethod.hpp"

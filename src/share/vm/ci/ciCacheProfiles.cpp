@@ -23,7 +23,6 @@
 
 #include "precompiled.hpp"
 #include "ci/ciMethodData.hpp"
-#include "ci/ciReplay.hpp"
 #include "ci/ciCacheProfiles.hpp"
 #include "ci/ciSymbol.hpp"
 #include "ci/ciKlass.hpp"
@@ -38,7 +37,7 @@
 
 #ifndef PRODUCT
 
-// ciReplay
+// ciCacheProfiles
 
 typedef struct _ciMethodDataRecord {
   const char* _klass_name;
@@ -81,10 +80,10 @@ typedef struct _ciInlineRecord {
   int _inline_bci;
 } ciInlineRecord;
 
-class  CompileReplay;
-static CompileReplay* replay_state;
+class  CacheReplay;
+static CacheReplay* replay_state;
 
-class CompileReplay : public StackObj {
+class CacheReplay : public StackObj {
  private:
   FILE*   _stream;
   Thread* _thread;
@@ -112,7 +111,7 @@ class CompileReplay : public StackObj {
   int      _comp_level;
 
  public:
-  CompileReplay(const char* filename, TRAPS) {
+  CacheReplay(const char* filename, TRAPS) {
     _thread = THREAD;
     _loader = Handle(_thread, SystemDictionary::java_system_loader());
     _protection_domain = Handle();
@@ -138,7 +137,7 @@ class CompileReplay : public StackObj {
     test();
   }
 
-  ~CompileReplay() {
+  ~CacheReplay() {
     if (_stream != NULL) fclose(_stream);
   }
 
@@ -1018,7 +1017,7 @@ class CompileReplay : public StackObj {
   }
 };
 
-void ciReplay::replay(TRAPS) {
+void ciCacheProfiles::replay(TRAPS) {
   int exit_code = replay_impl(THREAD);
 
   Threads::destroy_vm();
@@ -1026,7 +1025,7 @@ void ciReplay::replay(TRAPS) {
   vm_exit(exit_code);
 }
 
-void* ciReplay::load_inline_data(ciMethod* method, int entry_bci, int comp_level) {
+void* ciCacheProfiles::load_inline_data(ciMethod* method, int entry_bci, int comp_level) {
   if (FLAG_IS_DEFAULT(InlineDataFile)) {
     tty->print_cr("ERROR: no inline replay data file specified (use -XX:InlineDataFile=inline_pid12345.txt).");
     return NULL;
@@ -1034,9 +1033,9 @@ void* ciReplay::load_inline_data(ciMethod* method, int entry_bci, int comp_level
 
   VM_ENTRY_MARK;
   // Load and parse the replay data
-  CompileReplay rp(InlineDataFile, THREAD);
+  CacheReplay rp(InlineDataFile, THREAD);
   if (!rp.can_replay()) {
-    tty->print_cr("ciReplay: !rp.can_replay()");
+    tty->print_cr("ciCacheProfiles: !rp.can_replay()");
     return NULL;
   }
   void* data = rp.process_inline(method, method->get_Method(), entry_bci, comp_level, THREAD);
@@ -1051,13 +1050,13 @@ void* ciReplay::load_inline_data(ciMethod* method, int entry_bci, int comp_level
   }
 
   if (rp.had_error()) {
-    tty->print_cr("ciReplay: Failed on %s", rp.error_message());
+    tty->print_cr("ciCacheProfiles: Failed on %s", rp.error_message());
     return NULL;
   }
   return data;
 }
 
-int ciReplay::replay_impl(TRAPS) {
+int ciCacheProfiles::replay_impl(TRAPS) {
   HandleMark hm;
   ResourceMark rm;
   // Make sure we don't run with background compilation
@@ -1070,13 +1069,13 @@ int ciReplay::replay_impl(TRAPS) {
     ReplaySuppressInitializers = 1;
   }
 
-  if (FLAG_IS_DEFAULT(ReplayDataFile)) {
-    tty->print_cr("ERROR: no compiler replay data file specified (use -XX:ReplayDataFile=replay_pid12345.txt).");
+  if (FLAG_IS_DEFAULT(CacheProfilesFile)) {
+    tty->print_cr("ERROR: no compiler cache profiles file specified (use -XX:CacheProfilesFile=profiles_pid12345.txt).");
     return 1;
   }
 
   // Load and parse the replay data
-  CompileReplay rp(ReplayDataFile, THREAD);
+  CacheReplay rp(ReplayDataFile, THREAD);
   int exit_code = 0;
   if (rp.can_replay()) {
     rp.process(THREAD);
@@ -1102,7 +1101,7 @@ int ciReplay::replay_impl(TRAPS) {
   return exit_code;
 }
 
-void ciReplay::initialize(ciMethodData* m) {
+void ciCacheProfiles::initialize(ciMethodData* m) {
   if (replay_state == NULL) {
     return;
   }
@@ -1154,7 +1153,7 @@ void ciReplay::initialize(ciMethodData* m) {
 }
 
 
-bool ciReplay::should_not_inline(ciMethod* method) {
+bool ciCacheProfiles::should_not_inline(ciMethod* method) {
   if (replay_state == NULL) {
     return false;
   }
@@ -1163,12 +1162,12 @@ bool ciReplay::should_not_inline(ciMethod* method) {
   return replay_state->find_ciMethodRecord(method->get_Method()) == NULL;
 }
 
-bool ciReplay::should_inline(void* data, ciMethod* method, int bci, int inline_depth) {
+bool ciCacheProfiles::should_inline(void* data, ciMethod* method, int bci, int inline_depth) {
   if (data != NULL) {
     GrowableArray<ciInlineRecord*>*  records = (GrowableArray<ciInlineRecord*>*)data;
     VM_ENTRY_MARK;
     // Inline record are ordered by bci and depth.
-    return CompileReplay::find_ciInlineRecord(records, method->get_Method(), bci, inline_depth) != NULL;
+    return CacheReplay::find_ciInlineRecord(records, method->get_Method(), bci, inline_depth) != NULL;
   } else if (replay_state != NULL) {
     VM_ENTRY_MARK;
     // Inline record are ordered by bci and depth.
@@ -1177,12 +1176,12 @@ bool ciReplay::should_inline(void* data, ciMethod* method, int bci, int inline_d
   return false;
 }
 
-bool ciReplay::should_not_inline(void* data, ciMethod* method, int bci, int inline_depth) {
+bool ciCacheProfiles::should_not_inline(void* data, ciMethod* method, int bci, int inline_depth) {
   if (data != NULL) {
     GrowableArray<ciInlineRecord*>*  records = (GrowableArray<ciInlineRecord*>*)data;
     VM_ENTRY_MARK;
     // Inline record are ordered by bci and depth.
-    return CompileReplay::find_ciInlineRecord(records, method->get_Method(), bci, inline_depth) == NULL;
+    return CacheReplay::find_ciInlineRecord(records, method->get_Method(), bci, inline_depth) == NULL;
   } else if (replay_state != NULL) {
     VM_ENTRY_MARK;
     // Inline record are ordered by bci and depth.
@@ -1191,7 +1190,7 @@ bool ciReplay::should_not_inline(void* data, ciMethod* method, int bci, int inli
   return false;
 }
 
-void ciReplay::initialize(ciMethod* m) {
+void ciCacheProfiles::initialize(ciMethod* m) {
   if (replay_state == NULL) {
     return;
   }
@@ -1221,7 +1220,7 @@ void ciReplay::initialize(ciMethod* m) {
   }
 }
 
-bool ciReplay::is_loaded(Method* method) {
+bool ciCacheProfiles::is_loaded(Method* method) {
   if (replay_state == NULL) {
     return true;
   }

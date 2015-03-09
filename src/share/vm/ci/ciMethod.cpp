@@ -32,6 +32,7 @@
 #include "ci/ciStreams.hpp"
 #include "ci/ciSymbol.hpp"
 #include "ci/ciReplay.hpp"
+#include "ci/ciCacheProfiles.hpp"
 #include "ci/ciUtilities.hpp"
 #include "classfile/systemDictionary.hpp"
 #include "compiler/abstractCompiler.hpp"
@@ -149,6 +150,9 @@ ciMethod::ciMethod(methodHandle h_m, ciInstanceKlass* holder) :
 #ifdef ASSERT
   if (ReplayCompiles) {
     ciReplay::initialize(this);
+  }
+  if (CacheProfiles) {
+	ciCacheProfiles::initialize(this);
   }
 #endif
 }

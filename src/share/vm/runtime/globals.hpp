@@ -974,8 +974,8 @@ class CommandLineFlags {
           "Print native memory tracking summary data if it is on")          \
                                                                             \
   diagnostic(bool, LogCompilation, false,                                   \
-          "Log compilation activity in detail to LogFile")                  \
-                                                                            \
+		  "Log compilation activity in detail to LogFile")                  \
+																			\
   product(bool, PrintCompilation, false,                                    \
           "Print compilations")                                             \
                                                                             \
@@ -3387,8 +3387,15 @@ class CommandLineFlags {
   product(ccstr, ReplayDataFile, NULL,                                      \
           "File containing compilation replay information"                  \
           "[default: ./replay_pid%p.log] (%p replaced with pid)")           \
-                                                                            \
-   product(ccstr, InlineDataFile, NULL,                                     \
+		  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	\
+  experimental(bool, CacheProfiles, false,                                  \
+		  "Cache profiling information for future VM runs")                 \
+		  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	\
+  experimental(ccstr, CacheProfilesFile, NULL,                              \
+		  "File containing cached profiles"                                 \
+		  "[default: ./profiles_pid%p.log] (%p replaced with pid)")           \
+		                                                                    \
+  product(ccstr, InlineDataFile, NULL,                                      \
           "File containing inlining replay information"                     \
           "[default: ./inline_pid%p.log] (%p replaced with pid)")           \
                                                                             \

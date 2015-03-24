@@ -871,6 +871,10 @@ Compile::Compile( ciEnv* ci_env, C2Compiler* compiler, ciMethod* target, int osr
   if (method()->has_option("DumpInline") && (ilt() != NULL)) {
     env()->dump_inline_data(_compile_id);
   }
+  // Dump profile to allow profile caching
+  if (method()->has_option("DumpProfile")) {
+    env()->dump_cache_profiles(_compile_id);
+  }
 
   // Now that we know the size of all the monitors we can add a fixed slot
   // for the original deopt pc.

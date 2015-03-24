@@ -28,6 +28,7 @@
 #include "ci/ciKlass.hpp"
 #include "ci/ciUtilities.hpp"
 #include "compiler/compileBroker.hpp"
+#include "compiler/compilerOracle.hpp"
 #include "memory/allocation.inline.hpp"
 #include "memory/oopFactory.hpp"
 #include "memory/resourceArea.hpp"
@@ -81,7 +82,7 @@ typedef struct _ciInlineRecord {
 } ciInlineRecord;
 
 class  CacheReplay;
-static CacheReplay* replay_state;
+static CacheReplay* cache_state;
 
 class CacheReplay : public StackObj {
  private:
@@ -118,7 +119,7 @@ class CacheReplay : public StackObj {
 
     _stream = fopen(filename, "rt");
     if (_stream == NULL) {
-      fprintf(stderr, "ERROR: Can't open replay file %s\n", filename);
+      fprintf(stderr, "ERROR: Can't open cache profile %s\n", filename);
     }
 
     _ci_inline_records = NULL;
@@ -407,18 +408,48 @@ class CacheReplay : public StackObj {
       process_ciMethod(CHECK);
     } else if (strcmp("ciMethodData", cmd) == 0) {
       process_ciMethodData(CHECK);
-    } else if (strcmp("staticfield", cmd) == 0) {
-      process_staticfield(CHECK);
-    } else if (strcmp("ciInstanceKlass", cmd) == 0) {
-      process_ciInstanceKlass(CHECK);
-    } else if (strcmp("instanceKlass", cmd) == 0) {
-      process_instanceKlass(CHECK);
+//    } else if (strcmp("staticfield", cmd) == 0) {
+//      process_staticfield(CHECK);
+//    } else if (strcmp("ciInstanceKlass", cmd) == 0) {
+//      process_ciInstanceKlass(CHECK);
+//    } else if (strcmp("instanceKlass", cmd) == 0) {
+//      process_instanceKlass(CHECK);
 #if INCLUDE_JVMTI
     } else if (strcmp("JvmtiExport", cmd) == 0) {
       process_JvmtiExport(CHECK);
 #endif // INCLUDE_JVMTI
     } else {
       report_error("unknown command");
+    }
+  }
+
+  // marcel:parse methods that are cached and set their flag
+  void process_cached_methods(TRAPS) {
+    int line_no = 1;
+    int c = getc(_stream);
+    while(c != EOF) {
+      c = get_line(c);
+      char* cmd = parse_string();
+      if (cmd == NULL) {
+        return;
+      }
+      if (strcmp("#", cmd) == 0) {
+        // ignore
+      } else if (strcmp("compile", cmd) == 0) {
+        Method* method = parse_method(CHECK);
+        // marcel: enable cached profile flag
+        method->set_cached_profile(true);
+      }
+      if (had_error()) {
+        tty->print_cr("Error while parsing line %d: %s\n", line_no, _error_message);
+        if (ReplayIgnoreInitErrors) {
+          CLEAR_PENDING_EXCEPTION;
+          _error_message = NULL;
+        } else {
+          return;
+        }
+      }
+      line_no++;
     }
   }
 
@@ -548,10 +579,11 @@ class CacheReplay : public StackObj {
     if (nm != NULL) {
       nm->make_not_entrant();
     }
-    replay_state = this;
+    cache_state = this;
     CompileBroker::compile_method(method, entry_bci, comp_level,
                                   methodHandle(), 0, "replay", THREAD);
-    replay_state = NULL;
+    cache_state = NULL;
+    // marcel: disable reset to use compiled method later on
     reset();
   }
 
@@ -1020,9 +1052,43 @@ class CacheReplay : public StackObj {
 void ciCacheProfiles::replay(TRAPS) {
   int exit_code = replay_impl(THREAD);
 
-  Threads::destroy_vm();
+//  Threads::destroy_vm();
+//
+//  vm_exit(exit_code);
+}
 
-  vm_exit(exit_code);
+// initialize the cache profiler and parse the profile file
+void ciCacheProfiles::initialize(TRAPS) {
+  HandleMark hm;
+  ResourceMark rm;
+  int exit_code = 0;
+  if (FLAG_IS_DEFAULT(CacheProfilesFile)) {
+    tty->print_cr("ERROR: no compiler cache profiles file specified (use -XX:CacheProfilesFile=cached_profiles.txt).");
+    exit_code = 1;
+  }
+
+  // Load and parse the replay data
+  CacheReplay rp(CacheProfilesFile, THREAD);
+  if (rp.can_replay()) {
+    rp.process_cached_methods(THREAD);
+  } else {
+    exit_code = 1;
+  }
+
+  if (HAS_PENDING_EXCEPTION) {
+    oop throwable = PENDING_EXCEPTION;
+    CLEAR_PENDING_EXCEPTION;
+    java_lang_Throwable::print(throwable, tty);
+    tty->cr();
+    java_lang_Throwable::print_stack_trace(throwable, tty);
+    tty->cr();
+    exit_code = 2;
+  }
+
+  if (rp.had_error()) {
+    tty->print_cr("Failed on %s", rp.error_message());
+    exit_code = 1;
+  }
 }
 
 void* ciCacheProfiles::load_inline_data(ciMethod* method, int entry_bci, int comp_level) {
@@ -1059,15 +1125,16 @@ void* ciCacheProfiles::load_inline_data(ciMethod* method, int entry_bci, int com
 int ciCacheProfiles::replay_impl(TRAPS) {
   HandleMark hm;
   ResourceMark rm;
-  // Make sure we don't run with background compilation
-  BackgroundCompilation = false;
-
-  if (ReplaySuppressInitializers > 2) {
-    // ReplaySuppressInitializers > 2 means that we want to allow
-    // normal VM bootstrap but once we get into the replay itself
-    // don't allow any intializers to be run.
-    ReplaySuppressInitializers = 1;
-  }
+  // Make sure we don't run with background compilation -> marcel: enable that
+  BackgroundCompilation = true;
+  // set ReplaySuppressInitializers to don't to something special
+  ReplaySuppressInitializers = 2;
+//  if (ReplaySuppressInitializers > 2) {
+//    // ReplaySuppressInitializers > 2 means that we want to allow
+//    // normal VM bootstrap but once we get into the replay itself
+//    // don't allow any intializers to be run.
+//    ReplaySuppressInitializers = 1;
+//  }
 
   if (FLAG_IS_DEFAULT(CacheProfilesFile)) {
     tty->print_cr("ERROR: no compiler cache profiles file specified (use -XX:CacheProfilesFile=profiles_pid12345.txt).");
@@ -1075,7 +1142,7 @@ int ciCacheProfiles::replay_impl(TRAPS) {
   }
 
   // Load and parse the replay data
-  CacheReplay rp(ReplayDataFile, THREAD);
+  CacheReplay rp(CacheProfilesFile, THREAD);
   int exit_code = 0;
   if (rp.can_replay()) {
     rp.process(THREAD);
@@ -1102,7 +1169,7 @@ int ciCacheProfiles::replay_impl(TRAPS) {
 }
 
 void ciCacheProfiles::initialize(ciMethodData* m) {
-  if (replay_state == NULL) {
+  if (cache_state == NULL) {
     return;
   }
 
@@ -1110,7 +1177,7 @@ void ciCacheProfiles::initialize(ciMethodData* m) {
   ResourceMark rm;
 
   Method* method = m->get_MethodData()->method();
-  ciMethodDataRecord* rec = replay_state->find_ciMethodDataRecord(method);
+  ciMethodDataRecord* rec = cache_state->find_ciMethodDataRecord(method);
   if (rec == NULL) {
     // This indicates some mismatch with the original environment and
     // the replay environment though it's not always enough to
@@ -1154,12 +1221,12 @@ void ciCacheProfiles::initialize(ciMethodData* m) {
 
 
 bool ciCacheProfiles::should_not_inline(ciMethod* method) {
-  if (replay_state == NULL) {
+  if (cache_state == NULL) {
     return false;
   }
   VM_ENTRY_MARK;
   // ciMethod without a record shouldn't be inlined.
-  return replay_state->find_ciMethodRecord(method->get_Method()) == NULL;
+  return cache_state->find_ciMethodRecord(method->get_Method()) == NULL;
 }
 
 bool ciCacheProfiles::should_inline(void* data, ciMethod* method, int bci, int inline_depth) {
@@ -1168,10 +1235,10 @@ bool ciCacheProfiles::should_inline(void* data, ciMethod* method, int bci, int i
     VM_ENTRY_MARK;
     // Inline record are ordered by bci and depth.
     return CacheReplay::find_ciInlineRecord(records, method->get_Method(), bci, inline_depth) != NULL;
-  } else if (replay_state != NULL) {
+  } else if (cache_state != NULL) {
     VM_ENTRY_MARK;
     // Inline record are ordered by bci and depth.
-    return replay_state->find_ciInlineRecord(method->get_Method(), bci, inline_depth) != NULL;
+    return cache_state->find_ciInlineRecord(method->get_Method(), bci, inline_depth) != NULL;
   }
   return false;
 }
@@ -1182,16 +1249,16 @@ bool ciCacheProfiles::should_not_inline(void* data, ciMethod* method, int bci, i
     VM_ENTRY_MARK;
     // Inline record are ordered by bci and depth.
     return CacheReplay::find_ciInlineRecord(records, method->get_Method(), bci, inline_depth) == NULL;
-  } else if (replay_state != NULL) {
+  } else if (cache_state != NULL) {
     VM_ENTRY_MARK;
     // Inline record are ordered by bci and depth.
-    return replay_state->find_ciInlineRecord(method->get_Method(), bci, inline_depth) == NULL;
+    return cache_state->find_ciInlineRecord(method->get_Method(), bci, inline_depth) == NULL;
   }
   return false;
 }
 
 void ciCacheProfiles::initialize(ciMethod* m) {
-  if (replay_state == NULL) {
+  if (cache_state == NULL) {
     return;
   }
 
@@ -1199,7 +1266,7 @@ void ciCacheProfiles::initialize(ciMethod* m) {
   ResourceMark rm;
 
   Method* method = m->get_Method();
-  ciMethodRecord* rec = replay_state->find_ciMethodRecord(method);
+  ciMethodRecord* rec = cache_state->find_ciMethodRecord(method);
   if (rec == NULL) {
     // This indicates some mismatch with the original environment and
     // the replay environment though it's not always enough to
@@ -1221,14 +1288,14 @@ void ciCacheProfiles::initialize(ciMethod* m) {
 }
 
 bool ciCacheProfiles::is_loaded(Method* method) {
-  if (replay_state == NULL) {
+  if (cache_state == NULL) {
     return true;
   }
 
   ASSERT_IN_VM;
   ResourceMark rm;
 
-  ciMethodRecord* rec = replay_state->find_ciMethodRecord(method);
+  ciMethodRecord* rec = cache_state->find_ciMethodRecord(method);
   return rec != NULL;
 }
 #endif // PRODUCT

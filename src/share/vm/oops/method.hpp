@@ -73,6 +73,7 @@ class Method : public Metadata {
 #endif
   u2                _method_size;                // size of this object
   u1                _intrinsic_id;               // vmSymbols::intrinsic_id (0 == _none)
+  bool              _has_cached_profile;         // marcel: cached profile flag
 
   // Flags
   enum Flags {
@@ -612,6 +613,13 @@ class Method : public Metadata {
   // NOTE: code() is inherently racy as deopt can be clearing code
   // simultaneously. Use with caution.
   bool has_compiled_code() const                 { return code() != NULL; }
+
+  // marcel:
+  // returns true if the method has cached profile
+  void set_cached_profile(bool flag) {
+    _has_cached_profile = flag;
+  }
+  bool has_cached_profile() const                { return _has_cached_profile; }
 
   // sizing
   static int header_size()                       { return sizeof(Method)/HeapWordSize; }

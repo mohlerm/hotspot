@@ -24,6 +24,7 @@
 
 #include "precompiled.hpp"
 #include "classfile/systemDictionary.hpp"
+#include "ci/ciCacheProfiles.hpp"
 #include "classfile/vmSymbols.hpp"
 #include "code/codeCache.hpp"
 #include "compiler/compileBroker.hpp"
@@ -1297,6 +1298,7 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
                                        int comp_level,
                                        methodHandle hot_method, int hot_count,
                                        const char* comment, Thread* THREAD) {
+
   // make sure arguments make sense
   assert(method->method_holder()->oop_is_instance(), "not an instance method");
   assert(osr_bci == InvocationEntryBci || (0 <= osr_bci && osr_bci < method->code_size()), "bci out of range");
@@ -1396,6 +1398,23 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
       CompilationPolicy::policy()->delay_compilation(method());
       return NULL;
     }
+
+    // marcel:
+    // first, check whether the CacheProfiles flag is set, if not continue as usual
+    if((strcmp("tiered", comment) == 0) && !FLAG_IS_DEFAULT(CacheProfiles)) {
+      // if it's set trigger replayCompilation in case it's a cached method
+      // works with has_compiled_code
+      if(method->has_cached_profile()) {
+        tty->print(">>>>>> USE PROFILE Complevel: %d, Hotcount: %d <<<<<<<",comp_level, hot_count);
+        method->print_name(tty);
+        method->print_short_name(tty);
+        JavaThread *thread = JavaThread::current();
+        assert(!thread->has_pending_exception(), "should have returned not OK");
+        ciCacheProfiles::replay(thread);
+        return NULL;
+      }
+    }
+
     compile_method_base(method, osr_bci, comp_level, hot_method, hot_count, comment, THREAD);
   }
 

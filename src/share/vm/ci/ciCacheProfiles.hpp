@@ -62,9 +62,9 @@
 //
 // Replay file replay_pid%p_compid%d.log can be created
 // for the specified java method during normal execution using
-// CompileCommand option DumpReplay:
+// CompileCommand option DumpProfile:
 //
-// -XX:CompileCommand=option,Benchmark::test,DumpReplay
+// -XX:CompileCommand=option,Benchmark::test,DumpProfile
 //
 // In this case the file name has additional compilation id "_compid%d"
 // because the method could be compiled several times.
@@ -104,6 +104,8 @@ class ciCacheProfiles {
   static int replay_impl(TRAPS);
 
  public:
+  // parse cached profiles to set flag in methods
+  static void initialize(TRAPS);
   // Replay specified compilation and exit VM.
   static void replay(TRAPS);
   // Load inlining decisions from file and use them

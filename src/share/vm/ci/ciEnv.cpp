@@ -1297,7 +1297,9 @@ void ciEnv::dump_cache_profiles_unsafe(outputStream* out) {
   GrowableArray<ciMetadata*>* objects = _factory->get_ci_metadata();
   out->print_cr("# %d ciObject found", objects->length());
   for (int i = 0; i < objects->length(); i++) {
-    objects->at(i)->dump_replay_data(out);
+    if(objects->at(i)->is_method() || objects->at(i)->is_method_data()) {
+      objects->at(i)->dump_replay_data(out);
+    }
   }
   dump_compile_data(out);
   out->flush();
@@ -1306,20 +1308,21 @@ void ciEnv::dump_cache_profiles_unsafe(outputStream* out) {
 void ciEnv::dump_cache_profiles(outputStream* out) {
   GUARDED_VM_ENTRY(
     MutexLocker ml(Compile_lock);
-    dump_replay_data_unsafe(out);
+    dump_cache_profiles_unsafe(out);
   )
 }
 
 void ciEnv::dump_cache_profiles(int compile_id) {
   static char buffer[O_BUFLEN];
-  int ret = jio_snprintf(buffer, O_BUFLEN, "profiles_pid%d_compid%d.log", os::current_process_id(), compile_id);
+  //int ret = jio_snprintf(buffer, O_BUFLEN, "profiles_pid%d_compid%d.log", os::current_process_id(), compile_id);
+  int ret = jio_snprintf(buffer, O_BUFLEN, "cached_profiles.log", os::current_process_id(), compile_id);
   if (ret > 0) {
     int fd = open(buffer, O_RDWR | O_CREAT | O_TRUNC, 0666);
     if (fd != -1) {
       FILE* replay_data_file = os::open(fd, "w");
       if (replay_data_file != NULL) {
         fileStream replay_data_stream(replay_data_file, /*need_close=*/true);
-        dump_replay_data(&replay_data_stream);
+        dump_cache_profiles(&replay_data_stream);
         tty->print_cr("# Compiler cached profile is saved as: %s", buffer);
       } else {
         tty->print_cr("# Can't open file to dump cached profile.");

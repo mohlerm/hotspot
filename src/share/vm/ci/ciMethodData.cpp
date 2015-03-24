@@ -183,7 +183,7 @@ void ciMethodData::load_data() {
     ciReplay::initialize(this);
   }
   if (CacheProfiles) {
-	ciCacheProfiles::initialize(this);
+	  ciCacheProfiles::initialize(this);
   }
 #endif
 }

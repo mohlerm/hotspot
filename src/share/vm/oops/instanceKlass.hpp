@@ -109,7 +109,7 @@ class InstanceKlass: public Klass {
   friend class VMStructs;
   friend class ClassFileParser;
   friend class CompileReplay;
-  friend class CacheReplay;
+  friend class ciCacheProfiles;
 
  protected:
   // Constructor

@@ -95,13 +95,140 @@
 // The difference from replay compilation is that replay inlining
 // is performed during normal java program execution.
 //
+// class to represent the cached compilations
+class CompileRecord : public CHeapObj<mtCompiler> {
+public:
+  const char* _klass_name;
+  const char* _method_name;
+  const char* _signature;
+};
+
+class MethodDataRecord : public CHeapObj<mtCompiler> {
+public:
+  const char* _klass_name;
+  const char* _method_name;
+  const char* _signature;
+
+  int _state;
+  int _current_mileage;
+
+  intptr_t* _data;
+  char*     _orig_data;
+  Klass**   _classes;
+  Method**  _methods;
+  int*      _classes_offsets;
+  int*      _methods_offsets;
+  int       _data_length;
+  int       _orig_data_length;
+  int       _classes_length;
+  int       _methods_length;
+};
+
+class MethodRecord : public CHeapObj<mtCompiler> {
+public:
+  const char* _klass_name;
+  const char* _method_name;
+  const char* _signature;
+
+  int _instructions_size;
+  int _interpreter_invocation_count;
+  int _interpreter_throwout_count;
+  int _invocation_counter;
+  int _backedge_counter;
+};
 
 class ciCacheProfiles : AllStatic {
   CI_PACKAGE_ACCESS
 
 #ifndef PRODUCT
  private:
+  static FILE*   _stream;
+  static Thread* _thread;
+  static Handle  _protection_domain;
+  static Handle  _loader;
+
+  static const char* _error_message;
+
+  static char* _bufptr;
+  static char* _buffer;
+  static int   _buffer_length;
+  static int   _buffer_pos;
+
+  // "compile" data
+  static ciKlass* _iklass;
+  static Method*  _imethod;
+  static int      _entry_bci;
+  static int      _comp_level;
+
+
   static int replay_impl(TRAPS);
+  static GrowableArray<MethodRecord*>*     _method_records;
+  static GrowableArray<MethodDataRecord*>* _method_data_records;
+  static GrowableArray<CompileRecord*>*    _compile_records;
+
+  static bool _initialized;
+
+  static bool had_error();
+  static bool can_replay();
+  static void report_error(const char* msg);
+  static int parse_int(const char* label);
+  static intptr_t parse_intptr_t(const char* label);
+  static void skip_ws();
+  static char* scan_and_terminate(char delim);
+  static char* parse_string();
+  static char* parse_quoted_string();
+  static const char* parse_escaped_string();
+  // Look for the tag 'tag' followed by an
+  static bool parse_tag_and_count(const char* tag, int& length) ;
+  // Parse a sequence of raw data encoded as bytes and return the
+  // resulting data.
+  static char* parse_data(const char* tag, int& length);
+  // Parse a standard chunk of data emitted as:
+  //   'tag' <length> # # ...
+  // Where each # is an intptr_t item
+  static intptr_t* parse_intptr_data(const char* tag, int& length);
+  // Parse a possibly quoted version of a symbol into a symbolOop
+  static Symbol* parse_symbol(TRAPS);
+  // Parse a valid klass name and look it up
+  static Klass* parse_klass(TRAPS);
+  // Lookup a klass
+  static Klass* resolve_klass(const char* klass, TRAPS);
+  // Parse the standard tuple of <klass> <name> <signature>
+  static Method* parse_method(TRAPS);
+  static int get_line(int c);
+  // validation of comp_level
+  static bool is_valid_comp_level(int comp_level);
+  static void unescape_string(char* value);
+
+  static const char* error_message();
+
+  static void process(TRAPS);
+  static void process_command(TRAPS);
+
+  static void replay_method(TRAPS);
+  static void process_compile(TRAPS);
+  static void process_ciMethod(TRAPS);
+  static void process_ciMethodData(TRAPS);
+  static void process_JvmtiExport(TRAPS);
+
+
+  // Create and initialize a record for a ciMethod
+  static MethodRecord* new_methodRecord(Method* method);
+
+  // Lookup data for a ciMethod
+  static MethodRecord* find_methodRecord(Method* method);
+
+  // Create and initialize a record for a ciMethodData
+  static MethodDataRecord* new_methodDataRecord(Method* method);
+  // Lookup data for a ciMethodData
+  static MethodDataRecord* find_methodDataRecord(Method* method);
+
+  // Create and initialize a record for a ciCompile
+  static CompileRecord* new_compileRecord(Method* method);
+
+  // Lookup data for a ciMethod
+  static CompileRecord* find_compileRecord(Method* method);
+
 
  public:
   // parse cached profiles to set flag in methods
@@ -128,6 +255,11 @@ class ciCacheProfiles : AllStatic {
 //  class  CacheReplay;
 //  static CacheReplay* cache_state;
   static bool is_cached(Method* method);
+
+  static bool is_initialized();
+  static void is_initialized(bool flag);
+
+  //static void reset();
 
 #endif
 };

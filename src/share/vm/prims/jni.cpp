@@ -4009,8 +4009,6 @@ _JNI_IMPORT_OR_EXPORT_ jint JNICALL JNI_CreateJavaVM(JavaVM **vm, void **penv, v
     // Check if we should compile all classes on bootclasspath
     if (CompileTheWorld) ClassLoader::compile_the_world();
     if (ReplayCompiles) ciReplay::replay(thread);
-    // marcel: invoke initialization of CacheProfiles
-    if (CacheProfiles) ciCacheProfiles::initialize(thread);
 
     // Some platforms (like Win*) need a wrapper around these test
     // functions in order to properly handle error conditions.
@@ -4046,7 +4044,6 @@ _JNI_IMPORT_OR_EXPORT_ jint JNICALL JNI_CreateJavaVM(JavaVM **vm, void **penv, v
     // control both compiler and architectural-based reordering.
     OrderAccess::release_store(&vm_created, 0);
   }
-
   return result;
 }
 

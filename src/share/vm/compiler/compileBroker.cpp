@@ -1403,8 +1403,7 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
     // first, check whether the CacheProfiles flag is set, if not continue as usual
     if((strcmp("tiered", comment) == 0) && !FLAG_IS_DEFAULT(CacheProfiles)) {
       // if it's set trigger replayCompilation in case it's a cached method
-      // works with has_compiled_code
-      if(method->has_cached_profile()) {
+      if(ciCacheProfiles::is_cached(method())) {
         tty->print(">>>>>> USE PROFILE Complevel: %d, Hotcount: %d <<<<<<<",comp_level, hot_count);
         method->print_name(tty);
         method->print_short_name(tty);

@@ -96,7 +96,7 @@
 // is performed during normal java program execution.
 //
 
-class ciCacheProfiles {
+class ciCacheProfiles : AllStatic {
   CI_PACKAGE_ACCESS
 
 #ifndef PRODUCT
@@ -106,11 +106,12 @@ class ciCacheProfiles {
  public:
   // parse cached profiles to set flag in methods
   static void initialize(TRAPS);
+  //static bool _initialized = false;
   // Replay specified compilation and exit VM.
   static void replay(TRAPS);
   // Load inlining decisions from file and use them
   // during compilation of specified method.
-  static void* load_inline_data(ciMethod* method, int entry_bci, int comp_level);
+//  static void* load_inline_data(ciMethod* method, int entry_bci, int comp_level);
 
   // These are used by the CI to fill in the cached data from the
   // replay file when replaying compiles.
@@ -120,9 +121,13 @@ class ciCacheProfiles {
   static bool is_loaded(Method* method);
   static bool is_loaded(Klass* klass);
 
-  static bool should_not_inline(ciMethod* method);
-  static bool should_inline(void* data, ciMethod* method, int bci, int inline_depth);
-  static bool should_not_inline(void* data, ciMethod* method, int bci, int inline_depth);
+//  static bool should_not_inline(ciMethod* method);
+//  static bool should_inline(void* data, ciMethod* method, int bci, int inline_depth);
+//  static bool should_not_inline(void* data, ciMethod* method, int bci, int inline_depth);
+
+//  class  CacheReplay;
+//  static CacheReplay* cache_state;
+  static bool is_cached(Method* method);
 
 #endif
 };

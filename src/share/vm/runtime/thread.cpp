@@ -27,6 +27,7 @@
 #include "classfile/javaClasses.hpp"
 #include "classfile/systemDictionary.hpp"
 #include "classfile/vmSymbols.hpp"
+#include "ci/ciCacheProfiles.hpp"
 #include "code/codeCache.hpp"
 #include "code/scopeDesc.hpp"
 #include "compiler/compileBroker.hpp"
@@ -3519,6 +3520,9 @@ jint Threads::create_vm(JavaVMInitArgs* args, bool* canTryAgain) {
 #if defined(COMPILER1) || defined(COMPILER2) || defined(SHARK)
   CompileBroker::compilation_init();
 #endif
+
+  // marcel: invoke initialization of CacheProfiles
+  if (CacheProfiles) ciCacheProfiles::initialize(THREAD);
 
   // Pre-initialize some JSR292 core classes to avoid deadlock during class loading.
   // It is done after compilers are initialized, because otherwise compilations of

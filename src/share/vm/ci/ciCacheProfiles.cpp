@@ -40,6 +40,13 @@
 
 // ciCacheProfiles
 
+// struct to represent the cached compilations
+typedef struct _ciCompileRecord {
+  const char* _klass_name;
+  const char* _method_name;
+  const char* _signature;
+} ciCompileRecord;
+
 typedef struct _ciMethodDataRecord {
   const char* _klass_name;
   const char* _method_name;
@@ -72,19 +79,18 @@ typedef struct _ciMethodRecord {
   int _backedge_counter;
 } ciMethodRecord;
 
-typedef struct _ciInlineRecord {
-  const char* _klass_name;
-  const char* _method_name;
-  const char* _signature;
-
-  int _inline_depth;
-  int _inline_bci;
-} ciInlineRecord;
-
+//typedef struct _ciInlineRecord {
+//  const char* _klass_name;
+//  const char* _method_name;
+//  const char* _signature;
+//
+//  int _inline_depth;
+//  int _inline_bci;
+//} ciInlineRecord;
 class  CacheReplay;
 static CacheReplay* cache_state;
 
-class CacheReplay : public StackObj {
+class CacheReplay : public CHeapObj<mtCompiler> {
  private:
   FILE*   _stream;
   Thread* _thread;
@@ -96,7 +102,12 @@ class CacheReplay : public StackObj {
 
   // Use pointer because we may need to return inline records
   // without destroying them.
-  GrowableArray<ciInlineRecord*>*    _ci_inline_records;
+  //GrowableArray<ciInlineRecord*>*    _ci_inline_records;
+
+  // marcel: another array for our compile records
+  GrowableArray<ciCompileRecord*>    _ci_compile_records;
+
+  bool _initialized;
 
   const char* _error_message;
 
@@ -122,7 +133,7 @@ class CacheReplay : public StackObj {
       fprintf(stderr, "ERROR: Can't open cache profile %s\n", filename);
     }
 
-    _ci_inline_records = NULL;
+    //_ci_inline_records = NULL;
     _error_message = NULL;
 
     _buffer_length = 32;
@@ -140,6 +151,14 @@ class CacheReplay : public StackObj {
 
   ~CacheReplay() {
     if (_stream != NULL) fclose(_stream);
+  }
+
+  bool is_initialized() {
+    return _initialized;
+  }
+
+  void is_initialized(bool flag) {
+    _initialized = flag;
   }
 
   void test() {
@@ -424,34 +443,38 @@ class CacheReplay : public StackObj {
   }
 
   // marcel:parse methods that are cached and set their flag
-  void process_cached_methods(TRAPS) {
-    int line_no = 1;
-    int c = getc(_stream);
-    while(c != EOF) {
-      c = get_line(c);
-      char* cmd = parse_string();
-      if (cmd == NULL) {
-        return;
-      }
-      if (strcmp("#", cmd) == 0) {
-        // ignore
-      } else if (strcmp("compile", cmd) == 0) {
-        Method* method = parse_method(CHECK);
-        // marcel: enable cached profile flag
-        method->set_cached_profile(true);
-      }
-      if (had_error()) {
-        tty->print_cr("Error while parsing line %d: %s\n", line_no, _error_message);
-        if (ReplayIgnoreInitErrors) {
-          CLEAR_PENDING_EXCEPTION;
-          _error_message = NULL;
-        } else {
-          return;
-        }
-      }
-      line_no++;
-    }
-  }
+  // might not be used since it's implemented in process_compile() now
+//  void process_cached_methods(TRAPS) {
+//    int line_no = 1;
+//    int c = getc(_stream);
+//    while(c != EOF) {
+//      c = get_line(c);
+//      char* cmd = parse_string();
+//      if (cmd == NULL) {
+//        return;
+//      }
+//      if (strcmp("compile", cmd) == 0) {
+//        Method* method = parse_method(CHECK);
+//        // marcel: enable cached profile flag
+//        tty->print("Added method to ciCompileRecord"); method->print_name(tty);
+//        cache_state = this;
+//        new_ciCompile(method);
+//        cache_state = NULL;
+//        // don't use flag anymore, line can be deleted later
+//        //method->set_cached_profile(true);
+//      }
+//      if (had_error()) {
+//        tty->print_cr("Error while parsing line %d: %s\n", line_no, _error_message);
+//        if (ReplayIgnoreInitErrors) {
+//          CLEAR_PENDING_EXCEPTION;
+//          _error_message = NULL;
+//        } else {
+//          return;
+//        }
+//      }
+//      line_no++;
+//    }
+//  }
 
   // validation of comp_level
   bool is_valid_comp_level(int comp_level) {
@@ -481,37 +504,36 @@ class CacheReplay : public StackObj {
   }
 
   // compile <klass> <name> <signature> <entry_bci> <comp_level> inline <count> <depth> <bci> <klass> <name> <signature> ...
-  void* process_inline(ciMethod* imethod, Method* m, int entry_bci, int comp_level, TRAPS) {
-    _imethod    = m;
-    _iklass     = imethod->holder();
-    _entry_bci  = entry_bci;
-    _comp_level = comp_level;
-    int line_no = 1;
-    int c = getc(_stream);
-    while(c != EOF) {
-      c = get_line(c);
-      // Expecting only lines with "compile" command in inline replay file.
-      char* cmd = parse_string();
-      if (cmd == NULL || strcmp("compile", cmd) != 0) {
-        return NULL;
-      }
-      process_compile(CHECK_NULL);
-      if (had_error()) {
-        tty->print_cr("Error while parsing line %d: %s\n", line_no, _error_message);
-        tty->print_cr("%s", _buffer);
-        return NULL;
-      }
-      if (_ci_inline_records != NULL && _ci_inline_records->length() > 0) {
-        // Found inlining record for the requested method.
-        return _ci_inline_records;
-      }
-      line_no++;
-    }
-    return NULL;
-  }
+//  void* process_inline(ciMethod* imethod, Method* m, int entry_bci, int comp_level, TRAPS) {
+//    _imethod    = m;
+//    _iklass     = imethod->holder();
+//    _entry_bci  = entry_bci;
+//    _comp_level = comp_level;
+//    int line_no = 1;
+//    int c = getc(_stream);
+//    while(c != EOF) {
+//      c = get_line(c);
+//      // Expecting only lines with "compile" command in inline replay file.
+//      char* cmd = parse_string();
+//      if (cmd == NULL || strcmp("compile", cmd) != 0) {
+//        return NULL;
+//      }
+//      process_compile(CHECK_NULL);
+//      if (had_error()) {
+//        tty->print_cr("Error while parsing line %d: %s\n", line_no, _error_message);
+//        tty->print_cr("%s", _buffer);
+//        return NULL;
+//      }
+//      if (_ci_inline_records != NULL && _ci_inline_records->length() > 0) {
+//        // Found inlining record for the requested method.
+//        return _ci_inline_records;
+//      }
+//      line_no++;
+//    }
+//    return NULL;
+//  }
 
-  // compile <klass> <name> <signature> <entry_bci> <comp_level> inline <count> <depth> <bci> <klass> <name> <signature> ...
-  void process_compile(TRAPS) {
+  void replay_method(TRAPS) {
     Method* method = parse_method(CHECK);
     if (had_error()) return;
     int entry_bci = parse_int("entry_bci");
@@ -524,68 +546,117 @@ class CacheReplay : public StackObj {
     if (!is_valid_comp_level(comp_level)) {
       return;
     }
-    if (_imethod != NULL) {
-      // Replay Inlining
-      if (entry_bci != _entry_bci || comp_level != _comp_level) {
-        return;
-      }
-      const char* iklass_name  = _imethod->method_holder()->name()->as_utf8();
-      const char* imethod_name = _imethod->name()->as_utf8();
-      const char* isignature   = _imethod->signature()->as_utf8();
-      const char* klass_name   = method->method_holder()->name()->as_utf8();
-      const char* method_name  = method->name()->as_utf8();
-      const char* signature    = method->signature()->as_utf8();
-      if (strcmp(iklass_name,  klass_name)  != 0 ||
-          strcmp(imethod_name, method_name) != 0 ||
-          strcmp(isignature,   signature)   != 0) {
-        return;
-      }
-    }
-    int inline_count = 0;
-    if (parse_tag_and_count("inline", inline_count)) {
-      // Record inlining data
-      _ci_inline_records = new GrowableArray<ciInlineRecord*>();
-      for (int i = 0; i < inline_count; i++) {
-        int depth = parse_int("inline_depth");
-        int bci = parse_int("inline_bci");
-        if (had_error()) {
-          break;
-        }
-        Method* inl_method = parse_method(CHECK);
-        if (had_error()) {
-          break;
-        }
-        new_ciInlineRecord(inl_method, bci, depth);
-      }
-    }
-    if (_imethod != NULL) {
-      return; // Replay Inlining
-    }
     Klass* k = method->method_holder();
-    ((InstanceKlass*)k)->initialize(THREAD);
-    if (HAS_PENDING_EXCEPTION) {
-      oop throwable = PENDING_EXCEPTION;
-      java_lang_Throwable::print(throwable, tty);
-      tty->cr();
-      if (ReplayIgnoreInitErrors) {
-        CLEAR_PENDING_EXCEPTION;
-        ((InstanceKlass*)k)->set_init_state(InstanceKlass::fully_initialized);
-      } else {
-        return;
-      }
-    }
-    // Make sure the existence of a prior compile doesn't stop this one
-    nmethod* nm = (entry_bci != InvocationEntryBci) ? method->lookup_osr_nmethod_for(entry_bci, comp_level, true) : method->code();
-    if (nm != NULL) {
-      nm->make_not_entrant();
-    }
-    cache_state = this;
-    CompileBroker::compile_method(method, entry_bci, comp_level,
-                                  methodHandle(), 0, "replay", THREAD);
-    cache_state = NULL;
-    // marcel: disable reset to use compiled method later on
-    reset();
+     ((InstanceKlass*)k)->initialize(THREAD);
+     if (HAS_PENDING_EXCEPTION) {
+       oop throwable = PENDING_EXCEPTION;
+       java_lang_Throwable::print(throwable, tty);
+       tty->cr();
+       if (ReplayIgnoreInitErrors) {
+         CLEAR_PENDING_EXCEPTION;
+         ((InstanceKlass*)k)->set_init_state(InstanceKlass::fully_initialized);
+       } else {
+         return;
+       }
+     }
+     // Make sure the existence of a prior compile doesn't stop this one
+     nmethod* nm = (entry_bci != InvocationEntryBci) ? method->lookup_osr_nmethod_for(entry_bci, comp_level, true) : method->code();
+     if (nm != NULL) {
+       nm->make_not_entrant();
+     }
+     //cache_state = this;
+     CompileBroker::compile_method(method, entry_bci, comp_level,
+                                   methodHandle(), 0, "replay", THREAD);
+     //cache_state = NULL;
+     //reset();
   }
+
+  // marcel: new method, does something completely different
+  // instead of compiling it adds the compilations to the data structure during initialization
+  void process_compile(TRAPS) {
+    Method* method = parse_method(CHECK);
+    // marcel: enable cached profile flag
+    tty->print("Added method to ciCompileRecord"); method->print_name(tty);
+    new_ciCompile(method);
+    // don't use flag anymore, line can be deleted later
+    //method->set_cached_profile(true);
+  }
+
+  // compile <klass> <name> <signature> <entry_bci> <comp_level> inline <count> <depth> <bci> <klass> <name> <signature> ...
+//  void process_compile(TRAPS) {
+//    Method* method = parse_method(CHECK);
+//    if (had_error()) return;
+//    int entry_bci = parse_int("entry_bci");
+//    const char* comp_level_label = "comp_level";
+//    int comp_level = parse_int(comp_level_label);
+//    // old version w/o comp_level
+//    if (had_error() && (error_message() == comp_level_label)) {
+//      comp_level = CompLevel_full_optimization;
+//    }
+//    if (!is_valid_comp_level(comp_level)) {
+//      return;
+//    }
+//    if (_imethod != NULL) {
+//      // Replay Inlining
+//      if (entry_bci != _entry_bci || comp_level != _comp_level) {
+//        return;
+//      }
+//      const char* iklass_name  = _imethod->method_holder()->name()->as_utf8();
+//      const char* imethod_name = _imethod->name()->as_utf8();
+//      const char* isignature   = _imethod->signature()->as_utf8();
+//      const char* klass_name   = method->method_holder()->name()->as_utf8();
+//      const char* method_name  = method->name()->as_utf8();
+//      const char* signature    = method->signature()->as_utf8();
+//      if (strcmp(iklass_name,  klass_name)  != 0 ||
+//          strcmp(imethod_name, method_name) != 0 ||
+//          strcmp(isignature,   signature)   != 0) {
+//        return;
+//      }
+//    }
+//    int inline_count = 0;
+//    if (parse_tag_and_count("inline", inline_count)) {
+//      // Record inlining data
+//      _ci_inline_records = new GrowableArray<ciInlineRecord*>();
+//      for (int i = 0; i < inline_count; i++) {
+//        int depth = parse_int("inline_depth");
+//        int bci = parse_int("inline_bci");
+//        if (had_error()) {
+//          break;
+//        }
+//        Method* inl_method = parse_method(CHECK);
+//        if (had_error()) {
+//          break;
+//        }
+//        new_ciInlineRecord(inl_method, bci, depth);
+//      }
+//    }
+//    if (_imethod != NULL) {
+//      return; // Replay Inlining
+//    }
+//    Klass* k = method->method_holder();
+//    ((InstanceKlass*)k)->initialize(THREAD);
+//    if (HAS_PENDING_EXCEPTION) {
+//      oop throwable = PENDING_EXCEPTION;
+//      java_lang_Throwable::print(throwable, tty);
+//      tty->cr();
+//      if (ReplayIgnoreInitErrors) {
+//        CLEAR_PENDING_EXCEPTION;
+//        ((InstanceKlass*)k)->set_init_state(InstanceKlass::fully_initialized);
+//      } else {
+//        return;
+//      }
+//    }
+//    // Make sure the existence of a prior compile doesn't stop this one
+//    nmethod* nm = (entry_bci != InvocationEntryBci) ? method->lookup_osr_nmethod_for(entry_bci, comp_level, true) : method->code();
+//    if (nm != NULL) {
+//      nm->make_not_entrant();
+//    }
+//    cache_state = this;
+//    CompileBroker::compile_method(method, entry_bci, comp_level,
+//                                  methodHandle(), 0, "replay", THREAD);
+//    cache_state = NULL;
+//    reset();
+//  }
 
   // ciMethod <klass> <name> <signature> <invocation_counter> <backedge_counter> <interpreter_invocation_count> <interpreter_throwout_count> <instructions_size>
   //
@@ -669,218 +740,218 @@ class CacheReplay : public StackObj {
     }
   }
 
-  // instanceKlass <name>
-  //
-  // Loads and initializes the klass 'name'.  This can be used to
-  // create particular class loading environments
-  void process_instanceKlass(TRAPS) {
-    // just load the referenced class
-    Klass* k = parse_klass(CHECK);
-  }
-
-  // ciInstanceKlass <name> <is_linked> <is_initialized> <length> tag # # # ...
-  //
-  // Load the klass 'name' and link or initialize it.  Verify that the
-  // constant pool is the same length as 'length' and make sure the
-  // constant pool tags are in the same state.
-  void process_ciInstanceKlass(TRAPS) {
-    InstanceKlass* k = (InstanceKlass *)parse_klass(CHECK);
-    int is_linked = parse_int("is_linked");
-    int is_initialized = parse_int("is_initialized");
-    int length = parse_int("length");
-    if (is_initialized) {
-      k->initialize(THREAD);
-      if (HAS_PENDING_EXCEPTION) {
-        oop throwable = PENDING_EXCEPTION;
-        java_lang_Throwable::print(throwable, tty);
-        tty->cr();
-        if (ReplayIgnoreInitErrors) {
-          CLEAR_PENDING_EXCEPTION;
-          k->set_init_state(InstanceKlass::fully_initialized);
-        } else {
-          return;
-        }
-      }
-    } else if (is_linked) {
-      k->link_class(CHECK);
-    }
-    ConstantPool* cp = k->constants();
-    if (length != cp->length()) {
-      report_error("constant pool length mismatch: wrong class files?");
-      return;
-    }
-
-    int parsed_two_word = 0;
-    for (int i = 1; i < length; i++) {
-      int tag = parse_int("tag");
-      if (had_error()) {
-        return;
-      }
-      switch (cp->tag_at(i).value()) {
-        case JVM_CONSTANT_UnresolvedClass: {
-          if (tag == JVM_CONSTANT_Class) {
-            tty->print_cr("Resolving klass %s at %d", cp->klass_name_at(i)->as_utf8(), i);
-            Klass* k = cp->klass_at(i, CHECK);
-          }
-          break;
-        }
-        case JVM_CONSTANT_Long:
-        case JVM_CONSTANT_Double:
-          parsed_two_word = i + 1;
-
-        case JVM_CONSTANT_ClassIndex:
-        case JVM_CONSTANT_StringIndex:
-        case JVM_CONSTANT_String:
-        case JVM_CONSTANT_UnresolvedClassInError:
-        case JVM_CONSTANT_Fieldref:
-        case JVM_CONSTANT_Methodref:
-        case JVM_CONSTANT_InterfaceMethodref:
-        case JVM_CONSTANT_NameAndType:
-        case JVM_CONSTANT_Utf8:
-        case JVM_CONSTANT_Integer:
-        case JVM_CONSTANT_Float:
-        case JVM_CONSTANT_MethodHandle:
-        case JVM_CONSTANT_MethodType:
-        case JVM_CONSTANT_InvokeDynamic:
-          if (tag != cp->tag_at(i).value()) {
-            report_error("tag mismatch: wrong class files?");
-            return;
-          }
-          break;
-
-        case JVM_CONSTANT_Class:
-          if (tag == JVM_CONSTANT_Class) {
-          } else if (tag == JVM_CONSTANT_UnresolvedClass) {
-            tty->print_cr("Warning: entry was unresolved in the replay data");
-          } else {
-            report_error("Unexpected tag");
-            return;
-          }
-          break;
-
-        case 0:
-          if (parsed_two_word == i) continue;
-
-        default:
-          fatal(err_msg_res("Unexpected tag: %d", cp->tag_at(i).value()));
-          break;
-      }
-
-    }
-  }
-
-  // Initialize a class and fill in the value for a static field.
-  // This is useful when the compile was dependent on the value of
-  // static fields but it's impossible to properly rerun the static
-  // initiailizer.
-  void process_staticfield(TRAPS) {
-    InstanceKlass* k = (InstanceKlass *)parse_klass(CHECK);
-
-    if (ReplaySuppressInitializers == 0 ||
-        ReplaySuppressInitializers == 2 && k->class_loader() == NULL) {
-      return;
-    }
-
-    assert(k->is_initialized(), "must be");
-
-    const char* field_name = parse_escaped_string();;
-    const char* field_signature = parse_string();
-    fieldDescriptor fd;
-    Symbol* name = SymbolTable::lookup(field_name, (int)strlen(field_name), CHECK);
-    Symbol* sig = SymbolTable::lookup(field_signature, (int)strlen(field_signature), CHECK);
-    if (!k->find_local_field(name, sig, &fd) ||
-        !fd.is_static() ||
-        fd.has_initial_value()) {
-      report_error(field_name);
-      return;
-    }
-
-    oop java_mirror = k->java_mirror();
-    if (field_signature[0] == '[') {
-      int length = parse_int("array length");
-      oop value = NULL;
-
-      if (field_signature[1] == '[') {
-        // multi dimensional array
-        ArrayKlass* kelem = (ArrayKlass *)parse_klass(CHECK);
-        int rank = 0;
-        while (field_signature[rank] == '[') {
-          rank++;
-        }
-        int* dims = NEW_RESOURCE_ARRAY(int, rank);
-        dims[0] = length;
-        for (int i = 1; i < rank; i++) {
-          dims[i] = 1; // These aren't relevant to the compiler
-        }
-        value = kelem->multi_allocate(rank, dims, CHECK);
-      } else {
-        if (strcmp(field_signature, "[B") == 0) {
-          value = oopFactory::new_byteArray(length, CHECK);
-        } else if (strcmp(field_signature, "[Z") == 0) {
-          value = oopFactory::new_boolArray(length, CHECK);
-        } else if (strcmp(field_signature, "[C") == 0) {
-          value = oopFactory::new_charArray(length, CHECK);
-        } else if (strcmp(field_signature, "[S") == 0) {
-          value = oopFactory::new_shortArray(length, CHECK);
-        } else if (strcmp(field_signature, "[F") == 0) {
-          value = oopFactory::new_singleArray(length, CHECK);
-        } else if (strcmp(field_signature, "[D") == 0) {
-          value = oopFactory::new_doubleArray(length, CHECK);
-        } else if (strcmp(field_signature, "[I") == 0) {
-          value = oopFactory::new_intArray(length, CHECK);
-        } else if (strcmp(field_signature, "[J") == 0) {
-          value = oopFactory::new_longArray(length, CHECK);
-        } else if (field_signature[0] == '[' && field_signature[1] == 'L') {
-          KlassHandle kelem = resolve_klass(field_signature + 1, CHECK);
-          value = oopFactory::new_objArray(kelem(), length, CHECK);
-        } else {
-          report_error("unhandled array staticfield");
-        }
-      }
-      java_mirror->obj_field_put(fd.offset(), value);
-    } else {
-      const char* string_value = parse_escaped_string();
-      if (strcmp(field_signature, "I") == 0) {
-        int value = atoi(string_value);
-        java_mirror->int_field_put(fd.offset(), value);
-      } else if (strcmp(field_signature, "B") == 0) {
-        int value = atoi(string_value);
-        java_mirror->byte_field_put(fd.offset(), value);
-      } else if (strcmp(field_signature, "C") == 0) {
-        int value = atoi(string_value);
-        java_mirror->char_field_put(fd.offset(), value);
-      } else if (strcmp(field_signature, "S") == 0) {
-        int value = atoi(string_value);
-        java_mirror->short_field_put(fd.offset(), value);
-      } else if (strcmp(field_signature, "Z") == 0) {
-        int value = atol(string_value);
-        java_mirror->bool_field_put(fd.offset(), value);
-      } else if (strcmp(field_signature, "J") == 0) {
-        jlong value;
-        if (sscanf(string_value, JLONG_FORMAT, &value) != 1) {
-          fprintf(stderr, "Error parsing long: %s\n", string_value);
-          return;
-        }
-        java_mirror->long_field_put(fd.offset(), value);
-      } else if (strcmp(field_signature, "F") == 0) {
-        float value = atof(string_value);
-        java_mirror->float_field_put(fd.offset(), value);
-      } else if (strcmp(field_signature, "D") == 0) {
-        double value = atof(string_value);
-        java_mirror->double_field_put(fd.offset(), value);
-      } else if (strcmp(field_signature, "Ljava/lang/String;") == 0) {
-        Handle value = java_lang_String::create_from_str(string_value, CHECK);
-        java_mirror->obj_field_put(fd.offset(), value());
-      } else if (field_signature[0] == 'L') {
-        Symbol* klass_name = SymbolTable::lookup(field_signature, (int)strlen(field_signature), CHECK);
-        KlassHandle kelem = resolve_klass(field_signature, CHECK);
-        oop value = ((InstanceKlass*)kelem())->allocate_instance(CHECK);
-        java_mirror->obj_field_put(fd.offset(), value);
-      } else {
-        report_error("unhandled staticfield");
-      }
-    }
-  }
+//  // instanceKlass <name>
+//  //
+//  // Loads and initializes the klass 'name'.  This can be used to
+//  // create particular class loading environments
+//  void process_instanceKlass(TRAPS) {
+//    // just load the referenced class
+//    Klass* k = parse_klass(CHECK);
+//  }
+//
+//  // ciInstanceKlass <name> <is_linked> <is_initialized> <length> tag # # # ...
+//  //
+//  // Load the klass 'name' and link or initialize it.  Verify that the
+//  // constant pool is the same length as 'length' and make sure the
+//  // constant pool tags are in the same state.
+//  void process_ciInstanceKlass(TRAPS) {
+//    InstanceKlass* k = (InstanceKlass *)parse_klass(CHECK);
+//    int is_linked = parse_int("is_linked");
+//    int is_initialized = parse_int("is_initialized");
+//    int length = parse_int("length");
+//    if (is_initialized) {
+//      k->initialize(THREAD);
+//      if (HAS_PENDING_EXCEPTION) {
+//        oop throwable = PENDING_EXCEPTION;
+//        java_lang_Throwable::print(throwable, tty);
+//        tty->cr();
+//        if (ReplayIgnoreInitErrors) {
+//          CLEAR_PENDING_EXCEPTION;
+//          k->set_init_state(InstanceKlass::fully_initialized);
+//        } else {
+//          return;
+//        }
+//      }
+//    } else if (is_linked) {
+//      k->link_class(CHECK);
+//    }
+//    ConstantPool* cp = k->constants();
+//    if (length != cp->length()) {
+//      report_error("constant pool length mismatch: wrong class files?");
+//      return;
+//    }
+//
+//    int parsed_two_word = 0;
+//    for (int i = 1; i < length; i++) {
+//      int tag = parse_int("tag");
+//      if (had_error()) {
+//        return;
+//      }
+//      switch (cp->tag_at(i).value()) {
+//        case JVM_CONSTANT_UnresolvedClass: {
+//          if (tag == JVM_CONSTANT_Class) {
+//            tty->print_cr("Resolving klass %s at %d", cp->klass_name_at(i)->as_utf8(), i);
+//            Klass* k = cp->klass_at(i, CHECK);
+//          }
+//          break;
+//        }
+//        case JVM_CONSTANT_Long:
+//        case JVM_CONSTANT_Double:
+//          parsed_two_word = i + 1;
+//
+//        case JVM_CONSTANT_ClassIndex:
+//        case JVM_CONSTANT_StringIndex:
+//        case JVM_CONSTANT_String:
+//        case JVM_CONSTANT_UnresolvedClassInError:
+//        case JVM_CONSTANT_Fieldref:
+//        case JVM_CONSTANT_Methodref:
+//        case JVM_CONSTANT_InterfaceMethodref:
+//        case JVM_CONSTANT_NameAndType:
+//        case JVM_CONSTANT_Utf8:
+//        case JVM_CONSTANT_Integer:
+//        case JVM_CONSTANT_Float:
+//        case JVM_CONSTANT_MethodHandle:
+//        case JVM_CONSTANT_MethodType:
+//        case JVM_CONSTANT_InvokeDynamic:
+//          if (tag != cp->tag_at(i).value()) {
+//            report_error("tag mismatch: wrong class files?");
+//            return;
+//          }
+//          break;
+//
+//        case JVM_CONSTANT_Class:
+//          if (tag == JVM_CONSTANT_Class) {
+//          } else if (tag == JVM_CONSTANT_UnresolvedClass) {
+//            tty->print_cr("Warning: entry was unresolved in the replay data");
+//          } else {
+//            report_error("Unexpected tag");
+//            return;
+//          }
+//          break;
+//
+//        case 0:
+//          if (parsed_two_word == i) continue;
+//
+//        default:
+//          fatal(err_msg_res("Unexpected tag: %d", cp->tag_at(i).value()));
+//          break;
+//      }
+//
+//    }
+//  }
+//
+//  // Initialize a class and fill in the value for a static field.
+//  // This is useful when the compile was dependent on the value of
+//  // static fields but it's impossible to properly rerun the static
+//  // initiailizer.
+//  void process_staticfield(TRAPS) {
+//    InstanceKlass* k = (InstanceKlass *)parse_klass(CHECK);
+//
+//    if (ReplaySuppressInitializers == 0 ||
+//        ReplaySuppressInitializers == 2 && k->class_loader() == NULL) {
+//      return;
+//    }
+//
+//    assert(k->is_initialized(), "must be");
+//
+//    const char* field_name = parse_escaped_string();;
+//    const char* field_signature = parse_string();
+//    fieldDescriptor fd;
+//    Symbol* name = SymbolTable::lookup(field_name, (int)strlen(field_name), CHECK);
+//    Symbol* sig = SymbolTable::lookup(field_signature, (int)strlen(field_signature), CHECK);
+//    if (!k->find_local_field(name, sig, &fd) ||
+//        !fd.is_static() ||
+//        fd.has_initial_value()) {
+//      report_error(field_name);
+//      return;
+//    }
+//
+//    oop java_mirror = k->java_mirror();
+//    if (field_signature[0] == '[') {
+//      int length = parse_int("array length");
+//      oop value = NULL;
+//
+//      if (field_signature[1] == '[') {
+//        // multi dimensional array
+//        ArrayKlass* kelem = (ArrayKlass *)parse_klass(CHECK);
+//        int rank = 0;
+//        while (field_signature[rank] == '[') {
+//          rank++;
+//        }
+//        int* dims = NEW_RESOURCE_ARRAY(int, rank);
+//        dims[0] = length;
+//        for (int i = 1; i < rank; i++) {
+//          dims[i] = 1; // These aren't relevant to the compiler
+//        }
+//        value = kelem->multi_allocate(rank, dims, CHECK);
+//      } else {
+//        if (strcmp(field_signature, "[B") == 0) {
+//          value = oopFactory::new_byteArray(length, CHECK);
+//        } else if (strcmp(field_signature, "[Z") == 0) {
+//          value = oopFactory::new_boolArray(length, CHECK);
+//        } else if (strcmp(field_signature, "[C") == 0) {
+//          value = oopFactory::new_charArray(length, CHECK);
+//        } else if (strcmp(field_signature, "[S") == 0) {
+//          value = oopFactory::new_shortArray(length, CHECK);
+//        } else if (strcmp(field_signature, "[F") == 0) {
+//          value = oopFactory::new_singleArray(length, CHECK);
+//        } else if (strcmp(field_signature, "[D") == 0) {
+//          value = oopFactory::new_doubleArray(length, CHECK);
+//        } else if (strcmp(field_signature, "[I") == 0) {
+//          value = oopFactory::new_intArray(length, CHECK);
+//        } else if (strcmp(field_signature, "[J") == 0) {
+//          value = oopFactory::new_longArray(length, CHECK);
+//        } else if (field_signature[0] == '[' && field_signature[1] == 'L') {
+//          KlassHandle kelem = resolve_klass(field_signature + 1, CHECK);
+//          value = oopFactory::new_objArray(kelem(), length, CHECK);
+//        } else {
+//          report_error("unhandled array staticfield");
+//        }
+//      }
+//      java_mirror->obj_field_put(fd.offset(), value);
+//    } else {
+//      const char* string_value = parse_escaped_string();
+//      if (strcmp(field_signature, "I") == 0) {
+//        int value = atoi(string_value);
+//        java_mirror->int_field_put(fd.offset(), value);
+//      } else if (strcmp(field_signature, "B") == 0) {
+//        int value = atoi(string_value);
+//        java_mirror->byte_field_put(fd.offset(), value);
+//      } else if (strcmp(field_signature, "C") == 0) {
+//        int value = atoi(string_value);
+//        java_mirror->char_field_put(fd.offset(), value);
+//      } else if (strcmp(field_signature, "S") == 0) {
+//        int value = atoi(string_value);
+//        java_mirror->short_field_put(fd.offset(), value);
+//      } else if (strcmp(field_signature, "Z") == 0) {
+//        int value = atol(string_value);
+//        java_mirror->bool_field_put(fd.offset(), value);
+//      } else if (strcmp(field_signature, "J") == 0) {
+//        jlong value;
+//        if (sscanf(string_value, JLONG_FORMAT, &value) != 1) {
+//          fprintf(stderr, "Error parsing long: %s\n", string_value);
+//          return;
+//        }
+//        java_mirror->long_field_put(fd.offset(), value);
+//      } else if (strcmp(field_signature, "F") == 0) {
+//        float value = atof(string_value);
+//        java_mirror->float_field_put(fd.offset(), value);
+//      } else if (strcmp(field_signature, "D") == 0) {
+//        double value = atof(string_value);
+//        java_mirror->double_field_put(fd.offset(), value);
+//      } else if (strcmp(field_signature, "Ljava/lang/String;") == 0) {
+//        Handle value = java_lang_String::create_from_str(string_value, CHECK);
+//        java_mirror->obj_field_put(fd.offset(), value());
+//      } else if (field_signature[0] == 'L') {
+//        Symbol* klass_name = SymbolTable::lookup(field_signature, (int)strlen(field_signature), CHECK);
+//        KlassHandle kelem = resolve_klass(field_signature, CHECK);
+//        oop value = ((InstanceKlass*)kelem())->allocate_instance(CHECK);
+//        java_mirror->obj_field_put(fd.offset(), value);
+//      } else {
+//        report_error("unhandled staticfield");
+//      }
+//    }
+//  }
 
 #if INCLUDE_JVMTI
   void process_JvmtiExport(TRAPS) {
@@ -950,41 +1021,68 @@ class CacheReplay : public StackObj {
     return NULL;
   }
 
-  // Create and initialize a record for a ciInlineRecord
-  ciInlineRecord* new_ciInlineRecord(Method* method, int bci, int depth) {
-    ciInlineRecord* rec = NEW_RESOURCE_OBJ(ciInlineRecord);
+//  // Create and initialize a record for a ciInlineRecord
+//  ciInlineRecord* new_ciInlineRecord(Method* method, int bci, int depth) {
+//    ciInlineRecord* rec = NEW_RESOURCE_OBJ(ciInlineRecord);
+//    rec->_klass_name =  method->method_holder()->name()->as_utf8();
+//    rec->_method_name = method->name()->as_utf8();
+//    rec->_signature = method->signature()->as_utf8();
+//    rec->_inline_bci = bci;
+//    rec->_inline_depth = depth;
+//    _ci_inline_records->append(rec);
+//    return rec;
+//  }
+
+//  // Lookup inlining data for a ciMethod
+//  ciInlineRecord* find_ciInlineRecord(Method* method, int bci, int depth) {
+//    if (_ci_inline_records != NULL) {
+//      return find_ciInlineRecord(_ci_inline_records, method, bci, depth);
+//    }
+//    return NULL;
+//  }
+//
+//  static ciInlineRecord* find_ciInlineRecord(GrowableArray<ciInlineRecord*>*  records,
+//                                      Method* method, int bci, int depth) {
+//    if (records != NULL) {
+//      const char* klass_name  = method->method_holder()->name()->as_utf8();
+//      const char* method_name = method->name()->as_utf8();
+//      const char* signature   = method->signature()->as_utf8();
+//      for (int i = 0; i < records->length(); i++) {
+//        ciInlineRecord* rec = records->at(i);
+//        if ((rec->_inline_bci == bci) &&
+//            (rec->_inline_depth == depth) &&
+//            (strcmp(rec->_klass_name, klass_name) == 0) &&
+//            (strcmp(rec->_method_name, method_name) == 0) &&
+//            (strcmp(rec->_signature, signature) == 0)) {
+//          return rec;
+//        }
+//      }
+//    }
+//    return NULL;
+//  }
+
+
+  // Create and initialize a record for a ciCompile
+  ciCompileRecord* new_ciCompile(Method* method) {
+    ciCompileRecord* rec = NEW_RESOURCE_OBJ(ciCompileRecord);
     rec->_klass_name =  method->method_holder()->name()->as_utf8();
     rec->_method_name = method->name()->as_utf8();
     rec->_signature = method->signature()->as_utf8();
-    rec->_inline_bci = bci;
-    rec->_inline_depth = depth;
-    _ci_inline_records->append(rec);
+    _ci_compile_records.append(rec);
     return rec;
   }
 
-  // Lookup inlining data for a ciMethod
-  ciInlineRecord* find_ciInlineRecord(Method* method, int bci, int depth) {
-    if (_ci_inline_records != NULL) {
-      return find_ciInlineRecord(_ci_inline_records, method, bci, depth);
-    }
-    return NULL;
-  }
-
-  static ciInlineRecord* find_ciInlineRecord(GrowableArray<ciInlineRecord*>*  records,
-                                      Method* method, int bci, int depth) {
-    if (records != NULL) {
-      const char* klass_name  = method->method_holder()->name()->as_utf8();
-      const char* method_name = method->name()->as_utf8();
-      const char* signature   = method->signature()->as_utf8();
-      for (int i = 0; i < records->length(); i++) {
-        ciInlineRecord* rec = records->at(i);
-        if ((rec->_inline_bci == bci) &&
-            (rec->_inline_depth == depth) &&
-            (strcmp(rec->_klass_name, klass_name) == 0) &&
-            (strcmp(rec->_method_name, method_name) == 0) &&
-            (strcmp(rec->_signature, signature) == 0)) {
-          return rec;
-        }
+  // Lookup data for a ciMethod
+  ciCompileRecord* find_ciCompileRecord(Method* method) {
+    const char* klass_name =  method->method_holder()->name()->as_utf8();
+    const char* method_name = method->name()->as_utf8();
+    const char* signature = method->signature()->as_utf8();
+    for (int i = 0; i < _ci_compile_records.length(); i++) {
+      ciCompileRecord* rec = _ci_compile_records.at(i);
+      if (strcmp(rec->_klass_name, klass_name) == 0 &&
+          strcmp(rec->_method_name, method_name) == 0 &&
+          strcmp(rec->_signature, signature) == 0) {
+        return rec;
       }
     }
     return NULL;
@@ -998,6 +1096,7 @@ class CacheReplay : public StackObj {
     _error_message = NULL;
     _ci_method_records.clear();
     _ci_method_data_records.clear();
+    _ci_compile_records.clear();
   }
 
   // Take an ascii string contain \u#### escapes and convert it to utf8
@@ -1057,76 +1156,83 @@ void ciCacheProfiles::replay(TRAPS) {
 //  vm_exit(exit_code);
 }
 
-// initialize the cache profiler and parse the profile file
+// marcel: initialize the cache profiler and parse the profile file
+// to save methods in the ciCompileRecords array
 void ciCacheProfiles::initialize(TRAPS) {
-  HandleMark hm;
-  ResourceMark rm;
-  int exit_code = 0;
-  if (FLAG_IS_DEFAULT(CacheProfilesFile)) {
-    tty->print_cr("ERROR: no compiler cache profiles file specified (use -XX:CacheProfilesFile=cached_profiles.txt).");
-    exit_code = 1;
-  }
+  if (cache_state == NULL) {
+    HandleMark hm;
+    ResourceMark rm;
+    int exit_code = 0;
+    if (FLAG_IS_DEFAULT(CacheProfilesFile)) {
+      tty->print_cr("ERROR: no compiler cache profiles file specified (use -XX:CacheProfilesFile=cached_profiles.txt).");
+      exit_code = 1;
+    }
 
-  // Load and parse the replay data
-  CacheReplay rp(CacheProfilesFile, THREAD);
-  if (rp.can_replay()) {
-    rp.process_cached_methods(THREAD);
-  } else {
-    exit_code = 1;
-  }
+    // Load and parse the replay data
+    //CacheReplay rp(CacheProfilesFile, THREAD);
+    cache_state = new CacheReplay(CacheProfilesFile, THREAD);
 
-  if (HAS_PENDING_EXCEPTION) {
-    oop throwable = PENDING_EXCEPTION;
-    CLEAR_PENDING_EXCEPTION;
-    java_lang_Throwable::print(throwable, tty);
-    tty->cr();
-    java_lang_Throwable::print_stack_trace(throwable, tty);
-    tty->cr();
-    exit_code = 2;
-  }
+    if (cache_state->can_replay()) {
+      cache_state->process(THREAD);
+    } else {
+      exit_code = 1;
+    }
 
-  if (rp.had_error()) {
-    tty->print_cr("Failed on %s", rp.error_message());
-    exit_code = 1;
+    if (HAS_PENDING_EXCEPTION) {
+      oop throwable = PENDING_EXCEPTION;
+      CLEAR_PENDING_EXCEPTION;
+      java_lang_Throwable::print(throwable, tty);
+      tty->cr();
+      java_lang_Throwable::print_stack_trace(throwable, tty);
+      tty->cr();
+      exit_code = 2;
+    }
+
+    if (cache_state->had_error()) {
+      tty->print_cr("Failed on %s", cache_state->error_message());
+      exit_code = 1;
+    }
+    //cache_state = &rp;
   }
+  cache_state->is_initialized(true);
 }
 
-void* ciCacheProfiles::load_inline_data(ciMethod* method, int entry_bci, int comp_level) {
-  if (FLAG_IS_DEFAULT(InlineDataFile)) {
-    tty->print_cr("ERROR: no inline replay data file specified (use -XX:InlineDataFile=inline_pid12345.txt).");
-    return NULL;
-  }
-
-  VM_ENTRY_MARK;
-  // Load and parse the replay data
-  CacheReplay rp(InlineDataFile, THREAD);
-  if (!rp.can_replay()) {
-    tty->print_cr("ciCacheProfiles: !rp.can_replay()");
-    return NULL;
-  }
-  void* data = rp.process_inline(method, method->get_Method(), entry_bci, comp_level, THREAD);
-  if (HAS_PENDING_EXCEPTION) {
-    oop throwable = PENDING_EXCEPTION;
-    CLEAR_PENDING_EXCEPTION;
-    java_lang_Throwable::print(throwable, tty);
-    tty->cr();
-    java_lang_Throwable::print_stack_trace(throwable, tty);
-    tty->cr();
-    return NULL;
-  }
-
-  if (rp.had_error()) {
-    tty->print_cr("ciCacheProfiles: Failed on %s", rp.error_message());
-    return NULL;
-  }
-  return data;
-}
+//void* ciCacheProfiles::load_inline_data(ciMethod* method, int entry_bci, int comp_level) {
+//  if (FLAG_IS_DEFAULT(InlineDataFile)) {
+//    tty->print_cr("ERROR: no inline replay data file specified (use -XX:InlineDataFile=inline_pid12345.txt).");
+//    return NULL;
+//  }
+//
+//  VM_ENTRY_MARK;
+//  // Load and parse the replay data
+//  CacheReplay rp(InlineDataFile, THREAD);
+//  if (!rp.can_replay()) {
+//    tty->print_cr("ciCacheProfiles: !rp.can_replay()");
+//    return NULL;
+//  }
+//  void* data = rp.process_inline(method, method->get_Method(), entry_bci, comp_level, THREAD);
+//  if (HAS_PENDING_EXCEPTION) {
+//    oop throwable = PENDING_EXCEPTION;
+//    CLEAR_PENDING_EXCEPTION;
+//    java_lang_Throwable::print(throwable, tty);
+//    tty->cr();
+//    java_lang_Throwable::print_stack_trace(throwable, tty);
+//    tty->cr();
+//    return NULL;
+//  }
+//
+//  if (rp.had_error()) {
+//    tty->print_cr("ciCacheProfiles: Failed on %s", rp.error_message());
+//    return NULL;
+//  }
+//  return data;
+//}
 
 int ciCacheProfiles::replay_impl(TRAPS) {
   HandleMark hm;
   ResourceMark rm;
   // Make sure we don't run with background compilation -> marcel: enable that
-  BackgroundCompilation = true;
+  //BackgroundCompilation = true;
   // set ReplaySuppressInitializers to don't to something special
   ReplaySuppressInitializers = 2;
 //  if (ReplaySuppressInitializers > 2) {
@@ -1136,16 +1242,16 @@ int ciCacheProfiles::replay_impl(TRAPS) {
 //    ReplaySuppressInitializers = 1;
 //  }
 
-  if (FLAG_IS_DEFAULT(CacheProfilesFile)) {
-    tty->print_cr("ERROR: no compiler cache profiles file specified (use -XX:CacheProfilesFile=profiles_pid12345.txt).");
-    return 1;
-  }
+//  if (FLAG_IS_DEFAULT(CacheProfilesFile)) {
+//    tty->print_cr("ERROR: no compiler cache profiles file specified (use -XX:CacheProfilesFile=profiles_pid12345.txt).");
+//    return 1;
+//  }
 
   // Load and parse the replay data
-  CacheReplay rp(CacheProfilesFile, THREAD);
+  //CacheReplay rp(CacheProfilesFile, THREAD);
   int exit_code = 0;
-  if (rp.can_replay()) {
-    rp.process(THREAD);
+  if (cache_state->can_replay()) {
+    cache_state->replay_method(THREAD);
   } else {
     exit_code = 1;
     return exit_code;
@@ -1161,15 +1267,15 @@ int ciCacheProfiles::replay_impl(TRAPS) {
     exit_code = 2;
   }
 
-  if (rp.had_error()) {
-    tty->print_cr("Failed on %s", rp.error_message());
+  if (cache_state->had_error()) {
+    tty->print_cr("Failed on %s", cache_state->error_message());
     exit_code = 1;
   }
   return exit_code;
 }
 
 void ciCacheProfiles::initialize(ciMethodData* m) {
-  if (cache_state == NULL) {
+  if (!cache_state->is_initialized()) {
     return;
   }
 
@@ -1220,45 +1326,45 @@ void ciCacheProfiles::initialize(ciMethodData* m) {
 }
 
 
-bool ciCacheProfiles::should_not_inline(ciMethod* method) {
-  if (cache_state == NULL) {
-    return false;
-  }
-  VM_ENTRY_MARK;
-  // ciMethod without a record shouldn't be inlined.
-  return cache_state->find_ciMethodRecord(method->get_Method()) == NULL;
-}
+//bool ciCacheProfiles::should_not_inline(ciMethod* method) {
+//  if (!cache_state->is_initialized()) {
+//    return false;
+//  }
+//  VM_ENTRY_MARK;
+//  // ciMethod without a record shouldn't be inlined.
+//  return cache_state->find_ciMethodRecord(method->get_Method()) == NULL;
+//}
 
-bool ciCacheProfiles::should_inline(void* data, ciMethod* method, int bci, int inline_depth) {
-  if (data != NULL) {
-    GrowableArray<ciInlineRecord*>*  records = (GrowableArray<ciInlineRecord*>*)data;
-    VM_ENTRY_MARK;
-    // Inline record are ordered by bci and depth.
-    return CacheReplay::find_ciInlineRecord(records, method->get_Method(), bci, inline_depth) != NULL;
-  } else if (cache_state != NULL) {
-    VM_ENTRY_MARK;
-    // Inline record are ordered by bci and depth.
-    return cache_state->find_ciInlineRecord(method->get_Method(), bci, inline_depth) != NULL;
-  }
-  return false;
-}
-
-bool ciCacheProfiles::should_not_inline(void* data, ciMethod* method, int bci, int inline_depth) {
-  if (data != NULL) {
-    GrowableArray<ciInlineRecord*>*  records = (GrowableArray<ciInlineRecord*>*)data;
-    VM_ENTRY_MARK;
-    // Inline record are ordered by bci and depth.
-    return CacheReplay::find_ciInlineRecord(records, method->get_Method(), bci, inline_depth) == NULL;
-  } else if (cache_state != NULL) {
-    VM_ENTRY_MARK;
-    // Inline record are ordered by bci and depth.
-    return cache_state->find_ciInlineRecord(method->get_Method(), bci, inline_depth) == NULL;
-  }
-  return false;
-}
+//bool ciCacheProfiles::should_inline(void* data, ciMethod* method, int bci, int inline_depth) {
+//  if (data != NULL) {
+//    GrowableArray<ciInlineRecord*>*  records = (GrowableArray<ciInlineRecord*>*)data;
+//    VM_ENTRY_MARK;
+//    // Inline record are ordered by bci and depth.
+//    return CacheReplay::find_ciInlineRecord(records, method->get_Method(), bci, inline_depth) != NULL;
+//  } else if (cache_state != NULL) {
+//    VM_ENTRY_MARK;
+//    // Inline record are ordered by bci and depth.
+//    return cache_state->find_ciInlineRecord(method->get_Method(), bci, inline_depth) != NULL;
+//  }
+//  return false;
+//}
+//
+//bool ciCacheProfiles::should_not_inline(void* data, ciMethod* method, int bci, int inline_depth) {
+//  if (data != NULL) {
+//    GrowableArray<ciInlineRecord*>*  records = (GrowableArray<ciInlineRecord*>*)data;
+//    VM_ENTRY_MARK;
+//    // Inline record are ordered by bci and depth.
+//    return CacheReplay::find_ciInlineRecord(records, method->get_Method(), bci, inline_depth) == NULL;
+//  } else if (cache_state != NULL) {
+//    VM_ENTRY_MARK;
+//    // Inline record are ordered by bci and depth.
+//    return cache_state->find_ciInlineRecord(method->get_Method(), bci, inline_depth) == NULL;
+//  }
+//  return false;
+//}
 
 void ciCacheProfiles::initialize(ciMethod* m) {
-  if (cache_state == NULL) {
+  if (!cache_state->is_initialized()) {
     return;
   }
 
@@ -1288,7 +1394,7 @@ void ciCacheProfiles::initialize(ciMethod* m) {
 }
 
 bool ciCacheProfiles::is_loaded(Method* method) {
-  if (cache_state == NULL) {
+  if (!cache_state->is_initialized()) {
     return true;
   }
 
@@ -1297,5 +1403,15 @@ bool ciCacheProfiles::is_loaded(Method* method) {
 
   ciMethodRecord* rec = cache_state->find_ciMethodRecord(method);
   return rec != NULL;
+}
+
+bool ciCacheProfiles::is_cached(Method* method) {
+  if (!cache_state->is_initialized()) {
+    return false;
+  }
+  //VM_ENTRY_MARK;
+  ASSERT_IN_VM;
+  ResourceMark rm;
+  return cache_state->find_ciCompileRecord(method) != NULL;
 }
 #endif // PRODUCT

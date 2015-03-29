@@ -1409,7 +1409,7 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
         method->print_short_name(tty);
         JavaThread *thread = JavaThread::current();
         assert(!thread->has_pending_exception(), "should have returned not OK");
-        ciCacheProfiles::replay(thread);
+        ciCacheProfiles::replay(thread,method());
         return NULL;
       }
     }

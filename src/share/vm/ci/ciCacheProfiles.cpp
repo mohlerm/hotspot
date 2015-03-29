@@ -58,9 +58,9 @@ Method*  ciCacheProfiles::_imethod = NULL;
 int      ciCacheProfiles::_entry_bci = 0;
 int      ciCacheProfiles::_comp_level = 0;
 
-GrowableArray<MethodRecord*>*     ciCacheProfiles::_method_records = NULL;
-GrowableArray<MethodDataRecord*>* ciCacheProfiles::_method_data_records = NULL;
-GrowableArray<CompileRecord*>*    ciCacheProfiles::_compile_records = NULL;
+MethodRecord**     ciCacheProfiles::_method_records = NULL;
+MethodDataRecord** ciCacheProfiles::_method_data_records = NULL;
+CompileRecord**    ciCacheProfiles::_compile_records = NULL;
 
 bool ciCacheProfiles::_initialized = false;
 
@@ -420,8 +420,8 @@ void ciCacheProfiles::process_command(TRAPS) {
   }
 }
 
-void ciCacheProfiles::replay_method(TRAPS) {
-  Method* method = parse_method(CHECK);
+void ciCacheProfiles::replay_method(TRAPS, Method* method) {
+  //Method* method = parse_method(CHECK);
   if (had_error()) return;
   int entry_bci = parse_int("entry_bci");
   const char* comp_level_label = "comp_level";
@@ -646,8 +646,8 @@ void ciCacheProfiles::process_JvmtiExport(TRAPS) {
 
 
 
-void ciCacheProfiles::replay(TRAPS) {
-  int exit_code = replay_impl(THREAD);
+void ciCacheProfiles::replay(TRAPS, Method* method) {
+  int exit_code = replay_impl(THREAD, method);
 
 //  Threads::destroy_vm();
 //
@@ -690,9 +690,9 @@ void ciCacheProfiles::initialize(TRAPS) {
     _entry_bci  = 0;
     _comp_level = 0;
     // and continue as usual
-    ciCacheProfiles::_method_records = NEW_C_HEAP_OBJ(GrowableArray<MethodRecord*>, mtCompiler);
-    ciCacheProfiles::_method_data_records = NEW_C_HEAP_OBJ(GrowableArray<MethodDataRecord*>, mtCompiler);
-    ciCacheProfiles::_compile_records = NEW_C_HEAP_OBJ(GrowableArray<CompileRecord*>, mtCompiler);
+    ciCacheProfiles::_method_records = NEW_C_HEAP_ARRAY(MethodRecord*, 2, mtCompiler);
+    ciCacheProfiles::_method_data_records = NEW_C_HEAP_ARRAY(MethodDataRecord*,2, mtCompiler );
+    ciCacheProfiles::_compile_records = NEW_C_HEAP_ARRAY(CompileRecord*,2, mtCompiler );
 
     if (can_replay()) {
       process(THREAD);
@@ -728,7 +728,7 @@ void ciCacheProfiles::is_initialized(bool flag) {
 
 
 
-int ciCacheProfiles::replay_impl(TRAPS) {
+int ciCacheProfiles::replay_impl(TRAPS, Method* method) {
   HandleMark hm;
   ResourceMark rm;
   // Make sure we don't run with background compilation -> marcel: enable that
@@ -751,7 +751,7 @@ int ciCacheProfiles::replay_impl(TRAPS) {
   //CacheReplay rp(CacheProfilesFile, THREAD);
   int exit_code = 0;
   if (can_replay()) {
-    replay_method(THREAD);
+    replay_method(THREAD, method);
   } else {
     exit_code = 1;
     return exit_code;
@@ -886,7 +886,7 @@ MethodRecord* ciCacheProfiles::new_methodRecord(Method* method) {
   rec->_klass_name =  method->method_holder()->name()->as_utf8();
   rec->_method_name = method->name()->as_utf8();
   rec->_signature = method->signature()->as_utf8();
-  _method_records->append(rec);
+  _method_records[0] = rec;
   return rec;
 }
 
@@ -895,8 +895,8 @@ MethodRecord* ciCacheProfiles::find_methodRecord(Method* method) {
   const char* klass_name =  method->method_holder()->name()->as_utf8();
   const char* method_name = method->name()->as_utf8();
   const char* signature = method->signature()->as_utf8();
-  for (int i = 0; i < _method_records->length(); i++) {
-    MethodRecord* rec = _method_records->at(i);
+  for (int i = 0; i < 2; i++) {
+    MethodRecord* rec = _method_records[i];
     if (strcmp(rec->_klass_name, klass_name) == 0 &&
         strcmp(rec->_method_name, method_name) == 0 &&
         strcmp(rec->_signature, signature) == 0) {
@@ -912,7 +912,7 @@ MethodDataRecord* ciCacheProfiles::new_methodDataRecord(Method* method) {
   rec->_klass_name =  method->method_holder()->name()->as_utf8();
   rec->_method_name = method->name()->as_utf8();
   rec->_signature = method->signature()->as_utf8();
-  _method_data_records->append(rec);
+  _method_data_records[0] = rec;
   return rec;
 }
 
@@ -921,8 +921,8 @@ MethodDataRecord* ciCacheProfiles::find_methodDataRecord(Method* method) {
   const char* klass_name =  method->method_holder()->name()->as_utf8();
   const char* method_name = method->name()->as_utf8();
   const char* signature = method->signature()->as_utf8();
-  for (int i = 0; i < _method_data_records->length(); i++) {
-    MethodDataRecord* rec = _method_data_records->at(i);
+  for (int i = 0; i < 2; i++) {
+    MethodDataRecord* rec = _method_data_records[i];
     if (strcmp(rec->_klass_name, klass_name) == 0 &&
         strcmp(rec->_method_name, method_name) == 0 &&
         strcmp(rec->_signature, signature) == 0) {
@@ -934,11 +934,11 @@ MethodDataRecord* ciCacheProfiles::find_methodDataRecord(Method* method) {
 
 // Create and initialize a record for a ciCompile
 CompileRecord* ciCacheProfiles::new_compileRecord(Method* method) {
-  CompileRecord* rec = new CompileRecord ;
+  CompileRecord* rec = new CompileRecord();
   rec->_klass_name =  method->method_holder()->name()->as_utf8();
   rec->_method_name = method->name()->as_utf8();
   rec->_signature = method->signature()->as_utf8();
-  _compile_records->append(rec);
+  _compile_records[0] = rec;
   return rec;
 }
 
@@ -947,8 +947,8 @@ CompileRecord* ciCacheProfiles::find_compileRecord(Method* method) {
   const char* klass_name =  method->method_holder()->name()->as_utf8();
   const char* method_name = method->name()->as_utf8();
   const char* signature = method->signature()->as_utf8();
-  for (int i = 0; i < _compile_records->length(); i++) {
-    CompileRecord* rec = _compile_records->at(i);
+  for (int i = 0; i < 2; i++) {
+    CompileRecord* rec = _compile_records[i];
     if (strcmp(rec->_klass_name, klass_name) == 0 &&
         strcmp(rec->_method_name, method_name) == 0 &&
         strcmp(rec->_signature, signature) == 0) {

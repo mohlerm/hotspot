@@ -152,7 +152,7 @@ ciMethod::ciMethod(methodHandle h_m, ciInstanceKlass* holder) :
     ciReplay::initialize(this);
   }
   if (CacheProfiles) {
-	ciCacheProfiles::initialize(this);
+	  ciCacheProfiles::initialize(this);
   }
 #endif
 }

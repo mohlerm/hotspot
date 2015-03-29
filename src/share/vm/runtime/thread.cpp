@@ -3521,9 +3521,6 @@ jint Threads::create_vm(JavaVMInitArgs* args, bool* canTryAgain) {
   CompileBroker::compilation_init();
 #endif
 
-  // marcel: invoke initialization of CacheProfiles
-  if (CacheProfiles) ciCacheProfiles::initialize(THREAD);
-
   // Pre-initialize some JSR292 core classes to avoid deadlock during class loading.
   // It is done after compilers are initialized, because otherwise compilations of
   // signature polymorphic MH intrinsics can be missed

@@ -161,10 +161,10 @@ class ciCacheProfiles : AllStatic {
   static int      _comp_level;
 
 
-  static int replay_impl(TRAPS);
-  static GrowableArray<MethodRecord*>*     _method_records;
-  static GrowableArray<MethodDataRecord*>* _method_data_records;
-  static GrowableArray<CompileRecord*>*    _compile_records;
+  static int replay_impl(TRAPS, Method* method);
+  static MethodRecord**     _method_records;
+  static MethodDataRecord** _method_data_records;
+  static CompileRecord**    _compile_records;
 
   static bool _initialized;
 
@@ -205,7 +205,7 @@ class ciCacheProfiles : AllStatic {
   static void process(TRAPS);
   static void process_command(TRAPS);
 
-  static void replay_method(TRAPS);
+  static void replay_method(TRAPS, Method* method);
   static void process_compile(TRAPS);
   static void process_ciMethod(TRAPS);
   static void process_ciMethodData(TRAPS);
@@ -235,7 +235,7 @@ class ciCacheProfiles : AllStatic {
   static void initialize(TRAPS);
   //static bool _initialized = false;
   // Replay specified compilation and exit VM.
-  static void replay(TRAPS);
+  static void replay(TRAPS, Method* method);
   // Load inlining decisions from file and use them
   // during compilation of specified method.
 //  static void* load_inline_data(ciMethod* method, int entry_bci, int comp_level);

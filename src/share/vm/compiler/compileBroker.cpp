@@ -871,6 +871,10 @@ void CompileBroker::compilation_init() {
 
   _compilers[1] = new SharkCompiler();
 #endif // SHARK
+  // marcel: invoke initialization of CacheProfiles
+  JavaThread *thread = JavaThread::current();
+  assert(!thread->has_pending_exception(), "should have returned not OK");
+  ciCacheProfiles::initialize(thread);
 
   // Start the compiler thread(s) and the sweeper thread
   init_compiler_sweeper_threads(c1_count, c2_count);
@@ -882,7 +886,6 @@ void CompileBroker::compilation_init() {
                  PerfDataManager::create_counter(JAVA_CI, "totalTime",
                                                  PerfData::U_Ticks, CHECK);
   }
-
 
   if (UsePerfData) {
 
@@ -1403,13 +1406,13 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
     // first, check whether the CacheProfiles flag is set, if not continue as usual
     if((strcmp("tiered", comment) == 0) && !FLAG_IS_DEFAULT(CacheProfiles)) {
       // if it's set trigger replayCompilation in case it's a cached method
-      if(ciCacheProfiles::is_cached(method())) {
+      if(ciCacheProfiles::is_initialized() && ciCacheProfiles::is_cached(method())) {
         tty->print(">>>>>> USE PROFILE Complevel: %d, Hotcount: %d <<<<<<<",comp_level, hot_count);
         method->print_name(tty);
         method->print_short_name(tty);
-        JavaThread *thread = JavaThread::current();
-        assert(!thread->has_pending_exception(), "should have returned not OK");
-        ciCacheProfiles::replay(thread,method());
+        //JavaThread *thread = JavaThread::current();
+        //assert(!thread->has_pending_exception(), "should have returned not OK");
+        ciCacheProfiles::replay(THREAD,method());
         return NULL;
       }
     }

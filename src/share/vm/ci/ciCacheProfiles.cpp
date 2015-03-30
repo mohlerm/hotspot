@@ -895,7 +895,7 @@ MethodRecord* ciCacheProfiles::find_methodRecord(Method* method) {
   const char* klass_name =  method->method_holder()->name()->as_utf8();
   const char* method_name = method->name()->as_utf8();
   const char* signature = method->signature()->as_utf8();
-  for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < 1; i++) {
     MethodRecord* rec = _method_records[i];
     if (strcmp(rec->_klass_name, klass_name) == 0 &&
         strcmp(rec->_method_name, method_name) == 0 &&
@@ -921,7 +921,7 @@ MethodDataRecord* ciCacheProfiles::find_methodDataRecord(Method* method) {
   const char* klass_name =  method->method_holder()->name()->as_utf8();
   const char* method_name = method->name()->as_utf8();
   const char* signature = method->signature()->as_utf8();
-  for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < 1; i++) {
     MethodDataRecord* rec = _method_data_records[i];
     if (strcmp(rec->_klass_name, klass_name) == 0 &&
         strcmp(rec->_method_name, method_name) == 0 &&
@@ -947,7 +947,7 @@ CompileRecord* ciCacheProfiles::find_compileRecord(Method* method) {
   const char* klass_name =  method->method_holder()->name()->as_utf8();
   const char* method_name = method->name()->as_utf8();
   const char* signature = method->signature()->as_utf8();
-  for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < 1; i++) {
     CompileRecord* rec = _compile_records[i];
     if (strcmp(rec->_klass_name, klass_name) == 0 &&
         strcmp(rec->_method_name, method_name) == 0 &&

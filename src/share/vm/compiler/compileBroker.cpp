@@ -871,10 +871,6 @@ void CompileBroker::compilation_init() {
 
   _compilers[1] = new SharkCompiler();
 #endif // SHARK
-  // marcel: invoke initialization of CacheProfiles
-  JavaThread *thread = JavaThread::current();
-  assert(!thread->has_pending_exception(), "should have returned not OK");
-  ciCacheProfiles::initialize(thread);
 
   // Start the compiler thread(s) and the sweeper thread
   init_compiler_sweeper_threads(c1_count, c2_count);

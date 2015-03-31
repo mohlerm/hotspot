@@ -61,6 +61,14 @@ int      ciCacheProfiles::_comp_level = 0;
 MethodRecord**     ciCacheProfiles::_method_records = NULL;
 MethodDataRecord** ciCacheProfiles::_method_data_records = NULL;
 CompileRecord**    ciCacheProfiles::_compile_records = NULL;
+GrowableArray<InlineRecord*>* ciCacheProfiles::_inline_records = NULL;
+
+int ciCacheProfiles::_method_records_pos = 0;
+int ciCacheProfiles::_method_records_length = 0;
+int ciCacheProfiles::_method_data_records_pos = 0;
+int ciCacheProfiles::_method_data_records_length = 0;
+int ciCacheProfiles::_compile_records_pos = 0;
+int ciCacheProfiles::_compile_records_length = 0;
 
 bool ciCacheProfiles::_initialized = false;
 
@@ -421,42 +429,79 @@ void ciCacheProfiles::process_command(TRAPS) {
 }
 
 void ciCacheProfiles::replay_method(TRAPS, Method* method) {
-  //Method* method = parse_method(CHECK);
-  if (had_error()) return;
-  int entry_bci = parse_int("entry_bci");
-  const char* comp_level_label = "comp_level";
-  int comp_level = parse_int(comp_level_label);
-  // old version w/o comp_level
-  if (had_error() && (error_message() == comp_level_label)) {
-    comp_level = CompLevel_full_optimization;
+    //Method* method = parse_method(CHECK);
+    if (had_error()) return;
+    int entry_bci = parse_int("entry_bci");
+    const char* comp_level_label = "comp_level";
+    int comp_level = parse_int(comp_level_label);
+    // old version w/o comp_level
+    if (had_error() && (error_message() == comp_level_label)) {
+      comp_level = CompLevel_full_optimization;
+    }
+    if (!is_valid_comp_level(comp_level)) {
+      return;
+    }
+    if (_imethod != NULL) {
+      // Replay Inlining
+      if (entry_bci != _entry_bci || comp_level != _comp_level) {
+        return;
+      }
+      const char* iklass_name  = _imethod->method_holder()->name()->as_utf8();
+      const char* imethod_name = _imethod->name()->as_utf8();
+      const char* isignature   = _imethod->signature()->as_utf8();
+      const char* klass_name   = method->method_holder()->name()->as_utf8();
+      const char* method_name  = method->name()->as_utf8();
+      const char* signature    = method->signature()->as_utf8();
+      if (strcmp(iklass_name,  klass_name)  != 0 ||
+          strcmp(imethod_name, method_name) != 0 ||
+          strcmp(isignature,   signature)   != 0) {
+        return;
+      }
+    }
+    int inline_count = 0;
+    if (parse_tag_and_count("inline", inline_count)) {
+      // Record inlining data
+      _inline_records = new GrowableArray<InlineRecord*>();
+      for (int i = 0; i < inline_count; i++) {
+        int depth = parse_int("inline_depth");
+        int bci = parse_int("inline_bci");
+        if (had_error()) {
+          break;
+        }
+        Method* inl_method = parse_method(CHECK);
+        if (had_error()) {
+          break;
+        }
+        new_inlineRecord(inl_method, bci, depth);
+      }
+    }
+    if (_imethod != NULL) {
+      return; // Replay Inlining
+    }
+    Klass* k = method->method_holder();
+    ((InstanceKlass*)k)->initialize(THREAD);
+    if (HAS_PENDING_EXCEPTION) {
+      oop throwable = PENDING_EXCEPTION;
+      java_lang_Throwable::print(throwable, tty);
+      tty->cr();
+      if (ReplayIgnoreInitErrors) {
+        CLEAR_PENDING_EXCEPTION;
+        ((InstanceKlass*)k)->set_init_state(InstanceKlass::fully_initialized);
+      } else {
+        return;
+      }
+    }
+    // Make sure the existence of a prior compile doesn't stop this one
+    nmethod* nm = (entry_bci != InvocationEntryBci) ? method->lookup_osr_nmethod_for(entry_bci, comp_level, true) : method->code();
+    if (nm != NULL) {
+      nm->make_not_entrant();
+    }
+    //cache_state = this;
+    CompileBroker::compile_method(method, entry_bci, comp_level,
+                                  methodHandle(), 0, "replay", THREAD);
+    //cache_state = NULL;
+    //reset();
   }
-  if (!is_valid_comp_level(comp_level)) {
-    return;
-  }
-  Klass* k = method->method_holder();
-   ((InstanceKlass*)k)->initialize(THREAD);
-   if (HAS_PENDING_EXCEPTION) {
-     oop throwable = PENDING_EXCEPTION;
-     java_lang_Throwable::print(throwable, tty);
-     tty->cr();
-     if (ReplayIgnoreInitErrors) {
-       CLEAR_PENDING_EXCEPTION;
-       ((InstanceKlass*)k)->set_init_state(InstanceKlass::fully_initialized);
-     } else {
-       return;
-     }
-   }
-   // Make sure the existence of a prior compile doesn't stop this one
-   nmethod* nm = (entry_bci != InvocationEntryBci) ? method->lookup_osr_nmethod_for(entry_bci, comp_level, true) : method->code();
-   if (nm != NULL) {
-     nm->make_not_entrant();
-   }
-   //cache_state = this;
-   CompileBroker::compile_method(method, entry_bci, comp_level,
-                                 methodHandle(), 0, "replay", THREAD);
-   //cache_state = NULL;
-   //reset();
-}
 
 // marcel: new method, does something completely different
 // instead of compiling it adds the compilations to the data structure during initialization
@@ -464,86 +509,11 @@ void ciCacheProfiles::process_compile(TRAPS) {
   Method* method = parse_method(CHECK);
   // marcel: enable cached profile flag
   tty->print("Added method to ciCompileRecord"); method->print_name(tty);
+
   new_compileRecord(method);
   // don't use flag anymore, line can be deleted later
   //method->set_cached_profile(true);
 }
-
-// compile <klass> <name> <signature> <entry_bci> <comp_level> inline <count> <depth> <bci> <klass> <name> <signature> ...
-//  void process_compile(TRAPS) {
-//    Method* method = parse_method(CHECK);
-//    if (had_error()) return;
-//    int entry_bci = parse_int("entry_bci");
-//    const char* comp_level_label = "comp_level";
-//    int comp_level = parse_int(comp_level_label);
-//    // old version w/o comp_level
-//    if (had_error() && (error_message() == comp_level_label)) {
-//      comp_level = CompLevel_full_optimization;
-//    }
-//    if (!is_valid_comp_level(comp_level)) {
-//      return;
-//    }
-//    if (_imethod != NULL) {
-//      // Replay Inlining
-//      if (entry_bci != _entry_bci || comp_level != _comp_level) {
-//        return;
-//      }
-//      const char* iklass_name  = _imethod->method_holder()->name()->as_utf8();
-//      const char* imethod_name = _imethod->name()->as_utf8();
-//      const char* isignature   = _imethod->signature()->as_utf8();
-//      const char* klass_name   = method->method_holder()->name()->as_utf8();
-//      const char* method_name  = method->name()->as_utf8();
-//      const char* signature    = method->signature()->as_utf8();
-//      if (strcmp(iklass_name,  klass_name)  != 0 ||
-//          strcmp(imethod_name, method_name) != 0 ||
-//          strcmp(isignature,   signature)   != 0) {
-//        return;
-//      }
-//    }
-//    int inline_count = 0;
-//    if (parse_tag_and_count("inline", inline_count)) {
-//      // Record inlining data
-//      _ci_inline_records = new GrowableArray<ciInlineRecord*>();
-//      for (int i = 0; i < inline_count; i++) {
-//        int depth = parse_int("inline_depth");
-//        int bci = parse_int("inline_bci");
-//        if (had_error()) {
-//          break;
-//        }
-//        Method* inl_method = parse_method(CHECK);
-//        if (had_error()) {
-//          break;
-//        }
-//        new_ciInlineRecord(inl_method, bci, depth);
-//      }
-//    }
-//    if (_imethod != NULL) {
-//      return; // Replay Inlining
-//    }
-//    Klass* k = method->method_holder();
-//    ((InstanceKlass*)k)->initialize(THREAD);
-//    if (HAS_PENDING_EXCEPTION) {
-//      oop throwable = PENDING_EXCEPTION;
-//      java_lang_Throwable::print(throwable, tty);
-//      tty->cr();
-//      if (ReplayIgnoreInitErrors) {
-//        CLEAR_PENDING_EXCEPTION;
-//        ((InstanceKlass*)k)->set_init_state(InstanceKlass::fully_initialized);
-//      } else {
-//        return;
-//      }
-//    }
-//    // Make sure the existence of a prior compile doesn't stop this one
-//    nmethod* nm = (entry_bci != InvocationEntryBci) ? method->lookup_osr_nmethod_for(entry_bci, comp_level, true) : method->code();
-//    if (nm != NULL) {
-//      nm->make_not_entrant();
-//    }
-//    cache_state = this;
-//    CompileBroker::compile_method(method, entry_bci, comp_level,
-//                                  methodHandle(), 0, "replay", THREAD);
-//    cache_state = NULL;
-//    reset();
-//  }
 
 // ciMethod <klass> <name> <signature> <invocation_counter> <backedge_counter> <interpreter_invocation_count> <interpreter_throwout_count> <instructions_size>
 //
@@ -552,6 +522,9 @@ void ciCacheProfiles::process_ciMethod(TRAPS) {
   Method* method = parse_method(CHECK);
   if (had_error()) return;
   MethodRecord* rec = new_methodRecord(method);
+
+  // marcel: add a resourcemark
+  ResourceMark rm;
   rec->_invocation_counter = parse_int("invocation_counter");
   rec->_backedge_counter = parse_int("backedge_counter");
   rec->_interpreter_invocation_count = parse_int("interpreter_invocation_count");
@@ -585,6 +558,10 @@ void ciCacheProfiles::process_ciMethodData(TRAPS) {
 
   // collect and record all the needed information for later
   MethodDataRecord* rec = new_methodDataRecord(method);
+
+  // marcel: add a resourcemark
+  ResourceMark rm;
+
   rec->_state = parse_int("state");
   rec->_current_mileage = parse_int("current_mileage");
 
@@ -659,11 +636,11 @@ void ciCacheProfiles::replay(TRAPS, Method* method) {
 void ciCacheProfiles::initialize(TRAPS) {
   if (!is_initialized()) {
     HandleMark hm;
-    ResourceMark rm;
-    int exit_code = 0;
+    //ResourceMark rm;
+    //int exit_code = 0;
     if (FLAG_IS_DEFAULT(CacheProfilesFile)) {
       tty->print_cr("ERROR: no compiler cache profiles file specified (use -XX:CacheProfilesFile=cached_profiles.txt).");
-      exit_code = 1;
+      //exit_code = 1;
     }
 
     // Load and parse the replay data
@@ -677,11 +654,11 @@ void ciCacheProfiles::initialize(TRAPS) {
       fprintf(stderr, "ERROR: Can't open cache profile %s\n", CacheProfilesFile);
     }
 
-    //_ci_inline_records = NULL;
+    //_inline_records = NULL;
     _error_message = NULL;
 
     _buffer_length = 32;
-    _buffer = NEW_RESOURCE_ARRAY(char, _buffer_length);
+    _buffer = NEW_C_HEAP_ARRAY(char, _buffer_length, mtCompiler);
     _bufptr = _buffer;
     _buffer_pos = 0;
 
@@ -690,14 +667,23 @@ void ciCacheProfiles::initialize(TRAPS) {
     _entry_bci  = 0;
     _comp_level = 0;
     // and continue as usual
-    ciCacheProfiles::_method_records = NEW_C_HEAP_ARRAY(MethodRecord*, 2, mtCompiler);
-    ciCacheProfiles::_method_data_records = NEW_C_HEAP_ARRAY(MethodDataRecord*,2, mtCompiler );
-    ciCacheProfiles::_compile_records = NEW_C_HEAP_ARRAY(CompileRecord*,2, mtCompiler );
+
+    // TODO replace initial sizes with command line params
+    _method_records = NEW_C_HEAP_ARRAY(MethodRecord*, 64, mtCompiler);
+    _method_data_records = NEW_C_HEAP_ARRAY(MethodDataRecord*,64, mtCompiler );
+    _compile_records = NEW_C_HEAP_ARRAY(CompileRecord*,4, mtCompiler );
+
+    _method_records_pos = 0;
+    _method_records_length = 64;
+    _method_data_records_pos = 0;
+    _method_data_records_length = 64;
+    _compile_records_pos = 0;
+    _compile_records_length = 4;
 
     if (can_replay()) {
       process(THREAD);
     } else {
-      exit_code = 1;
+      //exit_code = 1;
     }
 
     if (HAS_PENDING_EXCEPTION) {
@@ -707,12 +693,12 @@ void ciCacheProfiles::initialize(TRAPS) {
       tty->cr();
       java_lang_Throwable::print_stack_trace(throwable, tty);
       tty->cr();
-      exit_code = 2;
+      //exit_code = 2;
     }
 
     if (had_error()) {
       tty->print_cr("Failed on %s", error_message());
-      exit_code = 1;
+      //exit_code = 1;
     }
   }
   is_initialized(true);
@@ -730,7 +716,7 @@ void ciCacheProfiles::is_initialized(bool flag) {
 
 int ciCacheProfiles::replay_impl(TRAPS, Method* method) {
   HandleMark hm;
-  ResourceMark rm;
+  //ResourceMark rm;
   // Make sure we don't run with background compilation -> marcel: enable that
   //BackgroundCompilation = true;
   // set ReplaySuppressInitializers to don't to something special
@@ -780,7 +766,7 @@ void ciCacheProfiles::initialize(ciMethodData* m) {
   }
 
   ASSERT_IN_VM;
-  ResourceMark rm;
+  //ResourceMark rm;
 
   Method* method = m->get_MethodData()->method();
   MethodDataRecord* rec = find_methodDataRecord(method);
@@ -833,7 +819,7 @@ void ciCacheProfiles::initialize(ciMethod* m) {
   }
 
   ASSERT_IN_VM;
-  ResourceMark rm;
+  //ResourceMark rm;
 
   Method* method = m->get_Method();
   MethodRecord* rec = find_methodRecord(method);
@@ -875,18 +861,29 @@ bool ciCacheProfiles::is_cached(Method* method) {
   }
   //VM_ENTRY_MARK;
   ASSERT_IN_VM;
-  ResourceMark rm;
+  //ResourceMark rm;
   return find_compileRecord(method) != NULL;
 }
 
 
 // Create and initialize a record for a ciMethod
 MethodRecord* ciCacheProfiles::new_methodRecord(Method* method) {
+  //MethodRecord* rec = NEW_C_HEAP_OBJ(MethodRecord, mtCompiler);
   MethodRecord* rec = new MethodRecord();
-  rec->_klass_name =  method->method_holder()->name()->as_utf8();
-  rec->_method_name = method->name()->as_utf8();
-  rec->_signature = method->signature()->as_utf8();
-  _method_records[0] = rec;
+  ResourceMark rm;
+  char* klass_name =  method->method_holder()->name()->as_utf8();
+  char* method_name = method->name()->as_utf8();
+  char * signature = method->signature()->as_utf8();
+  rec->setupMethodRecord(klass_name, method_name, signature);
+  // if array has empty space
+  if(_method_records_pos<_method_records_length) {
+    _method_records[_method_records_pos] = rec;
+    _method_records_pos++;
+  } else {
+    // grow
+    ;
+    // TODO
+  }
   return rec;
 }
 
@@ -895,7 +892,7 @@ MethodRecord* ciCacheProfiles::find_methodRecord(Method* method) {
   const char* klass_name =  method->method_holder()->name()->as_utf8();
   const char* method_name = method->name()->as_utf8();
   const char* signature = method->signature()->as_utf8();
-  for (int i = 0; i < 1; i++) {
+  for (int i = 0; i < _method_records_pos; i++) {
     MethodRecord* rec = _method_records[i];
     if (strcmp(rec->_klass_name, klass_name) == 0 &&
         strcmp(rec->_method_name, method_name) == 0 &&
@@ -908,20 +905,31 @@ MethodRecord* ciCacheProfiles::find_methodRecord(Method* method) {
 
 // Create and initialize a record for a ciMethodData
 MethodDataRecord* ciCacheProfiles::new_methodDataRecord(Method* method) {
+  //MethodDataRecord* rec = NEW_C_HEAP_OBJ(MethodDataRecord, mtCompiler);
   MethodDataRecord* rec = new MethodDataRecord();
-  rec->_klass_name =  method->method_holder()->name()->as_utf8();
-  rec->_method_name = method->name()->as_utf8();
-  rec->_signature = method->signature()->as_utf8();
-  _method_data_records[0] = rec;
+  ResourceMark rm;
+  char* klass_name =  method->method_holder()->name()->as_utf8();
+  char* method_name = method->name()->as_utf8();
+  char * signature = method->signature()->as_utf8();
+  rec->setupMethodDataRecord(klass_name, method_name, signature);
+  // if array has empty space
+  if(_method_data_records_pos<_method_data_records_length) {
+    _method_data_records[_method_data_records_pos] = rec;
+    _method_data_records_pos++;
+  } else {
+    // grow
+    ;
+    // TODO
+  }
   return rec;
 }
 
 // Lookup data for a ciMethodData
 MethodDataRecord* ciCacheProfiles::find_methodDataRecord(Method* method) {
-  const char* klass_name =  method->method_holder()->name()->as_utf8();
-  const char* method_name = method->name()->as_utf8();
-  const char* signature = method->signature()->as_utf8();
-  for (int i = 0; i < 1; i++) {
+  char* klass_name =  method->method_holder()->name()->as_utf8();
+  char* method_name = method->name()->as_utf8();
+  char* signature = method->signature()->as_utf8();
+  for (int i = 0; i < _method_data_records_pos; i++) {
     MethodDataRecord* rec = _method_data_records[i];
     if (strcmp(rec->_klass_name, klass_name) == 0 &&
         strcmp(rec->_method_name, method_name) == 0 &&
@@ -934,20 +942,31 @@ MethodDataRecord* ciCacheProfiles::find_methodDataRecord(Method* method) {
 
 // Create and initialize a record for a ciCompile
 CompileRecord* ciCacheProfiles::new_compileRecord(Method* method) {
+  //CompileRecord* rec = NEW_C_HEAP_OBJ(CompileRecord, mtCompiler);
   CompileRecord* rec = new CompileRecord();
-  rec->_klass_name =  method->method_holder()->name()->as_utf8();
-  rec->_method_name = method->name()->as_utf8();
-  rec->_signature = method->signature()->as_utf8();
-  _compile_records[0] = rec;
+  ResourceMark rm;
+  char* klass_name =  method->method_holder()->name()->as_utf8();
+  char* method_name = method->name()->as_utf8();
+  char * signature = method->signature()->as_utf8();
+  rec->setupCompileRecord(klass_name, method_name, signature);
+  // if array has empty space
+  if(_compile_records_pos<_compile_records_length) {
+    _compile_records[_compile_records_pos] = rec;
+    _compile_records_pos++;
+  } else {
+    // grow
+    ;
+    // TODO
+  }
   return rec;
 }
 
 // Lookup data for a ciMethod
 CompileRecord* ciCacheProfiles::find_compileRecord(Method* method) {
-  const char* klass_name =  method->method_holder()->name()->as_utf8();
-  const char* method_name = method->name()->as_utf8();
-  const char* signature = method->signature()->as_utf8();
-  for (int i = 0; i < 1; i++) {
+  char* klass_name =  method->method_holder()->name()->as_utf8();
+  char* method_name = method->name()->as_utf8();
+  char* signature = method->signature()->as_utf8();
+  for (int i = 0; i < _compile_records_pos; i++) {
     CompileRecord* rec = _compile_records[i];
     if (strcmp(rec->_klass_name, klass_name) == 0 &&
         strcmp(rec->_method_name, method_name) == 0 &&
@@ -957,6 +976,47 @@ CompileRecord* ciCacheProfiles::find_compileRecord(Method* method) {
   }
   return NULL;
 }
+
+ // Create and initialize a record for a ciInlineRecord
+InlineRecord* ciCacheProfiles::new_inlineRecord(Method* method, int bci, int depth) {
+ InlineRecord* rec = NEW_RESOURCE_OBJ(InlineRecord);
+ rec->_klass_name = method->method_holder()->name()->as_utf8();
+ rec->_method_name = method->name()->as_utf8();
+ rec->_signature = method->signature()->as_utf8();
+ rec->_inline_bci = bci;
+ rec->_inline_depth = depth;
+ _inline_records->append(rec);
+ return rec;
+ }
+
+ // Lookup inlining data for a ciMethod
+InlineRecord* ciCacheProfiles::find_inlineRecord(Method* method, int bci, int depth) {
+ if (_inline_records != NULL) {
+   return find_inlineRecord(_inline_records, method, bci, depth);
+ }
+ return NULL;
+}
+
+InlineRecord* ciCacheProfiles::find_inlineRecord(GrowableArray<InlineRecord*>* records,
+ Method* method, int bci, int depth) {
+ if (records != NULL) {
+   const char* klass_name = method->method_holder()->name()->as_utf8();
+   const char* method_name = method->name()->as_utf8();
+   const char* signature = method->signature()->as_utf8();
+   for (int i = 0; i < records->length(); i++) {
+     InlineRecord* rec = records->at(i);
+     if ((rec->_inline_bci == bci) &&
+       (rec->_inline_depth == depth) &&
+       (strcmp(rec->_klass_name, klass_name) == 0) &&
+       (strcmp(rec->_method_name, method_name) == 0) &&
+       (strcmp(rec->_signature, signature) == 0)) {
+       return rec;
+     }
+   }
+ }
+ return NULL;
+}
+
 //void ciCacheProfiles::reset() {
 //  _error_message = NULL;
 //  _method_records.clear();

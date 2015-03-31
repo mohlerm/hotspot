@@ -98,16 +98,24 @@
 // class to represent the cached compilations
 class CompileRecord : public CHeapObj<mtCompiler> {
 public:
-  const char* _klass_name;
-  const char* _method_name;
-  const char* _signature;
+  char* _klass_name;
+  char* _method_name;
+  char* _signature;
+  void setupCompileRecord(char* k_name, char* m_name, char* s) {
+    _klass_name = NEW_C_HEAP_OBJ(char, mtCompiler);
+    _method_name = NEW_C_HEAP_OBJ(char, mtCompiler);
+    _signature = NEW_C_HEAP_OBJ(char, mtCompiler);
+    strcpy(_klass_name,k_name);
+    strcpy(_method_name,m_name);
+    strcpy(_signature,s);
+  }
 };
 
 class MethodDataRecord : public CHeapObj<mtCompiler> {
 public:
-  const char* _klass_name;
-  const char* _method_name;
-  const char* _signature;
+  char* _klass_name;
+  char* _method_name;
+  char* _signature;
 
   int _state;
   int _current_mileage;
@@ -122,19 +130,53 @@ public:
   int       _orig_data_length;
   int       _classes_length;
   int       _methods_length;
+  void setupMethodDataRecord(char* k_name, char* m_name, char* s) {
+    _klass_name = NEW_C_HEAP_OBJ(char, mtCompiler);
+    _method_name = NEW_C_HEAP_OBJ(char, mtCompiler);
+    _signature = NEW_C_HEAP_OBJ(char, mtCompiler);
+    strcpy(_klass_name,k_name);
+    strcpy(_method_name,m_name);
+    strcpy(_signature,s);
+  }
 };
 
 class MethodRecord : public CHeapObj<mtCompiler> {
 public:
-  const char* _klass_name;
-  const char* _method_name;
-  const char* _signature;
+  char* _klass_name;
+  char* _method_name;
+  char* _signature;
 
   int _instructions_size;
   int _interpreter_invocation_count;
   int _interpreter_throwout_count;
   int _invocation_counter;
   int _backedge_counter;
+  void setupMethodRecord(char* k_name, char* m_name, char* s) {
+    _klass_name = NEW_C_HEAP_OBJ(char, mtCompiler);
+    _method_name = NEW_C_HEAP_OBJ(char, mtCompiler);
+    _signature = NEW_C_HEAP_OBJ(char, mtCompiler);
+    strcpy(_klass_name,k_name);
+    strcpy(_method_name,m_name);
+    strcpy(_signature,s);
+  }
+};
+
+class InlineRecord : public CHeapObj<mtCompiler> {
+public:
+  char* _klass_name;
+  char* _method_name;
+  char* _signature;
+
+  int _inline_depth;
+  int _inline_bci;
+  void setupInlineRecord(char* k_name, char* m_name, char* s) {
+    _klass_name = NEW_C_HEAP_OBJ(char, mtCompiler);
+    _method_name = NEW_C_HEAP_OBJ(char, mtCompiler);
+    _signature = NEW_C_HEAP_OBJ(char, mtCompiler);
+    strcpy(_klass_name,k_name);
+    strcpy(_method_name,m_name);
+    strcpy(_signature,s);
+  }
 };
 
 class ciCacheProfiles : AllStatic {
@@ -165,6 +207,15 @@ class ciCacheProfiles : AllStatic {
   static MethodRecord**     _method_records;
   static MethodDataRecord** _method_data_records;
   static CompileRecord**    _compile_records;
+
+  static GrowableArray<InlineRecord*>* _inline_records;
+
+  static int _method_records_pos;
+  static int _method_data_records_pos;
+  static int _compile_records_pos;
+  static int _method_records_length;
+  static int _method_data_records_length;
+  static int _compile_records_length;
 
   static bool _initialized;
 
@@ -228,6 +279,15 @@ class ciCacheProfiles : AllStatic {
 
   // Lookup data for a ciMethod
   static CompileRecord* find_compileRecord(Method* method);
+
+  // Create and initialize a record for a ciInlineRecord
+  static InlineRecord* new_inlineRecord(Method* method, int bci, int depth);
+
+  // Lookup inlining data for a ciMethod
+  static InlineRecord* find_inlineRecord(Method* method, int bci, int depth);
+
+  static InlineRecord* find_inlineRecord(GrowableArray<InlineRecord*>* records,
+  Method* method, int bci, int depth);
 
 
  public:

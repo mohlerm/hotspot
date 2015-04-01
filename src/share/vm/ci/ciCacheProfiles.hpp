@@ -96,19 +96,81 @@
 // is performed during normal java program execution.
 //
 // class to represent the cached compilations
+
+class InlineRecord : public CHeapObj<mtCompiler> {
+public:
+  char* _klass_name;
+  char* _method_name;
+  char* _signature;
+
+  int _inline_depth;
+  int _inline_bci;
+  void setupInlineRecord(char* k_name, char* m_name, char* s) {
+    _klass_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    strcpy(_klass_name,k_name);
+    strcpy(_method_name,m_name);
+    strcpy(_signature,s);
+  }
+};
+
 class CompileRecord : public CHeapObj<mtCompiler> {
 public:
   char* _klass_name;
   char* _method_name;
   char* _signature;
+  int   _entry_bci;
+  int   _comp_level;
+  GrowableArray<InlineRecord*>* _inline_records;
   void setupCompileRecord(char* k_name, char* m_name, char* s) {
-    _klass_name = NEW_C_HEAP_OBJ(char, mtCompiler);
-    _method_name = NEW_C_HEAP_OBJ(char, mtCompiler);
-    _signature = NEW_C_HEAP_OBJ(char, mtCompiler);
+    _klass_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
     strcpy(_klass_name,k_name);
     strcpy(_method_name,m_name);
     strcpy(_signature,s);
+    _inline_records = NULL;
   }
+ //  Create and initialize a record for a ciInlineRecord
+ InlineRecord* new_inlineRecord(Method* method, int bci, int depth) {
+  InlineRecord* rec = NEW_RESOURCE_OBJ(InlineRecord);
+  rec->_klass_name = method->method_holder()->name()->as_utf8();
+  rec->_method_name = method->name()->as_utf8();
+  rec->_signature = method->signature()->as_utf8();
+  rec->_inline_bci = bci;
+  rec->_inline_depth = depth;
+  _inline_records->append(rec);
+  return rec;
+  }
+
+  // Lookup inlining data for a ciMethod
+ InlineRecord* find_inlineRecord(Method* method, int bci, int depth) {
+  if (_inline_records != NULL) {
+    return find_inlineRecord(_inline_records, method, bci, depth);
+  }
+  return NULL;
+ }
+
+ InlineRecord* find_inlineRecord(GrowableArray<InlineRecord*>* records,
+  Method* method, int bci, int depth) {
+  if (records != NULL) {
+    const char* klass_name = method->method_holder()->name()->as_utf8();
+    const char* method_name = method->name()->as_utf8();
+    const char* signature = method->signature()->as_utf8();
+    for (int i = 0; i < records->length(); i++) {
+      InlineRecord* rec = records->at(i);
+      if ((rec->_inline_bci == bci) &&
+        (rec->_inline_depth == depth) &&
+        (strcmp(rec->_klass_name, klass_name) == 0) &&
+        (strcmp(rec->_method_name, method_name) == 0) &&
+        (strcmp(rec->_signature, signature) == 0)) {
+        return rec;
+      }
+    }
+  }
+  return NULL;
+ }
 };
 
 class MethodDataRecord : public CHeapObj<mtCompiler> {
@@ -131,9 +193,9 @@ public:
   int       _classes_length;
   int       _methods_length;
   void setupMethodDataRecord(char* k_name, char* m_name, char* s) {
-    _klass_name = NEW_C_HEAP_OBJ(char, mtCompiler);
-    _method_name = NEW_C_HEAP_OBJ(char, mtCompiler);
-    _signature = NEW_C_HEAP_OBJ(char, mtCompiler);
+    _klass_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
     strcpy(_klass_name,k_name);
     strcpy(_method_name,m_name);
     strcpy(_signature,s);
@@ -152,32 +214,18 @@ public:
   int _invocation_counter;
   int _backedge_counter;
   void setupMethodRecord(char* k_name, char* m_name, char* s) {
-    _klass_name = NEW_C_HEAP_OBJ(char, mtCompiler);
-    _method_name = NEW_C_HEAP_OBJ(char, mtCompiler);
-    _signature = NEW_C_HEAP_OBJ(char, mtCompiler);
+    //_klass_name = NEW_C_HEAP_OBJ(char, mtCompiler);
+    //_method_name = NEW_C_HEAP_OBJ(char, mtCompiler);
+    //_signature = NEW_C_HEAP_OBJ(char, mtCompiler);
+    _klass_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
     strcpy(_klass_name,k_name);
     strcpy(_method_name,m_name);
     strcpy(_signature,s);
   }
 };
 
-class InlineRecord : public CHeapObj<mtCompiler> {
-public:
-  char* _klass_name;
-  char* _method_name;
-  char* _signature;
-
-  int _inline_depth;
-  int _inline_bci;
-  void setupInlineRecord(char* k_name, char* m_name, char* s) {
-    _klass_name = NEW_C_HEAP_OBJ(char, mtCompiler);
-    _method_name = NEW_C_HEAP_OBJ(char, mtCompiler);
-    _signature = NEW_C_HEAP_OBJ(char, mtCompiler);
-    strcpy(_klass_name,k_name);
-    strcpy(_method_name,m_name);
-    strcpy(_signature,s);
-  }
-};
 
 class ciCacheProfiles : AllStatic {
   CI_PACKAGE_ACCESS
@@ -208,7 +256,7 @@ class ciCacheProfiles : AllStatic {
   static MethodDataRecord** _method_data_records;
   static CompileRecord**    _compile_records;
 
-  static GrowableArray<InlineRecord*>* _inline_records;
+  //static GrowableArray<InlineRecord*>* _inline_records;
 
   static int _method_records_pos;
   static int _method_data_records_pos;
@@ -264,30 +312,30 @@ class ciCacheProfiles : AllStatic {
 
 
   // Create and initialize a record for a ciMethod
-  static MethodRecord* new_methodRecord(Method* method);
+  static MethodRecord* new_methodRecord(char* klass_name, char* method_name, char* signature);
 
   // Lookup data for a ciMethod
   static MethodRecord* find_methodRecord(Method* method);
 
   // Create and initialize a record for a ciMethodData
-  static MethodDataRecord* new_methodDataRecord(Method* method);
+  static MethodDataRecord* new_methodDataRecord(char* klass_name, char* method_name, char* signature);
   // Lookup data for a ciMethodData
   static MethodDataRecord* find_methodDataRecord(Method* method);
 
   // Create and initialize a record for a ciCompile
-  static CompileRecord* new_compileRecord(Method* method);
+  static CompileRecord* new_compileRecord(char* klass_name, char* method_name, char* signature);
 
   // Lookup data for a ciMethod
   static CompileRecord* find_compileRecord(Method* method);
 
-  // Create and initialize a record for a ciInlineRecord
-  static InlineRecord* new_inlineRecord(Method* method, int bci, int depth);
-
-  // Lookup inlining data for a ciMethod
-  static InlineRecord* find_inlineRecord(Method* method, int bci, int depth);
-
-  static InlineRecord* find_inlineRecord(GrowableArray<InlineRecord*>* records,
-  Method* method, int bci, int depth);
+//  // Create and initialize a record for a ciInlineRecord
+//  static InlineRecord* new_inlineRecord(Method* method, int bci, int depth);
+//
+//  // Lookup inlining data for a ciMethod
+//  static InlineRecord* find_inlineRecord(Method* method, int bci, int depth);
+//
+//  static InlineRecord* find_inlineRecord(GrowableArray<InlineRecord*>* records,
+//  Method* method, int bci, int depth);
 
 
  public:

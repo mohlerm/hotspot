@@ -61,7 +61,7 @@ int      ciCacheProfiles::_comp_level = 0;
 MethodRecord**     ciCacheProfiles::_method_records = NULL;
 MethodDataRecord** ciCacheProfiles::_method_data_records = NULL;
 CompileRecord**    ciCacheProfiles::_compile_records = NULL;
-GrowableArray<InlineRecord*>* ciCacheProfiles::_inline_records = NULL;
+//GrowableArray<InlineRecord*>* ciCacheProfiles::_inline_records = NULL;
 
 int ciCacheProfiles::_method_records_pos = 0;
 int ciCacheProfiles::_method_records_length = 0;
@@ -191,7 +191,7 @@ char* ciCacheProfiles::parse_data(const char* tag, int& length) {
     return NULL;
   }
 
-  char * result = NEW_RESOURCE_ARRAY(char, length);
+  char * result = NEW_C_HEAP_ARRAY(char, length, mtCompiler);
   for (int i = 0; i < length; i++) {
     int val = parse_int("data");
     result[i] = val;
@@ -207,7 +207,7 @@ intptr_t* ciCacheProfiles::parse_intptr_data(const char* tag, int& length) {
     return NULL;
   }
 
-  intptr_t* result = NEW_RESOURCE_ARRAY(intptr_t, length);
+  intptr_t* result = NEW_C_HEAP_ARRAY(intptr_t, length, mtCompiler);
   for (int i = 0; i < length; i++) {
     skip_ws();
     intptr_t val = parse_intptr_t("data");
@@ -257,6 +257,7 @@ Klass* ciCacheProfiles::resolve_klass(const char* klass, TRAPS) {
 
 // Parse the standard tuple of <klass> <name> <signature>
 Method* ciCacheProfiles::parse_method(TRAPS) {
+  ResourceMark rm;
   InstanceKlass* k = (InstanceKlass*)parse_klass(CHECK_NULL);
   Symbol* method_name = parse_symbol(CHECK_NULL);
   Symbol* method_signature = parse_symbol(CHECK_NULL);
@@ -429,55 +430,37 @@ void ciCacheProfiles::process_command(TRAPS) {
 }
 
 void ciCacheProfiles::replay_method(TRAPS, Method* method) {
+    CompileRecord* rec = find_compileRecord(method);
+
     //Method* method = parse_method(CHECK);
-    if (had_error()) return;
-    int entry_bci = parse_int("entry_bci");
-    const char* comp_level_label = "comp_level";
-    int comp_level = parse_int(comp_level_label);
+    //if (had_error()) return;
+
     // old version w/o comp_level
-    if (had_error() && (error_message() == comp_level_label)) {
-      comp_level = CompLevel_full_optimization;
-    }
-    if (!is_valid_comp_level(comp_level)) {
+
+    if (!is_valid_comp_level(rec->_comp_level)) {
       return;
     }
-    if (_imethod != NULL) {
-      // Replay Inlining
-      if (entry_bci != _entry_bci || comp_level != _comp_level) {
-        return;
-      }
-      const char* iklass_name  = _imethod->method_holder()->name()->as_utf8();
-      const char* imethod_name = _imethod->name()->as_utf8();
-      const char* isignature   = _imethod->signature()->as_utf8();
-      const char* klass_name   = method->method_holder()->name()->as_utf8();
-      const char* method_name  = method->name()->as_utf8();
-      const char* signature    = method->signature()->as_utf8();
-      if (strcmp(iklass_name,  klass_name)  != 0 ||
-          strcmp(imethod_name, method_name) != 0 ||
-          strcmp(isignature,   signature)   != 0) {
-        return;
-      }
-    }
-    int inline_count = 0;
-    if (parse_tag_and_count("inline", inline_count)) {
-      // Record inlining data
-      _inline_records = new GrowableArray<InlineRecord*>();
-      for (int i = 0; i < inline_count; i++) {
-        int depth = parse_int("inline_depth");
-        int bci = parse_int("inline_bci");
-        if (had_error()) {
-          break;
-        }
-        Method* inl_method = parse_method(CHECK);
-        if (had_error()) {
-          break;
-        }
-        new_inlineRecord(inl_method, bci, depth);
-      }
-    }
-    if (_imethod != NULL) {
-      return; // Replay Inlining
-    }
+//    if (_imethod != NULL) {
+//      // Replay Inlining
+//      if (entry_bci != _entry_bci || comp_level != _comp_level) {
+//        return;
+//      }
+//      const char* iklass_name  = _imethod->method_holder()->name()->as_utf8();
+//      const char* imethod_name = _imethod->name()->as_utf8();
+//      const char* isignature   = _imethod->signature()->as_utf8();
+//      const char* klass_name   = method->method_holder()->name()->as_utf8();
+//      const char* method_name  = method->name()->as_utf8();
+//      const char* signature    = method->signature()->as_utf8();
+//      if (strcmp(iklass_name,  klass_name)  != 0 ||
+//          strcmp(imethod_name, method_name) != 0 ||
+//          strcmp(isignature,   signature)   != 0) {
+//        return;
+//      }
+//    }
+//
+//    if (_imethod != NULL) {
+//      return; // Replay Inlining
+//    }
     Klass* k = method->method_holder();
     ((InstanceKlass*)k)->initialize(THREAD);
     if (HAS_PENDING_EXCEPTION) {
@@ -492,12 +475,12 @@ void ciCacheProfiles::replay_method(TRAPS, Method* method) {
       }
     }
     // Make sure the existence of a prior compile doesn't stop this one
-    nmethod* nm = (entry_bci != InvocationEntryBci) ? method->lookup_osr_nmethod_for(entry_bci, comp_level, true) : method->code();
+    nmethod* nm = (rec->_entry_bci != InvocationEntryBci) ? method->lookup_osr_nmethod_for(rec->_entry_bci, rec->_comp_level, true) : method->code();
     if (nm != NULL) {
       nm->make_not_entrant();
     }
     //cache_state = this;
-    CompileBroker::compile_method(method, entry_bci, comp_level,
+    CompileBroker::compile_method(method, rec->_entry_bci, rec->_comp_level,
                                   methodHandle(), 0, "replay", THREAD);
     //cache_state = NULL;
     //reset();
@@ -506,22 +489,55 @@ void ciCacheProfiles::replay_method(TRAPS, Method* method) {
 // marcel: new method, does something completely different
 // instead of compiling it adds the compilations to the data structure during initialization
 void ciCacheProfiles::process_compile(TRAPS) {
-  Method* method = parse_method(CHECK);
+  //Method* method = parse_method(CHECK);
   // marcel: enable cached profile flag
-  tty->print("Added method to ciCompileRecord"); method->print_name(tty);
-
-  new_compileRecord(method);
+  //tty->print("Added method to ciCompileRecord"); method->print_name(tty);
+  char* klass_name = parse_string();
+  char* method_name = parse_string();
+  char* signature = parse_string();
+  CompileRecord* rec = new_compileRecord(klass_name, method_name, signature);
   // don't use flag anymore, line can be deleted later
   //method->set_cached_profile(true);
+
+  // marcel: add a resourcemark
+  ResourceMark rm;
+
+  rec->_entry_bci = parse_int("entry_bci");
+  const char* comp_level_label = "comp_level";
+  rec->_comp_level = parse_int(comp_level_label);
+  if (had_error() && (error_message() == comp_level_label)) {
+    rec->_comp_level = CompLevel_full_optimization;
+  }
+  int inline_count = 0;
+  if (parse_tag_and_count("inline", inline_count)) {
+    // Record inlining data
+    rec->_inline_records = new GrowableArray<InlineRecord*>();
+    for (int i = 0; i < inline_count; i++) {
+      int depth = parse_int("inline_depth");
+      int bci = parse_int("inline_bci");
+      if (had_error()) {
+        break;
+      }
+      Method* inl_method = parse_method(CHECK);
+      if (had_error()) {
+        break;
+      }
+      rec->new_inlineRecord(inl_method, bci, depth);
+    }
+  }
+
 }
 
 // ciMethod <klass> <name> <signature> <invocation_counter> <backedge_counter> <interpreter_invocation_count> <interpreter_throwout_count> <instructions_size>
 //
 //
 void ciCacheProfiles::process_ciMethod(TRAPS) {
-  Method* method = parse_method(CHECK);
-  if (had_error()) return;
-  MethodRecord* rec = new_methodRecord(method);
+  //Method* method = parse_method(CHECK);
+  //if (had_error()) return;
+  char* klass_name = parse_string();
+  char* method_name = parse_string();
+  char* signature = parse_string();
+  MethodRecord* rec = new_methodRecord(klass_name,method_name,signature);
 
   // marcel: add a resourcemark
   ResourceMark rm;
@@ -534,30 +550,32 @@ void ciCacheProfiles::process_ciMethod(TRAPS) {
 
 // ciMethodData <klass> <name> <signature> <state> <current mileage> orig <length> # # ... data <length> # # ... oops <length> # ... methods <length>
 void ciCacheProfiles::process_ciMethodData(TRAPS) {
-  Method* method = parse_method(CHECK);
-  if (had_error()) return;
-  /* just copied from Method, to build interpret data*/
-  if (InstanceRefKlass::owns_pending_list_lock((JavaThread*)THREAD)) {
-    return;
-  }
-  // To be properly initialized, some profiling in the MDO needs the
-  // method to be rewritten (number of arguments at a call for
-  // instance)
-  method->method_holder()->link_class(CHECK);
-  // methodOopDesc::build_interpreter_method_data(method, CHECK);
-  {
-    // Grab a lock here to prevent multiple
-    // MethodData*s from being created.
-    MutexLocker ml(MethodData_lock, THREAD);
-    if (method->method_data() == NULL) {
-      ClassLoaderData* loader_data = method->method_holder()->class_loader_data();
-      MethodData* method_data = MethodData::allocate(loader_data, method, CHECK);
-      method->set_method_data(method_data);
-    }
-  }
-
+//  Method* method = parse_method(CHECK);
+//  if (had_error()) return;
+//  /* just copied from Method, to build interpret data*/
+//  if (InstanceRefKlass::owns_pending_list_lock((JavaThread*)THREAD)) {
+//    return;
+//  }
+//  // To be properly initialized, some profiling in the MDO needs the
+//  // method to be rewritten (number of arguments at a call for
+//  // instance)
+//  method->method_holder()->link_class(CHECK);
+//  // methodOopDesc::build_interpreter_method_data(method, CHECK);
+//  {
+//    // Grab a lock here to prevent multiple
+//    // MethodData*s from being created.
+//    MutexLocker ml(MethodData_lock, THREAD);
+//    if (method->method_data() == NULL) {
+//      ClassLoaderData* loader_data = method->method_holder()->class_loader_data();
+//      MethodData* method_data = MethodData::allocate(loader_data, method, CHECK);
+//      method->set_method_data(method_data);
+//    }
+//  }
+  char* klass_name = parse_string();
+  char* method_name = parse_string();
+  char* signature = parse_string();
   // collect and record all the needed information for later
-  MethodDataRecord* rec = new_methodDataRecord(method);
+  MethodDataRecord* rec = new_methodDataRecord(klass_name, method_name, signature);
 
   // marcel: add a resourcemark
   ResourceMark rm;
@@ -565,19 +583,26 @@ void ciCacheProfiles::process_ciMethodData(TRAPS) {
   rec->_state = parse_int("state");
   rec->_current_mileage = parse_int("current_mileage");
 
-  rec->_orig_data = parse_data("orig", rec->_orig_data_length);
+  //rec->_orig_data = parse_data("orig", rec->_orig_data_length);
+  char* parsed_data = NEW_C_HEAP_ARRAY(char, rec->_orig_data_length, mtCompiler);
+  parsed_data = parse_data("orig", rec->_orig_data_length);
+  rec->_orig_data = parsed_data;
   if (rec->_orig_data == NULL) {
     return;
   }
-  rec->_data = parse_intptr_data("data", rec->_data_length);
+  intptr_t* parsed_intptr = parse_intptr_data("data", rec->_data_length);
+  rec->_data = NEW_C_HEAP_ARRAY(intptr_t, rec->_data_length, mtCompiler);
+  //rec->_data = parse_intptr_data("data", rec->_data_length);
+  rec->_data = parsed_intptr;
+
   if (rec->_data == NULL) {
     return;
   }
   if (!parse_tag_and_count("oops", rec->_classes_length)) {
     return;
   }
-  rec->_classes = NEW_RESOURCE_ARRAY(Klass*, rec->_classes_length);
-  rec->_classes_offsets = NEW_RESOURCE_ARRAY(int, rec->_classes_length);
+  rec->_classes = NEW_C_HEAP_ARRAY(Klass*, rec->_classes_length, mtCompiler);
+  rec->_classes_offsets = NEW_C_HEAP_ARRAY(int, rec->_classes_length, mtCompiler);
   for (int i = 0; i < rec->_classes_length; i++) {
     int offset = parse_int("offset");
     if (had_error()) {
@@ -591,8 +616,8 @@ void ciCacheProfiles::process_ciMethodData(TRAPS) {
   if (!parse_tag_and_count("methods", rec->_methods_length)) {
     return;
   }
-  rec->_methods = NEW_RESOURCE_ARRAY(Method*, rec->_methods_length);
-  rec->_methods_offsets = NEW_RESOURCE_ARRAY(int, rec->_methods_length);
+  rec->_methods = NEW_C_HEAP_ARRAY(Method*, rec->_methods_length, mtCompiler);
+  rec->_methods_offsets = NEW_C_HEAP_ARRAY(int, rec->_methods_length, mtCompiler);
   for (int i = 0; i < rec->_methods_length; i++) {
     int offset = parse_int("offset");
     if (had_error()) {
@@ -766,7 +791,7 @@ void ciCacheProfiles::initialize(ciMethodData* m) {
   }
 
   ASSERT_IN_VM;
-  //ResourceMark rm;
+  ResourceMark rm;
 
   Method* method = m->get_MethodData()->method();
   MethodDataRecord* rec = find_methodDataRecord(method);
@@ -819,7 +844,7 @@ void ciCacheProfiles::initialize(ciMethod* m) {
   }
 
   ASSERT_IN_VM;
-  //ResourceMark rm;
+  ResourceMark rm;
 
   Method* method = m->get_Method();
   MethodRecord* rec = find_methodRecord(method);
@@ -861,19 +886,19 @@ bool ciCacheProfiles::is_cached(Method* method) {
   }
   //VM_ENTRY_MARK;
   ASSERT_IN_VM;
-  //ResourceMark rm;
+  ResourceMark rm;
   return find_compileRecord(method) != NULL;
 }
 
 
 // Create and initialize a record for a ciMethod
-MethodRecord* ciCacheProfiles::new_methodRecord(Method* method) {
+MethodRecord* ciCacheProfiles::new_methodRecord(char* klass_name, char* method_name, char* signature) {
   //MethodRecord* rec = NEW_C_HEAP_OBJ(MethodRecord, mtCompiler);
   MethodRecord* rec = new MethodRecord();
-  ResourceMark rm;
-  char* klass_name =  method->method_holder()->name()->as_utf8();
-  char* method_name = method->name()->as_utf8();
-  char * signature = method->signature()->as_utf8();
+  //ResourceMark rm;
+  //char* klass_name =  method->method_holder()->name()->as_utf8();
+  //char* method_name = method->name()->as_utf8();
+  //char * signature = method->signature()->as_utf8();
   rec->setupMethodRecord(klass_name, method_name, signature);
   // if array has empty space
   if(_method_records_pos<_method_records_length) {
@@ -904,13 +929,13 @@ MethodRecord* ciCacheProfiles::find_methodRecord(Method* method) {
 }
 
 // Create and initialize a record for a ciMethodData
-MethodDataRecord* ciCacheProfiles::new_methodDataRecord(Method* method) {
+MethodDataRecord* ciCacheProfiles::new_methodDataRecord(char* klass_name, char* method_name, char* signature) {
   //MethodDataRecord* rec = NEW_C_HEAP_OBJ(MethodDataRecord, mtCompiler);
   MethodDataRecord* rec = new MethodDataRecord();
-  ResourceMark rm;
-  char* klass_name =  method->method_holder()->name()->as_utf8();
-  char* method_name = method->name()->as_utf8();
-  char * signature = method->signature()->as_utf8();
+  //ResourceMark rm;
+  //char* klass_name =  method->method_holder()->name()->as_utf8();
+  //char* method_name = method->name()->as_utf8();
+  //char * signature = method->signature()->as_utf8();
   rec->setupMethodDataRecord(klass_name, method_name, signature);
   // if array has empty space
   if(_method_data_records_pos<_method_data_records_length) {
@@ -941,13 +966,13 @@ MethodDataRecord* ciCacheProfiles::find_methodDataRecord(Method* method) {
 }
 
 // Create and initialize a record for a ciCompile
-CompileRecord* ciCacheProfiles::new_compileRecord(Method* method) {
+CompileRecord* ciCacheProfiles::new_compileRecord(char* klass_name, char* method_name, char* signature) {
   //CompileRecord* rec = NEW_C_HEAP_OBJ(CompileRecord, mtCompiler);
   CompileRecord* rec = new CompileRecord();
-  ResourceMark rm;
-  char* klass_name =  method->method_holder()->name()->as_utf8();
-  char* method_name = method->name()->as_utf8();
-  char * signature = method->signature()->as_utf8();
+//  ResourceMark rm;
+//  char* klass_name =  method->method_holder()->name()->as_utf8();
+//  char* method_name = method->name()->as_utf8();
+//  char * signature = method->signature()->as_utf8();
   rec->setupCompileRecord(klass_name, method_name, signature);
   // if array has empty space
   if(_compile_records_pos<_compile_records_length) {
@@ -977,45 +1002,7 @@ CompileRecord* ciCacheProfiles::find_compileRecord(Method* method) {
   return NULL;
 }
 
- // Create and initialize a record for a ciInlineRecord
-InlineRecord* ciCacheProfiles::new_inlineRecord(Method* method, int bci, int depth) {
- InlineRecord* rec = NEW_RESOURCE_OBJ(InlineRecord);
- rec->_klass_name = method->method_holder()->name()->as_utf8();
- rec->_method_name = method->name()->as_utf8();
- rec->_signature = method->signature()->as_utf8();
- rec->_inline_bci = bci;
- rec->_inline_depth = depth;
- _inline_records->append(rec);
- return rec;
- }
 
- // Lookup inlining data for a ciMethod
-InlineRecord* ciCacheProfiles::find_inlineRecord(Method* method, int bci, int depth) {
- if (_inline_records != NULL) {
-   return find_inlineRecord(_inline_records, method, bci, depth);
- }
- return NULL;
-}
-
-InlineRecord* ciCacheProfiles::find_inlineRecord(GrowableArray<InlineRecord*>* records,
- Method* method, int bci, int depth) {
- if (records != NULL) {
-   const char* klass_name = method->method_holder()->name()->as_utf8();
-   const char* method_name = method->name()->as_utf8();
-   const char* signature = method->signature()->as_utf8();
-   for (int i = 0; i < records->length(); i++) {
-     InlineRecord* rec = records->at(i);
-     if ((rec->_inline_bci == bci) &&
-       (rec->_inline_depth == depth) &&
-       (strcmp(rec->_klass_name, klass_name) == 0) &&
-       (strcmp(rec->_method_name, method_name) == 0) &&
-       (strcmp(rec->_signature, signature) == 0)) {
-       return rec;
-     }
-   }
- }
- return NULL;
-}
 
 //void ciCacheProfiles::reset() {
 //  _error_message = NULL;

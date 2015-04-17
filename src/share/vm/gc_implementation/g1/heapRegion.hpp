@@ -27,7 +27,6 @@
 
 #include "gc_implementation/g1/g1AllocationContext.hpp"
 #include "gc_implementation/g1/g1BlockOffsetTable.hpp"
-#include "gc_implementation/g1/g1_specialized_oop_closures.hpp"
 #include "gc_implementation/g1/heapRegionType.hpp"
 #include "gc_implementation/g1/survRateGroup.hpp"
 #include "gc_implementation/shared/ageTable.hpp"
@@ -155,6 +154,9 @@ class G1OffsetTableContigSpace: public CompactibleSpace {
   void set_bottom(HeapWord* value);
   void set_end(HeapWord* value);
 
+  void mangle_unused_area() PRODUCT_RETURN;
+  void mangle_unused_area_complete() PRODUCT_RETURN;
+
   HeapWord* scan_top() const;
   void record_timestamp();
   void reset_gc_time_stamp() { _gc_time_stamp = 0; }
@@ -236,8 +238,6 @@ class HeapRegion: public G1OffsetTableContigSpace {
 
   // For a humongous region, region in which it starts.
   HeapRegion* _humongous_start_region;
-  // True iff the region is in current collection_set.
-  bool _in_collection_set;
 
   // True iff an attempt to evacuate an object in the region failed.
   bool _evacuation_failed;
@@ -487,13 +487,8 @@ class HeapRegion: public G1OffsetTableContigSpace {
     return _rem_set;
   }
 
-  // True iff the region is in current collection_set.
-  bool in_collection_set() const {
-    return _in_collection_set;
-  }
-  void set_in_collection_set(bool b) {
-    _in_collection_set = b;
-  }
+  bool in_collection_set() const;
+
   HeapRegion* next_in_collection_set() {
     assert(in_collection_set(), "should only invoke on member of CS.");
     assert(_next_in_special_set == NULL ||

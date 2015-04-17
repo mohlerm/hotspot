@@ -33,7 +33,7 @@
 class SubTasksDone;
 
 // A "GenCollectedHeap" is a SharedHeap that uses generational
-// collection.  It is represented with a sequence of Generation's.
+// collection.  It has two generations, young and old.
 class GenCollectedHeap : public SharedHeap {
   friend class GenCollectorPolicy;
   friend class Generation;
@@ -63,8 +63,9 @@ public:
 
  private:
   int _n_gens;
-  Generation* _gens[max_gens];
-  GenerationSpec** _gen_specs;
+
+  Generation* _young_gen;
+  Generation* _old_gen;
 
   // The singleton Gen Remembered Set.
   GenRemSet* _rem_set;
@@ -82,8 +83,12 @@ public:
 
   // Data structure for claiming the (potentially) parallel tasks in
   // (gen-specific) roots processing.
-  SubTasksDone* _gen_process_roots_tasks;
-  SubTasksDone* gen_process_roots_tasks() { return _gen_process_roots_tasks; }
+  SubTasksDone* _process_strong_tasks;
+
+  // Collects the given generation.
+  void collect_generation(Generation* gen, bool full, size_t size, bool is_tlab,
+                          bool run_verification, bool clear_soft_refs,
+                          bool restore_marks_for_biased_locking);
 
   // In block contents verification, the number of header words to skip
   NOT_PRODUCT(static size_t _skip_header_HeapWords;)
@@ -134,12 +139,16 @@ public:
   // Initialize ("weak") refs processing support
   virtual void ref_processing_init();
 
-  virtual CollectedHeap::Name kind() const {
+  virtual Name kind() const {
     return CollectedHeap::GenCollectedHeap;
   }
 
+  Generation* young_gen() const { return _young_gen; }
+  Generation* old_gen()   const { return _old_gen; }
+
   // The generational collector policy.
   GenCollectorPolicy* gen_policy() const { return _gen_policy; }
+
   virtual CollectorPolicy* collector_policy() const { return (CollectorPolicy*) gen_policy(); }
 
   // Adaptive size policy
@@ -206,7 +215,7 @@ public:
   bool is_in_young(oop p);
 
 #ifdef ASSERT
-  virtual bool is_in_partial_collection(const void* p);
+  bool is_in_partial_collection(const void* p);
 #endif
 
   virtual bool is_scavengable(const void* addr) {
@@ -309,20 +318,17 @@ public:
   // Update above counter, as appropriate, at the end of a concurrent GC cycle
   unsigned int update_full_collections_completed(unsigned int count);
 
-  // Update "time of last gc" for all constituent generations
-  // to "now".
+  // Update "time of last gc" for all generations to "now".
   void update_time_of_last_gc(jlong now) {
-    for (int i = 0; i < _n_gens; i++) {
-      _gens[i]->update_time_of_last_gc(now);
-    }
+    _young_gen->update_time_of_last_gc(now);
+    _old_gen->update_time_of_last_gc(now);
   }
 
   // Update the gc statistics for each generation.
   // "level" is the level of the latest collection.
   void update_gc_stats(int current_level, bool full) {
-    for (int i = 0; i < _n_gens; i++) {
-      _gens[i]->update_gc_stats(current_level, full);
-    }
+    _young_gen->update_gc_stats(current_level, full);
+    _old_gen->update_gc_stats(current_level, full);
   }
 
   // Override.
@@ -364,25 +370,6 @@ public:
   // collection.
   virtual bool is_maximal_no_gc() const;
 
-  // Return the generation before "gen".
-  Generation* prev_gen(Generation* gen) const {
-    int l = gen->level();
-    guarantee(l > 0, "Out of bounds");
-    return _gens[l-1];
-  }
-
-  // Return the generation after "gen".
-  Generation* next_gen(Generation* gen) const {
-    int l = gen->level() + 1;
-    guarantee(l < _n_gens, "Out of bounds");
-    return _gens[l];
-  }
-
-  Generation* get_gen(int i) const {
-    guarantee(i >= 0 && i < _n_gens, "Out of bounds");
-    return _gens[i];
-  }
-
   int n_gens() const {
     assert(_n_gens == gen_policy()->number_of_generations(), "Sanity");
     return _n_gens;
@@ -397,6 +384,7 @@ public:
   static GenCollectedHeap* heap();
 
   void set_par_threads(uint t);
+  void set_n_termination(uint t);
 
   // Invoke the "do_oop" method of one of the closures "not_older_gens"
   // or "older_gens" on root locations for the generation at
@@ -410,11 +398,25 @@ public:
   // The "so" argument determines which of the roots
   // the closure is applied to:
   // "SO_None" does none;
+  enum ScanningOption {
+    SO_None                =  0x0,
+    SO_AllCodeCache        =  0x8,
+    SO_ScavengeCodeCache   = 0x10
+  };
+
  private:
+  void process_roots(bool activate_scope,
+                     ScanningOption so,
+                     OopClosure* strong_roots,
+                     OopClosure* weak_roots,
+                     CLDClosure* strong_cld_closure,
+                     CLDClosure* weak_cld_closure,
+                     CodeBlobClosure* code_roots);
+
   void gen_process_roots(int level,
                          bool younger_gens_as_roots,
                          bool activate_scope,
-                         SharedHeap::ScanningOption so,
+                         ScanningOption so,
                          OopsInGenClosure* not_older_gens,
                          OopsInGenClosure* weak_roots,
                          OopsInGenClosure* older_gens,
@@ -429,7 +431,7 @@ public:
   void gen_process_roots(int level,
                          bool younger_gens_as_roots,
                          bool activate_scope,
-                         SharedHeap::ScanningOption so,
+                         ScanningOption so,
                          bool only_strong_roots,
                          OopsInGenClosure* not_older_gens,
                          OopsInGenClosure* older_gens,
@@ -475,7 +477,7 @@ public:
     assert(heap()->collector_policy()->is_generation_policy(),
            "the following definition may not be suitable for an n(>2)-generation system");
     return incremental_collection_failed() ||
-           (consult_young && !get_gen(0)->collection_attempt_is_safe());
+           (consult_young && !_young_gen->collection_attempt_is_safe());
   }
 
   // If a generation bails out of an incremental collection,

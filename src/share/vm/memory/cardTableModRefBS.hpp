@@ -37,7 +37,7 @@
 // the head of "o" is dirtied, not necessarily the card containing the
 // modified field itself.  For object arrays, however, the barrier *is*
 // precise; only the card containing the modified element is dirtied.
-// Any MemRegionClosures used to scan dirty cards should take these
+// Closures used to scan dirty cards should take these
 // considerations into account.
 
 class Generation;
@@ -176,16 +176,7 @@ class CardTableModRefBS: public ModRefBarrierSet {
 
   // Iterate over the portion of the card-table which covers the given
   // region mr in the given space and apply cl to any dirty sub-regions
-  // of mr. Dirty cards are _not_ cleared by the iterator method itself,
-  // but closures may arrange to do so on their own should they so wish.
-  void non_clean_card_iterate_serial(MemRegion mr, MemRegionClosure* cl);
-
-  // A variant of the above that will operate in a parallel mode if
-  // worker threads are available, and clear the dirty cards as it
-  // processes them.
-  // XXX ??? MemRegionClosure above vs OopsInGenClosure below XXX
-  // XXX some new_dcto_cl's take OopClosure's, plus as above there are
-  // some MemRegionClosures. Clean this up everywhere. XXX
+  // of mr. Clears the dirty cards as they are processed.
   void non_clean_card_iterate_possibly_parallel(Space* sp, MemRegion mr,
                                                 OopsInGenClosure* cl, CardTableRS* ct);
 
@@ -279,11 +270,6 @@ public:
   static int precleaned_card_val() { return precleaned_card; }
   static int deferred_card_val()   { return deferred_card; }
 
-  // For RTTI simulation.
-  bool is_a(BarrierSet::Name bsn) {
-    return bsn == BarrierSet::CardTableModRef || ModRefBarrierSet::is_a(bsn);
-  }
-
   virtual void initialize();
 
   // *** Barrier set functions.
@@ -292,7 +278,7 @@ public:
 
 protected:
 
-  CardTableModRefBS(MemRegion whole_heap, BarrierSet::Name kind);
+  CardTableModRefBS(MemRegion whole_heap, const BarrierSet::FakeRtti& fake_rtti);
   ~CardTableModRefBS();
 
   // Record a reference update. Note that these versions are precise!
@@ -384,24 +370,6 @@ public:
 
   // *** Card-table-RemSet-specific things.
 
-  // Invoke "cl.do_MemRegion" on a set of MemRegions that collectively
-  // includes all the modified cards (expressing each card as a
-  // MemRegion).  Thus, several modified cards may be lumped into one
-  // region.  The regions are non-overlapping, and are visited in
-  // *decreasing* address order.  (This order aids with imprecise card
-  // marking, where a dirty card may cause scanning, and summarization
-  // marking, of objects that extend onto subsequent cards.)
-  void mod_card_iterate(MemRegionClosure* cl) {
-    non_clean_card_iterate_serial(_whole_heap, cl);
-  }
-
-  // Like the "mod_cards_iterate" above, except only invokes the closure
-  // for cards within the MemRegion "mr" (which is required to be
-  // card-aligned and sized.)
-  void mod_card_iterate(MemRegion mr, MemRegionClosure* cl) {
-    non_clean_card_iterate_serial(mr, cl);
-  }
-
   static uintx ct_max_alignment_constraint();
 
   // Apply closure "cl" to the dirty cards containing some part of
@@ -462,6 +430,11 @@ public:
   void verify_dirty_region(MemRegion mr) PRODUCT_RETURN;
 };
 
+template<>
+struct BarrierSet::GetName<CardTableModRefBS> {
+  static const BarrierSet::Name value = BarrierSet::CardTableModRef;
+};
+
 class CardTableRS;
 
 // A specialization for the CardTableRS gen rem set.
@@ -472,9 +445,23 @@ protected:
   bool card_may_have_been_dirty(jbyte cv);
 public:
   CardTableModRefBSForCTRS(MemRegion whole_heap) :
-    CardTableModRefBS(whole_heap, BarrierSet::CardTableModRef) {}
+    CardTableModRefBS(
+      whole_heap,
+      // Concrete tag should be BarrierSet::CardTableForRS.
+      // That will presently break things in a bunch of places though.
+      // The concrete tag is used as a dispatch key in many places, and
+      // CardTableForRS does not correctly dispatch in some of those
+      // uses. This will be addressed as part of a reorganization of the
+      // BarrierSet hierarchy.
+      BarrierSet::FakeRtti(BarrierSet::CardTableModRef, 0).add_tag(BarrierSet::CardTableForRS))
+    {}
 
   void set_CTRS(CardTableRS* rs) { _rs = rs; }
+};
+
+template<>
+struct BarrierSet::GetName<CardTableModRefBSForCTRS> {
+  static const BarrierSet::Name value = BarrierSet::CardTableForRS;
 };
 
 

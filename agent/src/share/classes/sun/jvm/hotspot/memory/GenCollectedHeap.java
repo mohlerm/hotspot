@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2000, 2012, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2000, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -35,8 +35,11 @@ import sun.jvm.hotspot.utilities.*;
 
 public class GenCollectedHeap extends SharedHeap {
   private static CIntegerField nGensField;
-  private static long gensOffset;
-  private static AddressField genSpecsField;
+  private static AddressField youngGenField;
+  private static AddressField oldGenField;
+
+  private static AddressField youngGenSpecField;
+  private static AddressField oldGenSpecField;
 
   private static GenerationFactory genFactory;
 
@@ -52,10 +55,14 @@ public class GenCollectedHeap extends SharedHeap {
     Type type = db.lookupType("GenCollectedHeap");
 
     nGensField = type.getCIntegerField("_n_gens");
-    gensOffset = type.getField("_gens").getOffset();
-    genSpecsField = type.getAddressField("_gen_specs");
+    youngGenField = type.getAddressField("_young_gen");
+    oldGenField = type.getAddressField("_old_gen");
 
     genFactory = new GenerationFactory();
+
+    Type collectorPolicyType = db.lookupType("GenCollectorPolicy");
+    youngGenSpecField = collectorPolicyType.getAddressField("_young_gen_spec");
+    oldGenSpecField = collectorPolicyType.getAddressField("_old_gen_spec");
   }
 
   public GenCollectedHeap(Address addr) {
@@ -68,18 +75,19 @@ public class GenCollectedHeap extends SharedHeap {
 
   public Generation getGen(int i) {
     if (Assert.ASSERTS_ENABLED) {
-      Assert.that((i >= 0) && (i < nGens()), "Index " + i +
-                  " out of range (should be between 0 and " + nGens() + ")");
+      Assert.that((i == 0) || (i == 1), "Index " + i +
+                  " out of range (should be 0 or 1)");
     }
 
-    if ((i < 0) || (i >= nGens())) {
+    switch (i) {
+    case 0:
+      return genFactory.newObject(youngGenField.getValue(addr));
+    case 1:
+      return genFactory.newObject(oldGenField.getValue(addr));
+    default:
+      // no generation for i, and assertions disabled.
       return null;
     }
-
-    Address genAddr = addr.getAddressAt(gensOffset +
-                                        (i * VM.getVM().getAddressSize()));
-    return genFactory.newObject(addr.getAddressAt(gensOffset +
-                                                  (i * VM.getVM().getAddressSize())));
   }
 
   public boolean isIn(Address a) {
@@ -112,21 +120,23 @@ public class GenCollectedHeap extends SharedHeap {
   /** Package-private access to GenerationSpecs */
   GenerationSpec spec(int level) {
     if (Assert.ASSERTS_ENABLED) {
-      Assert.that((level >= 0) && (level < nGens()), "Index " + level +
-                  " out of range (should be between 0 and " + nGens() + ")");
+      Assert.that((level == 0) || (level == 1), "Index " + level +
+                  " out of range (should be 0 or 1)");
     }
 
-    if ((level < 0) || (level >= nGens())) {
+    if ((level != 0) && (level != 1)) {
       return null;
     }
 
-    Address ptrList = genSpecsField.getValue(addr);
-    if (ptrList == null) {
-      return null;
+    if (level == 0) {
+      return (GenerationSpec)
+              VMObjectFactory.newObject(GenerationSpec.class,
+                      youngGenSpecField.getAddress());
+    } else {
+      return (GenerationSpec)
+              VMObjectFactory.newObject(GenerationSpec.class,
+                      oldGenSpecField.getAddress());
     }
-    return (GenerationSpec)
-      VMObjectFactory.newObject(GenerationSpec.class,
-                                ptrList.getAddressAt(level * VM.getVM().getAddressSize()));
   }
 
   public CollectedHeapName kind() {

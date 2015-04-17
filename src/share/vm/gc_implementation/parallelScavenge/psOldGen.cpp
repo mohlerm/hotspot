@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2001, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -32,8 +32,6 @@
 #include "memory/gcLocker.inline.hpp"
 #include "oops/oop.inline.hpp"
 #include "runtime/java.hpp"
-
-PRAGMA_FORMAT_MUTE_WARNINGS_FOR_GCC
 
 inline const char* PSOldGen::select_name() {
   return UseParallelOldGC ? "ParOldGen" : "PSOldGen";
@@ -111,8 +109,8 @@ void PSOldGen::initialize_work(const char* perf_data_name, int level) {
 
   Universe::heap()->barrier_set()->resize_covered_region(cmr);
 
-  CardTableModRefBS* _ct = (CardTableModRefBS*)Universe::heap()->barrier_set();
-  assert (_ct->kind() == BarrierSet::CardTableModRef, "Sanity");
+  CardTableModRefBS* _ct =
+    barrier_set_cast<CardTableModRefBS>(Universe::heap()->barrier_set());
 
   // Verify that the start and end of this generation is the start of a card.
   // If this wasn't true, a single card could span more than one generation,
@@ -440,9 +438,9 @@ void PSOldGen::print_on(outputStream* st) const {
                 capacity_in_bytes()/K, used_in_bytes()/K);
   }
   st->print_cr(" [" INTPTR_FORMAT ", " INTPTR_FORMAT ", " INTPTR_FORMAT ")",
-                virtual_space()->low_boundary(),
-                virtual_space()->high(),
-                virtual_space()->high_boundary());
+                p2i(virtual_space()->low_boundary()),
+                p2i(virtual_space()->high()),
+                p2i(virtual_space()->high_boundary()));
 
   st->print("  object"); object_space()->print_on(st);
 }

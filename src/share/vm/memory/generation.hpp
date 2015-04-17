@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -139,7 +139,7 @@ class Generation: public CHeapObj<mtGC> {
     // GenGrain.
     // Note: on ARM we add 1 bit for card_table_base to be properly aligned
     // (we expect its low byte to be zero - see implementation of post_barrier)
-    LogOfGenGrain = 16 ARM_ONLY(+1),
+    LogOfGenGrain = 16 ARM32_ONLY(+1),
     GenGrain = 1 << LogOfGenGrain
   };
 
@@ -399,7 +399,7 @@ class Generation: public CHeapObj<mtGC> {
     // have to guard against non-monotonicity.
     NOT_PRODUCT(
       if (now < _time_of_last_gc) {
-        warning("time warp: "INT64_FORMAT" to "INT64_FORMAT, (int64_t)_time_of_last_gc, (int64_t)now);
+        warning("time warp: " JLONG_FORMAT " to " JLONG_FORMAT, _time_of_last_gc, now);
       }
     )
     return _time_of_last_gc;

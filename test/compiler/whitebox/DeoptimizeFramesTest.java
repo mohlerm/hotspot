@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,17 +25,20 @@
  * @test DeoptimizeFramesTest
  * @bug 8028595
  * @library /testlibrary /../../test/lib
+ * @modules java.management
  * @build DeoptimizeFramesTest
  * @run main ClassFileInstaller sun.hotspot.WhiteBox
  *                              sun.hotspot.WhiteBox$WhiteBoxPermission
  * @run main/othervm -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions
  *                   -XX:+WhiteBoxAPI -Xmixed
  *                   -XX:CompileCommand=compileonly,DeoptimizeFramesTest$TestCaseImpl::method
- *                   -XX:-DeoptimizeRandom -XX:-DeoptimizeALot DeoptimizeFramesTest true
+ *                   -XX:+IgnoreUnrecognizedVMOptions -XX:-DeoptimizeRandom -XX:-DeoptimizeALot
+ *                   DeoptimizeFramesTest true
  * @run main/othervm -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions
  *                   -XX:+WhiteBoxAPI -Xmixed
  *                   -XX:CompileCommand=compileonly,DeoptimizeFramesTest$TestCaseImpl::method
- *                   -XX:-DeoptimizeRandom -XX:-DeoptimizeALot DeoptimizeFramesTest false
+ *                   -XX:+IgnoreUnrecognizedVMOptions -XX:-DeoptimizeRandom -XX:-DeoptimizeALot
+ *                   DeoptimizeFramesTest false
  * @summary testing of WB::deoptimizeFrames()
  */
 import java.lang.reflect.Executable;

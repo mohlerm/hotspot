@@ -295,6 +295,12 @@ WB_ENTRY(jboolean, WB_G1IsHumongous(JNIEnv* env, jobject o, jobject obj))
   return hr->is_humongous();
 WB_END
 
+WB_ENTRY(jlong, WB_G1NumMaxRegions(JNIEnv* env, jobject o))
+  G1CollectedHeap* g1 = G1CollectedHeap::heap();
+  size_t nr = g1->max_regions();
+  return (jlong)nr;
+WB_END
+
 WB_ENTRY(jlong, WB_G1NumFreeRegions(JNIEnv* env, jobject o))
   G1CollectedHeap* g1 = G1CollectedHeap::heap();
   size_t nr = g1->num_free_regions();
@@ -317,6 +323,14 @@ WB_END
 
 WB_ENTRY(jint, WB_G1RegionSize(JNIEnv* env, jobject o))
   return (jint)HeapRegion::GrainBytes;
+WB_END
+
+WB_ENTRY(jobject, WB_G1AuxiliaryMemoryUsage(JNIEnv* env))
+  ResourceMark rm(THREAD);
+  G1CollectedHeap* g1h = G1CollectedHeap::heap();
+  MemoryUsage usage = g1h->get_auxiliary_data_memory_usage();
+  Handle h = MemoryService::create_MemoryUsage_obj(usage, CHECK_NULL);
+  return JNIHandles::make_local(env, h());
 WB_END
 #endif // INCLUDE_ALL_GCS
 
@@ -362,10 +376,6 @@ WB_END
 
 WB_ENTRY(void, WB_NMTReleaseMemory(JNIEnv* env, jobject o, jlong addr, jlong size))
   os::release_memory((char *)(uintptr_t)addr, size);
-WB_END
-
-WB_ENTRY(jboolean, WB_NMTIsDetailSupported(JNIEnv* env))
-  return MemTracker::tracking_level() == NMT_detail;
 WB_END
 
 WB_ENTRY(jboolean, WB_NMTChangeTrackingLevel(JNIEnv* env))
@@ -809,46 +819,9 @@ WB_ENTRY(void, WB_UnlockCompilation(JNIEnv* env, jobject o))
   mo.notify_all();
 WB_END
 
-void WhiteBox::sweeper_thread_entry(JavaThread* thread, TRAPS) {
-  guarantee(WhiteBoxAPI, "internal testing API :: WhiteBox has to be enabled");
-  {
-    MutexLockerEx mu(CodeCache_lock, Mutex::_no_safepoint_check_flag);
-    NMethodSweeper::_should_sweep = true;
-  }
-  NMethodSweeper::possibly_sweep();
-}
-
-JavaThread* WhiteBox::create_sweeper_thread(TRAPS) {
-  // create sweeper thread w/ custom entry -- one iteration instead of loop
-  CodeCacheSweeperThread* sweeper_thread = new CodeCacheSweeperThread();
-  sweeper_thread->set_entry_point(&WhiteBox::sweeper_thread_entry);
-
-  // create j.l.Thread object and associate it w/ sweeper thread
-  {
-    // inherit deamon property from current thread
-    bool is_daemon = java_lang_Thread::is_daemon(JavaThread::current()->threadObj());
-
-    HandleMark hm(THREAD);
-    Handle thread_group(THREAD, Universe::system_thread_group());
-    const char* name = "WB Sweeper thread";
-    sweeper_thread->allocate_threadObj(thread_group, name, is_daemon, THREAD);
-  }
-
-  {
-    MutexLocker mu(Threads_lock, THREAD);
-    Threads::add(sweeper_thread);
-  }
-  return sweeper_thread;
-}
-
-WB_ENTRY(jobject, WB_ForceNMethodSweep(JNIEnv* env, jobject o))
-  JavaThread* sweeper_thread = WhiteBox::create_sweeper_thread(Thread::current());
-  if (sweeper_thread == NULL) {
-    return NULL;
-  }
-  jobject result = JNIHandles::make_local(env, sweeper_thread->threadObj());
-  Thread::start(sweeper_thread);
-  return result;
+WB_ENTRY(void, WB_ForceNMethodSweep(JNIEnv* env, jobject o))
+  // Force a code cache sweep and block until it finished
+  NMethodSweeper::force_sweep();
 WB_END
 
 WB_ENTRY(jboolean, WB_IsInStringTable(JNIEnv* env, jobject o, jstring javaString))
@@ -1133,6 +1106,75 @@ WB_ENTRY(void, WB_ForceSafepoint(JNIEnv* env, jobject wb))
   VMThread::execute(&force_safepoint_op);
 WB_END
 
+template <typename T>
+static bool GetMethodOption(JavaThread* thread, JNIEnv* env, jobject method, jstring name, T* value) {
+  assert(value != NULL, "sanity");
+  if (method == NULL || name == NULL) {
+    return false;
+  }
+  jmethodID jmid = reflected_method_to_jmid(thread, env, method);
+  CHECK_JNI_EXCEPTION_(env, false);
+  methodHandle mh(thread, Method::checked_resolve_jmethod_id(jmid));
+  // can't be in VM when we call JNI
+  ThreadToNativeFromVM ttnfv(thread);
+  const char* flag_name = env->GetStringUTFChars(name, NULL);
+  bool result =  CompilerOracle::has_option_value(mh, flag_name, *value);
+  env->ReleaseStringUTFChars(name, flag_name);
+  return result;
+}
+
+WB_ENTRY(jobject, WB_GetMethodBooleaneOption(JNIEnv* env, jobject wb, jobject method, jstring name))
+  bool result;
+  if (GetMethodOption<bool> (thread, env, method, name, &result)) {
+    // can't be in VM when we call JNI
+    ThreadToNativeFromVM ttnfv(thread);
+    return booleanBox(thread, env, result);
+  }
+  return NULL;
+WB_END
+
+WB_ENTRY(jobject, WB_GetMethodIntxOption(JNIEnv* env, jobject wb, jobject method, jstring name))
+  intx result;
+  if (GetMethodOption <intx> (thread, env, method, name, &result)) {
+    // can't be in VM when we call JNI
+    ThreadToNativeFromVM ttnfv(thread);
+    return longBox(thread, env, result);
+  }
+  return NULL;
+WB_END
+
+WB_ENTRY(jobject, WB_GetMethodUintxOption(JNIEnv* env, jobject wb, jobject method, jstring name))
+  uintx result;
+  if (GetMethodOption <uintx> (thread, env, method, name, &result)) {
+    // can't be in VM when we call JNI
+    ThreadToNativeFromVM ttnfv(thread);
+    return longBox(thread, env, result);
+  }
+  return NULL;
+WB_END
+
+WB_ENTRY(jobject, WB_GetMethodDoubleOption(JNIEnv* env, jobject wb, jobject method, jstring name))
+  double result;
+  if (GetMethodOption <double> (thread, env, method, name, &result)) {
+    // can't be in VM when we call JNI
+    ThreadToNativeFromVM ttnfv(thread);
+    return doubleBox(thread, env, result);
+  }
+  return NULL;
+WB_END
+
+WB_ENTRY(jobject, WB_GetMethodStringOption(JNIEnv* env, jobject wb, jobject method, jstring name))
+  ccstr ccstrResult;
+  if (GetMethodOption <ccstr> (thread, env, method, name, &ccstrResult)) {
+    // can't be in VM when we call JNI
+    ThreadToNativeFromVM ttnfv(thread);
+    jstring result = env->NewStringUTF(ccstrResult);
+    CHECK_JNI_EXCEPTION_(env, NULL);
+    return result;
+  }
+  return NULL;
+WB_END
+
 //Some convenience methods to deal with objects from java
 int WhiteBox::offset_for_field(const char* field_name, oop object,
     Symbol* signature_symbol) {
@@ -1240,9 +1282,12 @@ static JNINativeMethod methods[] = {
 #if INCLUDE_ALL_GCS
   {CC"g1InConcurrentMark", CC"()Z",                   (void*)&WB_G1InConcurrentMark},
   {CC"g1IsHumongous",      CC"(Ljava/lang/Object;)Z", (void*)&WB_G1IsHumongous     },
+  {CC"g1NumMaxRegions",    CC"()J",                   (void*)&WB_G1NumMaxRegions  },
   {CC"g1NumFreeRegions",   CC"()J",                   (void*)&WB_G1NumFreeRegions  },
   {CC"g1RegionSize",       CC"()I",                   (void*)&WB_G1RegionSize      },
   {CC"g1StartConcMarkCycle",       CC"()Z",           (void*)&WB_G1StartMarkCycle  },
+  {CC"g1AuxiliaryMemoryUsage", CC"()Ljava/lang/management/MemoryUsage;",
+                                                      (void*)&WB_G1AuxiliaryMemoryUsage  },
 #endif // INCLUDE_ALL_GCS
 #if INCLUDE_NMT
   {CC"NMTMalloc",           CC"(J)J",                 (void*)&WB_NMTMalloc          },
@@ -1252,7 +1297,6 @@ static JNINativeMethod methods[] = {
   {CC"NMTCommitMemory",     CC"(JJ)V",                (void*)&WB_NMTCommitMemory    },
   {CC"NMTUncommitMemory",   CC"(JJ)V",                (void*)&WB_NMTUncommitMemory  },
   {CC"NMTReleaseMemory",    CC"(JJ)V",                (void*)&WB_NMTReleaseMemory   },
-  {CC"NMTIsDetailSupported",CC"()Z",                  (void*)&WB_NMTIsDetailSupported},
   {CC"NMTChangeTrackingLevel", CC"()Z",               (void*)&WB_NMTChangeTrackingLevel},
   {CC"NMTGetHashSize",      CC"()I",                  (void*)&WB_NMTGetHashSize     },
 #endif // INCLUDE_NMT
@@ -1321,7 +1365,7 @@ static JNINativeMethod methods[] = {
   {CC"getCPUFeatures",     CC"()Ljava/lang/String;",  (void*)&WB_GetCPUFeatures     },
   {CC"getNMethod",         CC"(Ljava/lang/reflect/Executable;Z)[Ljava/lang/Object;",
                                                       (void*)&WB_GetNMethod         },
-  {CC"forceNMethodSweep0", CC"()Ljava/lang/Thread;",  (void*)&WB_ForceNMethodSweep  },
+  {CC"forceNMethodSweep",  CC"()V",                   (void*)&WB_ForceNMethodSweep  },
   {CC"allocateCodeBlob",   CC"(II)J",                 (void*)&WB_AllocateCodeBlob   },
   {CC"freeCodeBlob",       CC"(J)V",                  (void*)&WB_FreeCodeBlob       },
   {CC"getCodeHeapEntries", CC"(I)[Ljava/lang/Object;",(void*)&WB_GetCodeHeapEntries },
@@ -1333,6 +1377,21 @@ static JNINativeMethod methods[] = {
   {CC"assertMatchingSafepointCalls", CC"(ZZ)V",       (void*)&WB_AssertMatchingSafepointCalls },
   {CC"isMonitorInflated",  CC"(Ljava/lang/Object;)Z", (void*)&WB_IsMonitorInflated  },
   {CC"forceSafepoint",     CC"()V",                   (void*)&WB_ForceSafepoint     },
+  {CC"getMethodBooleanOption",
+      CC"(Ljava/lang/reflect/Executable;Ljava/lang/String;)Ljava/lang/Boolean;",
+                                                      (void*)&WB_GetMethodBooleaneOption},
+  {CC"getMethodIntxOption",
+      CC"(Ljava/lang/reflect/Executable;Ljava/lang/String;)Ljava/lang/Long;",
+                                                      (void*)&WB_GetMethodIntxOption},
+  {CC"getMethodUintxOption",
+      CC"(Ljava/lang/reflect/Executable;Ljava/lang/String;)Ljava/lang/Long;",
+                                                      (void*)&WB_GetMethodUintxOption},
+  {CC"getMethodDoubleOption",
+      CC"(Ljava/lang/reflect/Executable;Ljava/lang/String;)Ljava/lang/Double;",
+                                                      (void*)&WB_GetMethodDoubleOption},
+  {CC"getMethodStringOption",
+      CC"(Ljava/lang/reflect/Executable;Ljava/lang/String;)Ljava/lang/String;",
+                                                      (void*)&WB_GetMethodStringOption},
 };
 
 #undef CC

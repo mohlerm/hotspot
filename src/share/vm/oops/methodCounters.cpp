@@ -72,4 +72,3 @@ void MethodCounters::set_highest_osr_comp_level(int level) {
   _highest_osr_comp_level = level;
 #endif
 }
-

@@ -46,7 +46,6 @@
 #include "compiler/oopMap.hpp"
 #include "compiler/compileBroker.hpp"
 #include "gc_implementation/shared/immutableSpace.hpp"
-#include "gc_implementation/shared/markSweep.hpp"
 #include "gc_implementation/shared/mutableSpace.hpp"
 #include "gc_interface/collectedHeap.hpp"
 #include "interpreter/bytecodeInterpreter.hpp"
@@ -123,6 +122,9 @@
 #ifdef TARGET_ARCH_ppc
 # include "vmStructs_ppc.hpp"
 #endif
+#ifdef TARGET_ARCH_aarch64
+# include "vmStructs_aarch64.hpp"
+#endif
 #ifdef TARGET_OS_ARCH_linux_x86
 # include "vmStructs_linux_x86.hpp"
 #endif
@@ -146,6 +148,9 @@
 #endif
 #ifdef TARGET_OS_ARCH_linux_ppc
 # include "vmStructs_linux_ppc.hpp"
+#endif
+#ifdef TARGET_OS_ARCH_linux_aarch64
+# include "vmStructs_linux_aarch64.hpp"
 #endif
 #ifdef TARGET_OS_ARCH_aix_ppc
 # include "vmStructs_aix_ppc.hpp"
@@ -482,7 +487,6 @@ typedef CompactHashtable<Symbol*, char>       SymbolCompactHashTable;
                                                                                                                                      \
   unchecked_nonstatic_field(ageTable,          sizes,                                         sizeof(ageTable::sizes))               \
                                                                                                                                      \
-  nonstatic_field(BarrierSet,                  _kind,                                         BarrierSet::Name)                      \
   nonstatic_field(BlockOffsetTable,            _bottom,                                       HeapWord*)                             \
   nonstatic_field(BlockOffsetTable,            _end,                                          HeapWord*)                             \
                                                                                                                                      \
@@ -523,16 +527,16 @@ typedef CompactHashtable<Symbol*, char>       SymbolCompactHashTable;
   nonstatic_field(CollectedHeap,               _defer_initial_card_mark,                      bool)                                  \
   nonstatic_field(CollectedHeap,               _is_gc_active,                                 bool)                                  \
   nonstatic_field(CollectedHeap,               _total_collections,                            unsigned int)                          \
+                                                                                                                                     \
   nonstatic_field(CompactibleSpace,            _compaction_top,                               HeapWord*)                             \
   nonstatic_field(CompactibleSpace,            _first_dead,                                   HeapWord*)                             \
   nonstatic_field(CompactibleSpace,            _end_of_live,                                  HeapWord*)                             \
-                                                                                                                                     \
                                                                                                                                      \
   nonstatic_field(ContiguousSpace,             _top,                                          HeapWord*)                             \
   nonstatic_field(ContiguousSpace,             _concurrent_iteration_safe_limit,              HeapWord*)                             \
   nonstatic_field(ContiguousSpace,             _saved_mark_word,                              HeapWord*)                             \
                                                                                                                                      \
-  nonstatic_field(DefNewGeneration,            _next_gen,                                     Generation*)                           \
+  nonstatic_field(DefNewGeneration,            _old_gen,                                      Generation*)                           \
   nonstatic_field(DefNewGeneration,            _tenuring_threshold,                           uint)                                  \
   nonstatic_field(DefNewGeneration,            _age_table,                                    ageTable)                              \
   nonstatic_field(DefNewGeneration,            _eden_space,                                   ContiguousSpace*)                      \
@@ -552,9 +556,12 @@ typedef CompactHashtable<Symbol*, char>       SymbolCompactHashTable;
   nonstatic_field(GenerationSpec,              _max_size,                                     size_t)                                \
                                                                                                                                      \
     static_field(GenCollectedHeap,             _gch,                                          GenCollectedHeap*)                     \
+  nonstatic_field(GenCollectedHeap,            _young_gen,                                    Generation*)                           \
+  nonstatic_field(GenCollectedHeap,            _old_gen,                                      Generation*)                           \
  nonstatic_field(GenCollectedHeap,             _n_gens,                                       int)                                   \
- unchecked_nonstatic_field(GenCollectedHeap,   _gens,                                         sizeof(GenCollectedHeap::_gens)) /* NOTE: no type */ \
-  nonstatic_field(GenCollectedHeap,            _gen_specs,                                    GenerationSpec**)                      \
+                                                                                                                                     \
+  nonstatic_field(GenCollectorPolicy,          _young_gen_spec,                               GenerationSpec*)                       \
+  nonstatic_field(GenCollectorPolicy,          _old_gen_spec,                                 GenerationSpec*)                       \
                                                                                                                                      \
   nonstatic_field(HeapWord,                    i,                                             char*)                                 \
                                                                                                                                      \
@@ -1500,6 +1507,7 @@ typedef CompactHashtable<Symbol*, char>       SymbolCompactHashTable;
            declare_type(DefNewGeneration,             Generation)         \
            declare_type(CardGeneration,               Generation)         \
            declare_type(TenuredGeneration,            CardGeneration)     \
+  declare_toplevel_type(GenCollectorPolicy)                               \
   declare_toplevel_type(Space)                                            \
   declare_toplevel_type(BitMap)                                           \
            declare_type(CompactibleSpace,             Space)              \
@@ -1977,13 +1985,18 @@ typedef CompactHashtable<Symbol*, char>       SymbolCompactHashTable;
   declare_c2_type(PowDNode, Node)                                         \
   declare_c2_type(ReverseBytesINode, Node)                                \
   declare_c2_type(ReverseBytesLNode, Node)                                \
+  declare_c2_type(ReductionNode, Node)                                    \
   declare_c2_type(VectorNode, Node)                                       \
   declare_c2_type(AddVBNode, VectorNode)                                  \
   declare_c2_type(AddVSNode, VectorNode)                                  \
   declare_c2_type(AddVINode, VectorNode)                                  \
+  declare_c2_type(AddReductionVINode, ReductionNode)                      \
   declare_c2_type(AddVLNode, VectorNode)                                  \
+  declare_c2_type(AddReductionVLNode, ReductionNode)                      \
   declare_c2_type(AddVFNode, VectorNode)                                  \
+  declare_c2_type(AddReductionVFNode, ReductionNode)                      \
   declare_c2_type(AddVDNode, VectorNode)                                  \
+  declare_c2_type(AddReductionVDNode, ReductionNode)                      \
   declare_c2_type(SubVBNode, VectorNode)                                  \
   declare_c2_type(SubVSNode, VectorNode)                                  \
   declare_c2_type(SubVINode, VectorNode)                                  \
@@ -1992,8 +2005,11 @@ typedef CompactHashtable<Symbol*, char>       SymbolCompactHashTable;
   declare_c2_type(SubVDNode, VectorNode)                                  \
   declare_c2_type(MulVSNode, VectorNode)                                  \
   declare_c2_type(MulVINode, VectorNode)                                  \
+  declare_c2_type(MulReductionVINode, ReductionNode)                      \
   declare_c2_type(MulVFNode, VectorNode)                                  \
+  declare_c2_type(MulReductionVFNode, ReductionNode)                      \
   declare_c2_type(MulVDNode, VectorNode)                                  \
+  declare_c2_type(MulReductionVDNode, ReductionNode)                      \
   declare_c2_type(DivVFNode, VectorNode)                                  \
   declare_c2_type(DivVDNode, VectorNode)                                  \
   declare_c2_type(LShiftVBNode, VectorNode)                               \
@@ -2245,9 +2261,9 @@ typedef CompactHashtable<Symbol*, char>       SymbolCompactHashTable;
                                                                           \
   declare_constant(CardTableRS::youngergen_card)                          \
                                                                           \
-  declare_constant(CollectedHeap::Abstract)                               \
-  declare_constant(CollectedHeap::SharedHeap)                             \
   declare_constant(CollectedHeap::GenCollectedHeap)                       \
+  declare_constant(CollectedHeap::ParallelScavengeHeap)                   \
+  declare_constant(CollectedHeap::G1CollectedHeap)                        \
                                                                           \
   declare_constant(GenCollectedHeap::max_gens)                            \
                                                                           \
@@ -2508,6 +2524,7 @@ typedef CompactHashtable<Symbol*, char>       SymbolCompactHashTable;
   declare_constant(Deoptimization::Reason_speculate_null_check)           \
   declare_constant(Deoptimization::Reason_rtm_state_change)               \
   declare_constant(Deoptimization::Reason_unstable_if)                    \
+  declare_constant(Deoptimization::Reason_unstable_fused_if)              \
   declare_constant(Deoptimization::Reason_tenured)                        \
   declare_constant(Deoptimization::Reason_LIMIT)                          \
   declare_constant(Deoptimization::Reason_RECORDED_LIMIT)                 \
@@ -2579,7 +2596,6 @@ typedef CompactHashtable<Symbol*, char>       SymbolCompactHashTable;
   /**********************/                                                \
   /* frame              */                                                \
   /**********************/                                                \
-  NOT_ZERO(PPC64_ONLY(declare_constant(frame::abi_minframe_size)))        \
   NOT_ZERO(PPC64_ONLY(declare_constant(frame::entry_frame_locals_size)))  \
                                                                           \
   NOT_ZERO(X86_ONLY(declare_constant(frame::entry_frame_call_wrapper_offset)))      \

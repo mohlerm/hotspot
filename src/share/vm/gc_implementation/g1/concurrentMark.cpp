@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2001, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -687,7 +687,7 @@ ConcurrentMark::ConcurrentMark(G1CollectedHeap* g1h, G1RegionToSpaceMapper* prev
   gclog_or_tty->print_cr("CL Sleep Factor          %1.4lf", cleanup_sleep_factor());
 #endif
 
-  _parallel_workers = new FlexibleWorkGang("G1 Parallel Marking Threads",
+  _parallel_workers = new FlexibleWorkGang("G1 Marker",
        _max_parallel_marking_threads, false, true);
   if (_parallel_workers == NULL) {
     vm_exit_during_initialization("Failed necessary allocation.");
@@ -696,32 +696,32 @@ ConcurrentMark::ConcurrentMark(G1CollectedHeap* g1h, G1RegionToSpaceMapper* prev
   }
 
   if (FLAG_IS_DEFAULT(MarkStackSize)) {
-    uintx mark_stack_size =
+    size_t mark_stack_size =
       MIN2(MarkStackSizeMax,
-          MAX2(MarkStackSize, (uintx) (parallel_marking_threads() * TASKQUEUE_SIZE)));
+          MAX2(MarkStackSize, (size_t) (parallel_marking_threads() * TASKQUEUE_SIZE)));
     // Verify that the calculated value for MarkStackSize is in range.
     // It would be nice to use the private utility routine from Arguments.
     if (!(mark_stack_size >= 1 && mark_stack_size <= MarkStackSizeMax)) {
-      warning("Invalid value calculated for MarkStackSize (" UINTX_FORMAT "): "
-              "must be between " UINTX_FORMAT " and " UINTX_FORMAT,
-              mark_stack_size, (uintx) 1, MarkStackSizeMax);
+      warning("Invalid value calculated for MarkStackSize (" SIZE_FORMAT "): "
+              "must be between 1 and " SIZE_FORMAT,
+              mark_stack_size, MarkStackSizeMax);
       return;
     }
-    FLAG_SET_ERGO(uintx, MarkStackSize, mark_stack_size);
+    FLAG_SET_ERGO(size_t, MarkStackSize, mark_stack_size);
   } else {
     // Verify MarkStackSize is in range.
     if (FLAG_IS_CMDLINE(MarkStackSize)) {
       if (FLAG_IS_DEFAULT(MarkStackSizeMax)) {
         if (!(MarkStackSize >= 1 && MarkStackSize <= MarkStackSizeMax)) {
-          warning("Invalid value specified for MarkStackSize (" UINTX_FORMAT "): "
-                  "must be between " UINTX_FORMAT " and " UINTX_FORMAT,
-                  MarkStackSize, (uintx) 1, MarkStackSizeMax);
+          warning("Invalid value specified for MarkStackSize (" SIZE_FORMAT "): "
+                  "must be between 1 and " SIZE_FORMAT,
+                  MarkStackSize, MarkStackSizeMax);
           return;
         }
       } else if (FLAG_IS_CMDLINE(MarkStackSizeMax)) {
         if (!(MarkStackSize >= 1 && MarkStackSize <= MarkStackSizeMax)) {
-          warning("Invalid value specified for MarkStackSize (" UINTX_FORMAT ")"
-                  " or for MarkStackSizeMax (" UINTX_FORMAT ")",
+          warning("Invalid value specified for MarkStackSize (" SIZE_FORMAT ")"
+                  " or for MarkStackSizeMax (" SIZE_FORMAT ")",
                   MarkStackSize, MarkStackSizeMax);
           return;
         }
@@ -745,7 +745,7 @@ ConcurrentMark::ConcurrentMark(G1CollectedHeap* g1h, G1RegionToSpaceMapper* prev
   // so that the assertion in MarkingTaskQueue::task_queue doesn't fail
   _active_tasks = _max_worker_id;
 
-  size_t max_regions = (size_t) _g1h->max_regions();
+  uint max_regions = _g1h->max_regions();
   for (uint i = 0; i < _max_worker_id; ++i) {
     CMTaskQueue* task_queue = new CMTaskQueue();
     task_queue->initialize();
@@ -1440,7 +1440,7 @@ public:
   CMCountDataClosureBase(G1CollectedHeap* g1h,
                          BitMap* region_bm, BitMap* card_bm):
     _g1h(g1h), _cm(g1h->concurrent_mark()),
-    _ct_bs((CardTableModRefBS*) (g1h->barrier_set())),
+    _ct_bs(barrier_set_cast<CardTableModRefBS>(g1h->barrier_set())),
     _region_bm(region_bm), _card_bm(card_bm) { }
 };
 
@@ -2088,10 +2088,7 @@ void ConcurrentMark::cleanup() {
   _cleanup_times.add((end - start) * 1000.0);
 
   if (G1Log::fine()) {
-    g1h->print_size_transition(gclog_or_tty,
-                               start_used_bytes,
-                               g1h->used(),
-                               g1h->capacity());
+    g1h->g1_policy()->print_heap_transition(start_used_bytes);
   }
 
   // Clean up will have freed any regions completely full of garbage.
@@ -2170,12 +2167,13 @@ void ConcurrentMark::completeCleanup() {
         g1h->secondary_free_list_add(&tmp_free_list);
         SecondaryFreeList_lock->notify_all();
       }
-
+#ifndef PRODUCT
       if (G1StressConcRegionFreeing) {
         for (uintx i = 0; i < G1StressConcRegionFreeingDelayMillis; ++i) {
           os::sleep(Thread::current(), (jlong) 1, false);
         }
       }
+#endif
     }
   }
   assert(tmp_free_list.is_empty(), "post-condition");
@@ -2532,11 +2530,6 @@ void ConcurrentMark::weakRefsWork(bool clear_all_soft_refs) {
     G1CMTraceTime trace("Unloading", G1Log::finer());
 
     if (ClassUnloadingWithConcurrentMark) {
-      // Cleaning of klasses depends on correct information from MetadataMarkOnStack. The CodeCache::mark_on_stack
-      // part is too slow to be done serially, so it is handled during the weakRefsWorkParallelPart phase.
-      // Defer the cleaning until we have complete on_stack data.
-      MetadataOnStackMark md_on_stack(false /* Don't visit the code cache at this point */);
-
       bool purged_classes;
 
       {
@@ -2547,11 +2540,6 @@ void ConcurrentMark::weakRefsWork(bool clear_all_soft_refs) {
       {
         G1CMTraceTime trace("Parallel Unloading", G1Log::finest());
         weakRefsWorkParallelPart(&g1_is_alive, purged_classes);
-      }
-
-      {
-        G1CMTraceTime trace("Deallocate Metadata", G1Log::finest());
-        ClassLoaderDataGraph::free_deallocate_lists();
       }
     }
 
@@ -2593,7 +2581,7 @@ class G1RemarkThreadsClosure : public ThreadClosure {
  public:
   G1RemarkThreadsClosure(G1CollectedHeap* g1h, CMTask* task) :
     _cm_obj(task), _cm_cl(g1h, g1h->concurrent_mark(), task), _code_cl(&_cm_cl, !CodeBlobToOopClosure::FixRelocations),
-    _thread_parity(SharedHeap::heap()->strong_roots_parity()) {}
+    _thread_parity(Threads::thread_claim_parity()) {}
 
   void do_thread(Thread* thread) {
     if (thread->is_Java_thread()) {
@@ -3111,7 +3099,7 @@ class AggregateCountDataHRClosure: public HeapRegionClosure {
                               BitMap* cm_card_bm,
                               uint max_worker_id) :
     _g1h(g1h), _cm(g1h->concurrent_mark()),
-    _ct_bs((CardTableModRefBS*) (g1h->barrier_set())),
+    _ct_bs(barrier_set_cast<CardTableModRefBS>(g1h->barrier_set())),
     _cm_card_bm(cm_card_bm), _max_worker_id(max_worker_id) { }
 
   bool doHeapRegion(HeapRegion* hr) {
@@ -3561,6 +3549,15 @@ void CMTask::reset(CMBitMap* nextMarkBitMap) {
   _termination_start_time_ms     = 0.0;
 
 #if _MARKING_STATS_
+  _aborted                       = 0;
+  _aborted_overflow              = 0;
+  _aborted_cm_aborted            = 0;
+  _aborted_yield                 = 0;
+  _aborted_timed_out             = 0;
+  _aborted_satb                  = 0;
+  _aborted_termination           = 0;
+  _steal_attempts                = 0;
+  _steals                        = 0;
   _local_pushes                  = 0;
   _local_pops                    = 0;
   _local_max_size                = 0;
@@ -3573,15 +3570,6 @@ void CMTask::reset(CMBitMap* nextMarkBitMap) {
   _regions_claimed               = 0;
   _objs_found_on_bitmap          = 0;
   _satb_buffers_processed        = 0;
-  _steal_attempts                = 0;
-  _steals                        = 0;
-  _aborted                       = 0;
-  _aborted_overflow              = 0;
-  _aborted_cm_aborted            = 0;
-  _aborted_yield                 = 0;
-  _aborted_timed_out             = 0;
-  _aborted_satb                  = 0;
-  _aborted_termination           = 0;
 #endif // _MARKING_STATS_
 }
 
@@ -3742,7 +3730,7 @@ void CMTask::move_entries_to_global_stack() {
         gclog_or_tty->print_cr("[%u] pushed %d entries to the global stack",
                                _worker_id, n);
       }
-      statsOnly( int tmp_size = _cm->mark_stack_size();
+      statsOnly( size_t tmp_size = _cm->mark_stack_size();
                  if (tmp_size > _global_max_size) {
                    _global_max_size = tmp_size;
                  }
@@ -3777,7 +3765,7 @@ void CMTask::get_entries_from_global_stack() {
       assert(success, "invariant");
     }
 
-    statsOnly( int tmp_size = _task_queue->size();
+    statsOnly( size_t tmp_size = (size_t)_task_queue->size();
                if (tmp_size > _local_max_size) {
                  _local_max_size = tmp_size;
                }
@@ -3934,24 +3922,24 @@ void CMTask::print_stats() {
   gclog_or_tty->print_cr("                         max = %1.2lfms, total = %1.2lfms",
                          _all_clock_intervals_ms.maximum(),
                          _all_clock_intervals_ms.sum());
-  gclog_or_tty->print_cr("  Clock Causes (cum): scanning = %d, marking = %d",
+  gclog_or_tty->print_cr("  Clock Causes (cum): scanning = " SIZE_FORMAT ", marking = " SIZE_FORMAT,
                          _clock_due_to_scanning, _clock_due_to_marking);
-  gclog_or_tty->print_cr("  Objects: scanned = %d, found on the bitmap = %d",
+  gclog_or_tty->print_cr("  Objects: scanned = " SIZE_FORMAT ", found on the bitmap = " SIZE_FORMAT,
                          _objs_scanned, _objs_found_on_bitmap);
-  gclog_or_tty->print_cr("  Local Queue:  pushes = %d, pops = %d, max size = %d",
+  gclog_or_tty->print_cr("  Local Queue:  pushes = " SIZE_FORMAT ", pops = " SIZE_FORMAT ", max size = " SIZE_FORMAT,
                          _local_pushes, _local_pops, _local_max_size);
-  gclog_or_tty->print_cr("  Global Stack: pushes = %d, pops = %d, max size = %d",
+  gclog_or_tty->print_cr("  Global Stack: pushes = " SIZE_FORMAT ", pops = " SIZE_FORMAT ", max size = " SIZE_FORMAT,
                          _global_pushes, _global_pops, _global_max_size);
-  gclog_or_tty->print_cr("                transfers to = %d, transfers from = %d",
+  gclog_or_tty->print_cr("                transfers to = " SIZE_FORMAT ", transfers from = " SIZE_FORMAT,
                          _global_transfers_to,_global_transfers_from);
-  gclog_or_tty->print_cr("  Regions: claimed = %d", _regions_claimed);
-  gclog_or_tty->print_cr("  SATB buffers: processed = %d", _satb_buffers_processed);
-  gclog_or_tty->print_cr("  Steals: attempts = %d, successes = %d",
+  gclog_or_tty->print_cr("  Regions: claimed = " SIZE_FORMAT, _regions_claimed);
+  gclog_or_tty->print_cr("  SATB buffers: processed = " SIZE_FORMAT, _satb_buffers_processed);
+  gclog_or_tty->print_cr("  Steals: attempts = " SIZE_FORMAT ", successes = " SIZE_FORMAT,
                          _steal_attempts, _steals);
-  gclog_or_tty->print_cr("  Aborted: %d, due to", _aborted);
-  gclog_or_tty->print_cr("    overflow: %d, global abort: %d, yield: %d",
+  gclog_or_tty->print_cr("  Aborted: " SIZE_FORMAT ", due to", _aborted);
+  gclog_or_tty->print_cr("    overflow: " SIZE_FORMAT ", global abort: " SIZE_FORMAT ", yield: " SIZE_FORMAT,
                          _aborted_overflow, _aborted_cm_aborted, _aborted_yield);
-  gclog_or_tty->print_cr("    time out: %d, SATB: %d, termination: %d",
+  gclog_or_tty->print_cr("    time out: " SIZE_FORMAT ", SATB: " SIZE_FORMAT ", termination: " SIZE_FORMAT,
                          _aborted_timed_out, _aborted_satb, _aborted_termination);
 #endif // _MARKING_STATS_
 }

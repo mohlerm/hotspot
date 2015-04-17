@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002, 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2002, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -56,7 +56,7 @@ inline void PSPromotionManager::claim_or_forward_internal_depth(T* p) {
 
 template <class T>
 inline void PSPromotionManager::claim_or_forward_depth(T* p) {
-  assert(PSScavenge::should_scavenge(p, true), "revisiting object?");
+  assert(should_scavenge(p, true), "revisiting object?");
   assert(Universe::heap()->kind() == CollectedHeap::ParallelScavengeHeap,
          "Sanity");
   assert(Universe::heap()->is_in(p), "pointer outside heap");
@@ -91,6 +91,9 @@ inline void PSPromotionManager::promotion_trace_event(oop new_obj, oop old_obj,
   }
 }
 
+inline void PSPromotionManager::push_contents(oop obj) {
+  obj->push_contents(this);
+}
 //
 // This method is pretty bulky. It would be nice to split it up
 // into smaller submethods, but we need to be careful not to hurt
@@ -98,7 +101,7 @@ inline void PSPromotionManager::promotion_trace_event(oop new_obj, oop old_obj,
 //
 template<bool promote_immediately>
 oop PSPromotionManager::copy_to_survivor_space(oop o) {
-  assert(PSScavenge::should_scavenge(&o), "Sanity");
+  assert(should_scavenge(&o), "Sanity");
 
   oop new_obj = NULL;
 
@@ -227,7 +230,7 @@ oop PSPromotionManager::copy_to_survivor_space(oop o) {
         TASKQUEUE_STATS_ONLY(++_arrays_chunked; ++_masked_pushes);
       } else {
         // we'll just push its contents
-        new_obj->push_contents(this);
+        push_contents(new_obj);
       }
     }  else {
       // We lost, someone else "owns" this object
@@ -257,7 +260,7 @@ oop PSPromotionManager::copy_to_survivor_space(oop o) {
   // information.
   if (TraceScavenge) {
     gclog_or_tty->print_cr("{%s %s " PTR_FORMAT " -> " PTR_FORMAT " (%d)}",
-       PSScavenge::should_scavenge(&new_obj) ? "copying" : "tenuring",
+       should_scavenge(&new_obj) ? "copying" : "tenuring",
        new_obj->klass()->internal_name(), p2i((void *)o), p2i((void *)new_obj), new_obj->size());
   }
 #endif
@@ -265,6 +268,40 @@ oop PSPromotionManager::copy_to_survivor_space(oop o) {
   return new_obj;
 }
 
+// Attempt to "claim" oop at p via CAS, push the new obj if successful
+// This version tests the oop* to make sure it is within the heap before
+// attempting marking.
+template <class T, bool promote_immediately>
+inline void PSPromotionManager::copy_and_push_safe_barrier(T* p) {
+  assert(should_scavenge(p, true), "revisiting object?");
+
+  oop o = oopDesc::load_decode_heap_oop_not_null(p);
+  oop new_obj = o->is_forwarded()
+        ? o->forwardee()
+        : copy_to_survivor_space<promote_immediately>(o);
+
+#ifndef PRODUCT
+  // This code must come after the CAS test, or it will print incorrect
+  // information.
+  if (TraceScavenge &&  o->is_forwarded()) {
+    gclog_or_tty->print_cr("{%s %s " PTR_FORMAT " -> " PTR_FORMAT " (%d)}",
+       "forwarding",
+       new_obj->klass()->internal_name(), p2i((void *)o), p2i((void *)new_obj), new_obj->size());
+  }
+#endif
+
+  oopDesc::encode_store_heap_oop_not_null(p, new_obj);
+
+  // We cannot mark without test, as some code passes us pointers
+  // that are outside the heap. These pointers are either from roots
+  // or from metadata.
+  if ((!PSScavenge::is_obj_in_young((HeapWord*)p)) &&
+      Universe::heap()->is_in_reserved(p)) {
+    if (PSScavenge::is_obj_in_young(new_obj)) {
+      PSScavenge::card_table()->inline_write_ref_field_gc(p, new_obj);
+    }
+  }
+}
 
 inline void PSPromotionManager::process_popped_location_depth(StarTask p) {
   if (is_oop_masked(p)) {
@@ -274,9 +311,9 @@ inline void PSPromotionManager::process_popped_location_depth(StarTask p) {
   } else {
     if (p.is_narrow()) {
       assert(UseCompressedOops, "Error");
-      PSScavenge::copy_and_push_safe_barrier<narrowOop, /*promote_immediately=*/false>(this, p);
+      copy_and_push_safe_barrier<narrowOop, /*promote_immediately=*/false>(p);
     } else {
-      PSScavenge::copy_and_push_safe_barrier<oop, /*promote_immediately=*/false>(this, p);
+      copy_and_push_safe_barrier<oop, /*promote_immediately=*/false>(p);
     }
   }
 }

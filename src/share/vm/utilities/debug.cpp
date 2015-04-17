@@ -30,7 +30,6 @@
 #include "code/vtableStubs.hpp"
 #include "compiler/compileBroker.hpp"
 #include "compiler/disassembler.hpp"
-#include "gc_implementation/shared/markSweep.hpp"
 #include "gc_interface/collectedHeap.hpp"
 #include "interpreter/bytecodeHistogram.hpp"
 #include "interpreter/interpreter.hpp"
@@ -274,7 +273,7 @@ void report_out_of_shared_space(SharedSpaceType shared_space) {
 }
 
 void report_insufficient_metaspace(size_t required_size) {
-  warning("\nThe MaxMetaspaceSize of " UINTX_FORMAT " bytes is not large enough.\n"
+  warning("\nThe MaxMetaspaceSize of " SIZE_FORMAT " bytes is not large enough.\n"
           "Either don't specify the -XX:MaxMetaspaceSize=<size>\n"
           "or increase the size to at least " SIZE_FORMAT ".\n",
           MaxMetaspaceSize, required_size);

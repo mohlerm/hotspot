@@ -56,6 +56,7 @@ class HRRSCleanupTask;
 class GenerationSpec;
 class OopsInHeapRegionClosure;
 class G1KlassScanClosure;
+class G1ParScanThreadState;
 class ObjectClosure;
 class SpaceClosure;
 class CompactibleSpaceClosure;
@@ -110,6 +111,7 @@ public:
   void         empty_list();
   bool         is_empty() { return _length == 0; }
   uint         length() { return _length; }
+  uint         eden_length() { return length() - survivor_length(); }
   uint         survivor_length() { return _survivor_length; }
 
   // Currently we do not keep track of the used byte sum for the
@@ -119,7 +121,7 @@ public:
   // we'll report the more accurate information then.
   size_t       eden_used_bytes() {
     assert(length() >= survivor_length(), "invariant");
-    return (size_t) (length() - survivor_length()) * HeapRegion::GrainBytes;
+    return (size_t) eden_length() * HeapRegion::GrainBytes;
   }
   size_t       survivor_used_bytes() {
     return (size_t) survivor_length() * HeapRegion::GrainBytes;
@@ -644,23 +646,21 @@ public:
   // is considered a candidate for eager reclamation.
   bool humongous_region_is_candidate(uint index);
   // Register the given region to be part of the collection set.
-  inline void register_humongous_region_with_in_cset_fast_test(uint index);
+  inline void register_humongous_region_with_cset(uint index);
   // Register regions with humongous objects (actually on the start region) in
   // the in_cset_fast_test table.
-  void register_humongous_regions_with_in_cset_fast_test();
+  void register_humongous_regions_with_cset();
   // We register a region with the fast "in collection set" test. We
   // simply set to true the array slot corresponding to this region.
-  void register_young_region_with_in_cset_fast_test(HeapRegion* r) {
+  void register_young_region_with_cset(HeapRegion* r) {
     _in_cset_fast_test.set_in_young(r->hrm_index());
   }
-  void register_old_region_with_in_cset_fast_test(HeapRegion* r) {
+  void register_old_region_with_cset(HeapRegion* r) {
     _in_cset_fast_test.set_in_old(r->hrm_index());
   }
-
-  // This is a fast test on whether a reference points into the
-  // collection set or not. Assume that the reference
-  // points into the heap.
-  inline bool in_cset_fast_test(oop obj);
+  void clear_in_cset(const HeapRegion* hr) {
+    _in_cset_fast_test.clear(hr);
+  }
 
   void clear_cset_fast_test() {
     _in_cset_fast_test.clear();
@@ -780,22 +780,6 @@ protected:
   // Abandon the current collection set without recording policy
   // statistics or updating free lists.
   void abandon_collection_set(HeapRegion* cs_head);
-
-  // Applies "scan_non_heap_roots" to roots outside the heap,
-  // "scan_rs" to roots inside the heap (having done "set_region" to
-  // indicate the region in which the root resides),
-  // and does "scan_metadata" If "scan_rs" is
-  // NULL, then this step is skipped.  The "worker_i"
-  // param is for use with parallel roots processing, and should be
-  // the "i" of the calling parallel worker thread's work(i) function.
-  // In the sequential case this param will be ignored.
-  void g1_process_roots(OopClosure* scan_non_heap_roots,
-                        OopClosure* scan_non_heap_weak_roots,
-                        G1ParPushHeapRSClosure* scan_rs,
-                        CLDClosure* scan_strong_clds,
-                        CLDClosure* scan_weak_clds,
-                        CodeBlobClosure* scan_strong_code,
-                        uint worker_i);
 
   // The concurrent marker (and the thread it runs in.)
   ConcurrentMark* _cm;
@@ -983,20 +967,9 @@ protected:
   // of G1CollectedHeap::_gc_time_stamp.
   uint* _worker_cset_start_region_time_stamp;
 
-  enum G1H_process_roots_tasks {
-    G1H_PS_filter_satb_buffers,
-    G1H_PS_refProcessor_oops_do,
-    // Leave this one last.
-    G1H_PS_NumElements
-  };
-
-  SubTasksDone* _process_strong_tasks;
-
   volatile bool _free_regions_coming;
 
 public:
-
-  SubTasksDone* process_strong_tasks() { return _process_strong_tasks; }
 
   void set_refine_cte_cl_concurrency(bool concurrent);
 
@@ -1030,22 +1003,12 @@ public:
   // Initialize weak reference processing.
   virtual void ref_processing_init();
 
-  void set_par_threads(uint t) {
-    SharedHeap::set_par_threads(t);
-    // Done in SharedHeap but oddly there are
-    // two _process_strong_tasks's in a G1CollectedHeap
-    // so do it here too.
-    _process_strong_tasks->set_n_threads(t);
-  }
-
+  // Explicitly import set_par_threads into this scope
+  using SharedHeap::set_par_threads;
   // Set _n_par_threads according to a policy TBD.
   void set_par_threads();
 
-  void set_n_termination(int t) {
-    _process_strong_tasks->set_n_threads(t);
-  }
-
-  virtual CollectedHeap::Name kind() const {
+  virtual Name kind() const {
     return CollectedHeap::G1CollectedHeap;
   }
 
@@ -1118,6 +1081,10 @@ public:
 
   // The number of regions that are completely free.
   uint num_free_regions() const { return _hrm.num_free_regions(); }
+
+  MemoryUsage get_auxiliary_data_memory_usage() const {
+    return _hrm.get_auxiliary_data_memory_usage();
+  }
 
   // The number of regions that are not completely free.
   uint num_used_regions() const { return num_regions() - num_free_regions(); }
@@ -1245,6 +1212,7 @@ public:
   // set. Slow implementation.
   inline bool obj_in_cs(oop obj);
 
+  inline bool is_in_cset(const HeapRegion *hr);
   inline bool is_in_cset(oop obj);
 
   inline bool is_in_cset_or_humongous(const oop obj);
@@ -1274,7 +1242,7 @@ public:
   virtual bool is_in_closed_subset(const void* p) const;
 
   G1SATBCardTableLoggingModRefBS* g1_barrier_set() {
-    return (G1SATBCardTableLoggingModRefBS*) barrier_set();
+    return barrier_set_cast<G1SATBCardTableLoggingModRefBS>(barrier_set());
   }
 
   // This resets the card table to all zeros.  It is used after
@@ -1410,10 +1378,6 @@ public:
   }
 
   inline bool is_in_young(const oop obj);
-
-#ifdef ASSERT
-  virtual bool is_in_partial_collection(const void* p);
-#endif
 
   virtual bool is_scavengable(const void* addr);
 

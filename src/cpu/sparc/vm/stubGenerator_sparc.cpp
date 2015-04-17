@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -957,7 +957,6 @@ class StubGenerator: public StubCodeGenerator {
   void gen_write_ref_array_pre_barrier(Register addr, Register count, bool dest_uninitialized) {
     BarrierSet* bs = Universe::heap()->barrier_set();
     switch (bs->kind()) {
-      case BarrierSet::G1SATBCT:
       case BarrierSet::G1SATBCTLogging:
         // With G1, don't generate the call if we statically know that the target in uninitialized
         if (!dest_uninitialized) {
@@ -1005,7 +1004,6 @@ class StubGenerator: public StubCodeGenerator {
     BarrierSet* bs = Universe::heap()->barrier_set();
 
     switch (bs->kind()) {
-      case BarrierSet::G1SATBCT:
       case BarrierSet::G1SATBCTLogging:
         {
           // Get some new fresh output registers.
@@ -1019,7 +1017,7 @@ class StubGenerator: public StubCodeGenerator {
       case BarrierSet::CardTableModRef:
       case BarrierSet::CardTableExtension:
         {
-          CardTableModRefBS* ct = (CardTableModRefBS*)bs;
+          CardTableModRefBS* ct = barrier_set_cast<CardTableModRefBS>(bs);
           assert(sizeof(*ct->byte_map_base) == sizeof(jbyte), "adjust this code");
           assert_different_registers(addr, count, tmp);
 

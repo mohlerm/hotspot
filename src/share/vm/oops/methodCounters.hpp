@@ -29,6 +29,7 @@
 #include "compiler/compilerOracle.hpp"
 #include "interpreter/invocationCounter.hpp"
 #include "runtime/arguments.hpp"
+//#include "ci/ciCacheProfiles.hpp"
 
 class MethodCounters: public MetaspaceObj {
  friend class VMStructs;
@@ -79,6 +80,8 @@ class MethodCounters: public MetaspaceObj {
 
     // Set per-method thresholds.
     double scale = 1.0;
+    // marcel: scale if method is cached
+    scale = scale_if_cached(mh, scale);
     CompilerOracle::has_option_value(mh, "CompileThresholdScaling", scale);
 
     int compile_threshold = Arguments::scaled_compile_threshold(CompileThreshold, scale);
@@ -141,6 +144,8 @@ class MethodCounters: public MetaspaceObj {
   float rate() const                             { return _rate; }
   void set_rate(float rate)                      { _rate = rate; }
 #endif
+
+  double scale_if_cached(methodHandle mh, double scale );
 
   int highest_comp_level() const;
   void set_highest_comp_level(int level);

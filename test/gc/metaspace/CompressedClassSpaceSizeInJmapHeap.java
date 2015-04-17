@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,6 +26,8 @@
  * @bug 8004924
  * @summary Checks that jmap -heap contains the flag CompressedClassSpaceSize
  * @library /testlibrary
+ * @modules java.base/sun.misc
+ *          java.management
  * @run main/othervm -XX:+IgnoreUnrecognizedVMOptions -XX:CompressedClassSpaceSize=50m CompressedClassSpaceSizeInJmapHeap
  */
 
@@ -36,6 +38,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 public class CompressedClassSpaceSizeInJmapHeap {
+    // Note that on some platforms it may require root privileges to run this test.
     public static void main(String[] args) throws Exception {
         if (!Platform.is64bit()) {
             // Compressed Class Space is only available on 64-bit JVMs

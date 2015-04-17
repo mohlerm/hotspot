@@ -27,6 +27,7 @@
 
 #include "classfile/classLoaderData.hpp"
 #include "memory/referenceType.hpp"
+#include "memory/specialized_oop_closures.hpp"
 #include "oops/annotations.hpp"
 #include "oops/constMethod.hpp"
 #include "oops/fieldInfo.hpp"
@@ -207,7 +208,8 @@ class InstanceKlass: public Klass {
     _misc_is_contended             = 1 << 4, // marked with contended annotation
     _misc_has_default_methods      = 1 << 5, // class/superclass/implemented interfaces has default methods
     _misc_declares_default_methods = 1 << 6, // directly declares default methods (any access)
-    _misc_has_been_redefined       = 1 << 7  // class has been redefined
+    _misc_has_been_redefined       = 1 << 7, // class has been redefined
+    _misc_is_scratch_class         = 1 << 8  // class is the redefined scratch class
   };
   u2              _misc_flags;
   u2              _minor_version;        // minor version number of class file
@@ -403,13 +405,17 @@ class InstanceKlass: public Klass {
   bool is_same_class_package(oop classloader2, Symbol* classname2);
   static bool is_same_class_package(oop class_loader1, Symbol* class_name1, oop class_loader2, Symbol* class_name2);
 
-  // find an enclosing class (defined where original code was, in jvm.cpp!)
+  // find an enclosing class
   Klass* compute_enclosing_class(bool* inner_is_member, TRAPS) {
     instanceKlassHandle self(THREAD, this);
     return compute_enclosing_class_impl(self, inner_is_member, THREAD);
   }
   static Klass* compute_enclosing_class_impl(instanceKlassHandle self,
-                                               bool* inner_is_member, TRAPS);
+                                             bool* inner_is_member, TRAPS);
+
+  // Find InnerClasses attribute for k and return outer_class_info_index & inner_name_index.
+  static bool find_inner_classes_attr(instanceKlassHandle k,
+                                      int* ooff, int* noff, TRAPS);
 
   // tell if two classes have the same enclosing class (at package level)
   bool is_same_package_member(Klass* class2, TRAPS) {
@@ -627,11 +633,23 @@ class InstanceKlass: public Klass {
     _misc_flags |= _misc_has_been_redefined;
   }
 
+  bool is_scratch_class() const {
+    return (_misc_flags & _misc_is_scratch_class) != 0;
+  }
+
+  void set_is_scratch_class() {
+    _misc_flags |= _misc_is_scratch_class;
+  }
+
   void init_previous_versions() {
     _previous_versions = NULL;
   }
 
+ private:
+  static int  _previous_version_count;
+ public:
   static void purge_previous_versions(InstanceKlass* ik);
+  static bool has_previous_versions() { return _previous_version_count > 0; }
 
   // JVMTI: Support for caching a class file before it is modified by an agent that can do retransformation
   void set_cached_class_file(JvmtiCachedClassFileData *data) {
@@ -938,8 +956,7 @@ class InstanceKlass: public Klass {
   Method* method_at_itable(Klass* holder, int index, TRAPS);
 
 #if INCLUDE_JVMTI
-  void adjust_default_methods(Method** old_methods, Method** new_methods,
-                              int methods_length, bool* trace_name_printed);
+  void adjust_default_methods(InstanceKlass* holder, bool* trace_name_printed);
 #endif // INCLUDE_JVMTI
 
   // Garbage collection

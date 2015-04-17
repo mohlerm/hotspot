@@ -1,6 +1,5 @@
-
 /*
- * Copyright (c) 2001, 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2001, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -54,8 +53,6 @@
 #include "services/memoryService.hpp"
 #include "utilities/events.hpp"
 #include "utilities/stack.inline.hpp"
-
-PRAGMA_FORMAT_MUTE_WARNINGS_FOR_GCC
 
 elapsedTimer        PSMarkSweep::_accumulated_time;
 jlong               PSMarkSweep::_time_of_last_gc   = 0;
@@ -233,15 +230,12 @@ bool PSMarkSweep::invoke_no_policy(bool clear_all_softrefs) {
                       young_gen->to_space()->is_empty();
     young_gen_empty = eden_empty && survivors_empty;
 
-    BarrierSet* bs = heap->barrier_set();
-    if (bs->is_a(BarrierSet::ModRef)) {
-      ModRefBarrierSet* modBS = (ModRefBarrierSet*)bs;
-      MemRegion old_mr = heap->old_gen()->reserved();
-      if (young_gen_empty) {
-        modBS->clear(MemRegion(old_mr.start(), old_mr.end()));
-      } else {
-        modBS->invalidate(MemRegion(old_mr.start(), old_mr.end()));
-      }
+    ModRefBarrierSet* modBS = barrier_set_cast<ModRefBarrierSet>(heap->barrier_set());
+    MemRegion old_mr = heap->old_gen()->reserved();
+    if (young_gen_empty) {
+      modBS->clear(MemRegion(old_mr.start(), old_mr.end()));
+    } else {
+      modBS->invalidate(MemRegion(old_mr.start(), old_mr.end()));
     }
 
     // Delete metaspaces for unloaded class loaders and clean up loader_data graph
@@ -674,7 +668,7 @@ jlong PSMarkSweep::millis_since_last_gc() {
   jlong ret_val = now - _time_of_last_gc;
   // XXX See note in genCollectedHeap::millis_since_last_gc().
   if (ret_val < 0) {
-    NOT_PRODUCT(warning("time warp: "INT64_FORMAT, ret_val);)
+    NOT_PRODUCT(warning("time warp: " JLONG_FORMAT, ret_val);)
     return 0;
   }
   return ret_val;

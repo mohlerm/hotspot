@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2001, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,10 +26,11 @@
 #include "gc_implementation/parallelScavenge/cardTableExtension.hpp"
 #include "gc_implementation/parallelScavenge/gcTaskManager.hpp"
 #include "gc_implementation/parallelScavenge/parallelScavengeHeap.hpp"
+#include "gc_implementation/parallelScavenge/psPromotionManager.inline.hpp"
+#include "gc_implementation/parallelScavenge/psScavenge.hpp"
 #include "gc_implementation/parallelScavenge/psTasks.hpp"
 #include "gc_implementation/parallelScavenge/psYoungGen.hpp"
 #include "oops/oop.inline.hpp"
-#include "oops/oop.psgc.inline.hpp"
 #include "runtime/prefetch.inline.hpp"
 
 // Checks an individual oop for missing precise marks. Mark
@@ -79,7 +80,7 @@ class CheckForUnmarkedObjects : public ObjectClosure {
     assert(heap->kind() == CollectedHeap::ParallelScavengeHeap, "Sanity");
 
     _young_gen = heap->young_gen();
-    _card_table = (CardTableExtension*)heap->barrier_set();
+    _card_table = barrier_set_cast<CardTableExtension>(heap->barrier_set());
     // No point in asserting barrier set type here. Need to make CardTableExtension
     // a unique barrier set type.
   }
@@ -289,7 +290,7 @@ void CardTableExtension::scavenge_contents_parallel(ObjectStartArray* start_arra
             Prefetch::write(p, interval);
             oop m = oop(p);
             assert(m->is_oop_or_null(), err_msg("Expected an oop or NULL for header field at " PTR_FORMAT, p2i(m)));
-            m->push_contents(pm);
+            pm->push_contents(m);
             p += m->size();
           }
           pm->drain_stacks_cond_depth();
@@ -297,7 +298,7 @@ void CardTableExtension::scavenge_contents_parallel(ObjectStartArray* start_arra
           while (p < to) {
             oop m = oop(p);
             assert(m->is_oop_or_null(), err_msg("Expected an oop or NULL for header field at " PTR_FORMAT, p2i(m)));
-            m->push_contents(pm);
+            pm->push_contents(m);
             p += m->size();
           }
           pm->drain_stacks_cond_depth();
@@ -339,7 +340,9 @@ void CardTableExtension::verify_all_young_refs_precise() {
 
   PSOldGen* old_gen = heap->old_gen();
 
-  CheckForPreciseMarks check(heap->young_gen(), (CardTableExtension*)heap->barrier_set());
+  CheckForPreciseMarks check(
+    heap->young_gen(),
+    barrier_set_cast<CardTableExtension>(heap->barrier_set()));
 
   old_gen->oop_iterate_no_header(&check);
 
@@ -347,8 +350,8 @@ void CardTableExtension::verify_all_young_refs_precise() {
 }
 
 void CardTableExtension::verify_all_young_refs_precise_helper(MemRegion mr) {
-  CardTableExtension* card_table = (CardTableExtension*)Universe::heap()->barrier_set();
-  // FIX ME ASSERT HERE
+  CardTableExtension* card_table =
+    barrier_set_cast<CardTableExtension>(Universe::heap()->barrier_set());
 
   jbyte* bot = card_table->byte_for(mr.start());
   jbyte* top = card_table->byte_for(mr.end());

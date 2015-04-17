@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,6 +25,8 @@
  * @test
  * @summary Verify correctnes of the random generator from Utility.java
  * @library /testlibrary
+ * @modules java.base/sun.misc
+ *          java.management
  * @run driver RandomGeneratorTest SAME_SEED
  * @run driver RandomGeneratorTest NO_SEED
  * @run driver RandomGeneratorTest DIFFERENT_SEED
@@ -58,7 +60,7 @@ public class RandomGeneratorTest {
         }
         jvmArgs.add(RandomRunner.class.getName());
         String[] cmdLineArgs = jvmArgs.toArray(new String[jvmArgs.size()]);
-        String etalon = ProcessTools.executeTestJvm(cmdLineArgs).getOutput().trim();
+        String etalon = ProcessTools.executeTestJvm(cmdLineArgs).getStdout().trim();
         seedOpt.verify(etalon, cmdLineArgs);
     }
 
@@ -122,7 +124,7 @@ public class RandomGeneratorTest {
             String lastLineOrig = getLastLine(orig);
             String lastLine;
             try {
-                lastLine = getLastLine(ProcessTools.executeTestJvm(cmdLine).getOutput().trim());
+                lastLine = getLastLine(ProcessTools.executeTestJvm(cmdLine).getStdout().trim());
             } catch (Throwable t) {
                 throw new Error("TESTBUG: Unexpedted exception during jvm execution.", t);
             }

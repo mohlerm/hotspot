@@ -39,8 +39,6 @@
 #include "runtime/atomic.inline.hpp"
 #include "runtime/orderAccess.inline.hpp"
 
-PRAGMA_FORMAT_MUTE_WARNINGS_FOR_GCC
-
 int    HeapRegion::LogOfHRGrainBytes = 0;
 int    HeapRegion::LogOfHRGrainWords = 0;
 size_t HeapRegion::GrainBytes        = 0;
@@ -106,18 +104,18 @@ size_t HeapRegion::max_region_size() {
 }
 
 void HeapRegion::setup_heap_region_size(size_t initial_heap_size, size_t max_heap_size) {
-  uintx region_size = G1HeapRegionSize;
+  size_t region_size = G1HeapRegionSize;
   if (FLAG_IS_DEFAULT(G1HeapRegionSize)) {
     size_t average_heap_size = (initial_heap_size + max_heap_size) / 2;
     region_size = MAX2(average_heap_size / HeapRegionBounds::target_number(),
-                       (uintx) HeapRegionBounds::min_size());
+                       HeapRegionBounds::min_size());
   }
 
   int region_size_log = log2_long((jlong) region_size);
   // Recalculate the region size to make sure it's a power of
   // 2. This means that region_size is the largest power of 2 that's
   // <= what we've calculated so far.
-  region_size = ((uintx)1 << region_size_log);
+  region_size = ((size_t)1 << region_size_log);
 
   // Now make sure that we don't go over or under our limits.
   if (region_size < HeapRegionBounds::min_size()) {
@@ -139,7 +137,7 @@ void HeapRegion::setup_heap_region_size(size_t initial_heap_size, size_t max_hea
   guarantee(GrainBytes == 0, "we should only set it once");
   // The cast to int is safe, given that we've bounded region_size by
   // MIN_REGION_SIZE and MAX_REGION_SIZE.
-  GrainBytes = (size_t)region_size;
+  GrainBytes = region_size;
 
   guarantee(GrainWords == 0, "we should only set it once");
   GrainWords = GrainBytes >> LogHeapWordSize;
@@ -162,7 +160,7 @@ void HeapRegion::hr_clear(bool par, bool clear_space, bool locked) {
          "we should have already filtered out humongous regions");
   assert(_end == orig_end(),
          "we should have already filtered out humongous regions");
-  assert(!_in_collection_set,
+  assert(!in_collection_set(),
          err_msg("Should not clear heap region %u in the collection set", hrm_index()));
 
   set_allocation_context(AllocationContext::system());
@@ -193,7 +191,7 @@ void HeapRegion::par_clear() {
   HeapRegionRemSet* hrrs = rem_set();
   hrrs->clear();
   CardTableModRefBS* ct_bs =
-                   (CardTableModRefBS*)G1CollectedHeap::heap()->barrier_set();
+    barrier_set_cast<CardTableModRefBS>(G1CollectedHeap::heap()->barrier_set());
   ct_bs->clear(MemRegion(bottom(), end()));
 }
 
@@ -262,7 +260,6 @@ HeapRegion::HeapRegion(uint hrm_index,
     _hrm_index(hrm_index),
     _allocation_context(AllocationContext::system()),
     _humongous_start_region(NULL),
-    _in_collection_set(false),
     _next_in_special_set(NULL),
     _evacuation_failed(false),
     _prev_marked_bytes(0), _next_marked_bytes(0), _gc_efficiency(0.0),
@@ -325,9 +322,8 @@ void HeapRegion::note_self_forwarding_removal_start(bool during_initial_mark,
 void HeapRegion::note_self_forwarding_removal_end(bool during_initial_mark,
                                                   bool during_conc_mark,
                                                   size_t marked_bytes) {
-  assert(0 <= marked_bytes && marked_bytes <= used(),
-         err_msg("marked: "SIZE_FORMAT" used: "SIZE_FORMAT,
-                 marked_bytes, used()));
+  assert(marked_bytes <= used(),
+         err_msg("marked: "SIZE_FORMAT" used: "SIZE_FORMAT, marked_bytes, used()));
   _prev_top_at_mark_start = top();
   _prev_marked_bytes = marked_bytes;
 }
@@ -507,7 +503,7 @@ class VerifyStrongCodeRootOopClosure: public OopClosure {
           gclog_or_tty->print_cr("Object "PTR_FORMAT" in region "
                                  "["PTR_FORMAT", "PTR_FORMAT") is above "
                                  "top "PTR_FORMAT,
-                                 (void *)obj, _hr->bottom(), _hr->end(), _hr->top());
+                                 p2i(obj), p2i(_hr->bottom()), p2i(_hr->end()), p2i(_hr->top()));
           _failures = true;
           return;
         }
@@ -542,7 +538,7 @@ public:
       if (!nm->is_alive()) {
         gclog_or_tty->print_cr("region ["PTR_FORMAT","PTR_FORMAT"] has dead nmethod "
                                PTR_FORMAT" in its strong code roots",
-                               _hr->bottom(), _hr->end(), nm);
+                               p2i(_hr->bottom()), p2i(_hr->end()), p2i(nm));
         _failures = true;
       } else {
         VerifyStrongCodeRootOopClosure oop_cl(_hr, nm);
@@ -551,12 +547,12 @@ public:
           gclog_or_tty->print_cr("region ["PTR_FORMAT","PTR_FORMAT"] has nmethod "
                                  PTR_FORMAT" in its strong code roots "
                                  "with no pointers into region",
-                                 _hr->bottom(), _hr->end(), nm);
+                                 p2i(_hr->bottom()), p2i(_hr->end()), p2i(nm));
           _failures = true;
         } else if (oop_cl.failures()) {
           gclog_or_tty->print_cr("region ["PTR_FORMAT","PTR_FORMAT"] has other "
                                  "failures for nmethod "PTR_FORMAT,
-                                 _hr->bottom(), _hr->end(), nm);
+                                 p2i(_hr->bottom()), p2i(_hr->end()), p2i(nm));
           _failures = true;
         }
       }
@@ -591,7 +587,7 @@ void HeapRegion::verify_strong_code_roots(VerifyOption vo, bool* failures) const
     if (strong_code_roots_length > 0) {
       gclog_or_tty->print_cr("region ["PTR_FORMAT","PTR_FORMAT"] is empty "
                              "but has "SIZE_FORMAT" code root entries",
-                             bottom(), end(), strong_code_roots_length);
+                             p2i(bottom()), p2i(end()), strong_code_roots_length);
       *failures = true;
     }
     return;
@@ -626,7 +622,7 @@ void HeapRegion::print_on(outputStream* st) const {
     st->print("   ");
   st->print(" TS %5d", _gc_time_stamp);
   st->print(" PTAMS "PTR_FORMAT" NTAMS "PTR_FORMAT,
-            prev_top_at_mark_start(), next_top_at_mark_start());
+            p2i(prev_top_at_mark_start()), p2i(next_top_at_mark_start()));
   G1OffsetTableContigSpace::print_on(st);
 }
 
@@ -643,13 +639,9 @@ public:
   // _vo == UseNextMarking -> use "next" marking information,
   // _vo == UseMarkWord    -> use mark word from object header.
   VerifyLiveClosure(G1CollectedHeap* g1h, VerifyOption vo) :
-    _g1h(g1h), _bs(NULL), _containing_obj(NULL),
-    _failures(false), _n_failures(0), _vo(vo)
-  {
-    BarrierSet* bs = _g1h->barrier_set();
-    if (bs->is_a(BarrierSet::CardTableModRef))
-      _bs = (CardTableModRefBS*)bs;
-  }
+    _g1h(g1h), _bs(barrier_set_cast<CardTableModRefBS>(g1h->barrier_set())),
+    _containing_obj(NULL), _failures(false), _n_failures(0), _vo(vo)
+  { }
 
   void set_containing_obj(oop obj) {
     _containing_obj = obj;
@@ -693,23 +685,23 @@ public:
           gclog_or_tty->print_cr("Field "PTR_FORMAT
                                  " of live obj "PTR_FORMAT" in region "
                                  "["PTR_FORMAT", "PTR_FORMAT")",
-                                 p, (void*) _containing_obj,
-                                 from->bottom(), from->end());
+                                 p2i(p), p2i(_containing_obj),
+                                 p2i(from->bottom()), p2i(from->end()));
           print_object(gclog_or_tty, _containing_obj);
           gclog_or_tty->print_cr("points to obj "PTR_FORMAT" not in the heap",
-                                 (void*) obj);
+                                 p2i(obj));
         } else {
           HeapRegion* from = _g1h->heap_region_containing((HeapWord*)p);
           HeapRegion* to   = _g1h->heap_region_containing((HeapWord*)obj);
           gclog_or_tty->print_cr("Field "PTR_FORMAT
                                  " of live obj "PTR_FORMAT" in region "
                                  "["PTR_FORMAT", "PTR_FORMAT")",
-                                 p, (void*) _containing_obj,
-                                 from->bottom(), from->end());
+                                 p2i(p), p2i(_containing_obj),
+                                 p2i(from->bottom()), p2i(from->end()));
           print_object(gclog_or_tty, _containing_obj);
           gclog_or_tty->print_cr("points to dead obj "PTR_FORMAT" in region "
                                  "["PTR_FORMAT", "PTR_FORMAT")",
-                                 (void*) obj, to->bottom(), to->end());
+                                 p2i(obj), p2i(to->bottom()), p2i(to->end()));
           print_object(gclog_or_tty, obj);
         }
         gclog_or_tty->print_cr("----------");
@@ -747,12 +739,12 @@ public:
             gclog_or_tty->print_cr("Field "PTR_FORMAT" "
                                    "of obj "PTR_FORMAT", "
                                    "in region "HR_FORMAT,
-                                   p, (void*) _containing_obj,
+                                   p2i(p), p2i(_containing_obj),
                                    HR_FORMAT_PARAMS(from));
             _containing_obj->print_on(gclog_or_tty);
             gclog_or_tty->print_cr("points to obj "PTR_FORMAT" "
                                    "in region "HR_FORMAT,
-                                   (void*) obj,
+                                   p2i(obj),
                                    HR_FORMAT_PARAMS(to));
             obj->print_on(gclog_or_tty);
             gclog_or_tty->print_cr("Obj head CTE = %d, field CTE = %d.",
@@ -789,7 +781,7 @@ void HeapRegion::verify(VerifyOption vo,
         !g1->is_obj_dead(obj, this)) { // Dead objects may have bigger block_size since they span several objects.
       gclog_or_tty->print_cr("obj "PTR_FORMAT" is of %shumongous size ("
                              SIZE_FORMAT" words) in a %shumongous region",
-                             p, g1->is_humongous(obj_size) ? "" : "non-",
+                             p2i(p), g1->is_humongous(obj_size) ? "" : "non-",
                              obj_size, is_region_humongous ? "" : "non-");
        *failures = true;
        return;
@@ -803,12 +795,12 @@ void HeapRegion::verify(VerifyOption vo,
                                    ClassLoaderDataGraph::unload_list_contains(klass));
         if (!is_metaspace_object) {
           gclog_or_tty->print_cr("klass "PTR_FORMAT" of object "PTR_FORMAT" "
-                                 "not metadata", klass, (void *)obj);
+                                 "not metadata", p2i(klass), p2i(obj));
           *failures = true;
           return;
         } else if (!klass->is_klass()) {
           gclog_or_tty->print_cr("klass "PTR_FORMAT" of object "PTR_FORMAT" "
-                                 "not a klass", klass, (void *)obj);
+                                 "not a klass", p2i(klass), p2i(obj));
           *failures = true;
           return;
         } else {
@@ -823,7 +815,7 @@ void HeapRegion::verify(VerifyOption vo,
           }
         }
       } else {
-        gclog_or_tty->print_cr(PTR_FORMAT" no an oop", (void *)obj);
+        gclog_or_tty->print_cr(PTR_FORMAT" no an oop", p2i(obj));
         *failures = true;
         return;
       }
@@ -838,7 +830,7 @@ void HeapRegion::verify(VerifyOption vo,
 
   if (p != top()) {
     gclog_or_tty->print_cr("end of last object "PTR_FORMAT" "
-                           "does not match top "PTR_FORMAT, p, top());
+                           "does not match top "PTR_FORMAT, p2i(p), p2i(top()));
     *failures = true;
     return;
   }
@@ -855,7 +847,7 @@ void HeapRegion::verify(VerifyOption vo,
     if (b_start_1 != p) {
       gclog_or_tty->print_cr("BOT look up for top: "PTR_FORMAT" "
                              " yielded "PTR_FORMAT", expecting "PTR_FORMAT,
-                             addr_1, b_start_1, p);
+                             p2i(addr_1), p2i(b_start_1), p2i(p));
       *failures = true;
       return;
     }
@@ -867,7 +859,7 @@ void HeapRegion::verify(VerifyOption vo,
       if (b_start_2 != p) {
         gclog_or_tty->print_cr("BOT look up for top + 1: "PTR_FORMAT" "
                                " yielded "PTR_FORMAT", expecting "PTR_FORMAT,
-                               addr_2, b_start_2, p);
+                               p2i(addr_2), p2i(b_start_2), p2i(p));
         *failures = true;
         return;
       }
@@ -881,7 +873,7 @@ void HeapRegion::verify(VerifyOption vo,
       if (b_start_3 != p) {
         gclog_or_tty->print_cr("BOT look up for top + diff: "PTR_FORMAT" "
                                " yielded "PTR_FORMAT", expecting "PTR_FORMAT,
-                               addr_3, b_start_3, p);
+                               p2i(addr_3), p2i(b_start_3), p2i(p));
         *failures = true;
         return;
       }
@@ -893,7 +885,7 @@ void HeapRegion::verify(VerifyOption vo,
     if (b_start_4 != p) {
       gclog_or_tty->print_cr("BOT look up for end - 1: "PTR_FORMAT" "
                              " yielded "PTR_FORMAT", expecting "PTR_FORMAT,
-                             addr_4, b_start_4, p);
+                             p2i(addr_4), p2i(b_start_4), p2i(p));
       *failures = true;
       return;
     }
@@ -902,7 +894,7 @@ void HeapRegion::verify(VerifyOption vo,
   if (is_region_humongous && object_num > 1) {
     gclog_or_tty->print_cr("region ["PTR_FORMAT","PTR_FORMAT"] is humongous "
                            "but has "SIZE_FORMAT", objects",
-                           bottom(), end(), object_num);
+                           p2i(bottom()), p2i(end()), object_num);
     *failures = true;
     return;
   }
@@ -939,11 +931,21 @@ void G1OffsetTableContigSpace::set_end(HeapWord* new_end) {
   _offsets.resize(new_end - bottom());
 }
 
+#ifndef PRODUCT
+void G1OffsetTableContigSpace::mangle_unused_area() {
+  mangle_unused_area_complete();
+}
+
+void G1OffsetTableContigSpace::mangle_unused_area_complete() {
+  SpaceMangler::mangle_region(MemRegion(top(), end()));
+}
+#endif
+
 void G1OffsetTableContigSpace::print() const {
   print_short();
   gclog_or_tty->print_cr(" [" INTPTR_FORMAT ", " INTPTR_FORMAT ", "
                 INTPTR_FORMAT ", " INTPTR_FORMAT ")",
-                bottom(), top(), _offsets.threshold(), end());
+                p2i(bottom()), p2i(top()), p2i(_offsets.threshold()), p2i(end()));
 }
 
 HeapWord* G1OffsetTableContigSpace::initialize_threshold() {

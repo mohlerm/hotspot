@@ -407,20 +407,17 @@ const  uint64_t KlassEncodingMetaspaceMax = (uint64_t(max_juint) + 1) << LogKlas
 
 // Machine dependent stuff
 
-#if defined(X86) && defined(COMPILER2) && !defined(JAVASE_EMBEDDED)
-// Include Restricted Transactional Memory lock eliding optimization
-#define INCLUDE_RTM_OPT 1
-#define RTM_OPT_ONLY(code) code
-#else
-#define INCLUDE_RTM_OPT 0
-#define RTM_OPT_ONLY(code)
-#endif
 // States of Restricted Transactional Memory usage.
 enum RTMState {
   NoRTM      = 0x2, // Don't use RTM
   UseRTM     = 0x1, // Use RTM
   ProfileRTM = 0x0  // Use RTM with abort ratio calculation
 };
+
+// The maximum size of the code cache.  Can be overridden by targets.
+#define CODE_CACHE_SIZE_LIMIT (2*G)
+// Allow targets to reduce the default size of the code cache.
+#define CODE_CACHE_DEFAULT_LIMIT CODE_CACHE_SIZE_LIMIT
 
 #ifdef TARGET_ARCH_x86
 # include "globalDefinitions_x86.hpp"
@@ -437,14 +434,17 @@ enum RTMState {
 #ifdef TARGET_ARCH_ppc
 # include "globalDefinitions_ppc.hpp"
 #endif
+#ifdef TARGET_ARCH_aarch64
+# include "globalDefinitions_aarch64.hpp"
+#endif
 
-/*
- * If a platform does not support native stack walking
- * the platform specific globalDefinitions (above)
- * can set PLATFORM_NATIVE_STACK_WALKING_SUPPORTED to 0
- */
-#ifndef PLATFORM_NATIVE_STACK_WALKING_SUPPORTED
-#define PLATFORM_NATIVE_STACK_WALKING_SUPPORTED 1
+#ifndef INCLUDE_RTM_OPT
+#define INCLUDE_RTM_OPT 0
+#endif
+#if INCLUDE_RTM_OPT
+#define RTM_OPT_ONLY(code) code
+#else
+#define RTM_OPT_ONLY(code)
 #endif
 
 // To assure the IRIW property on processors that are not multiple copy
@@ -1344,6 +1344,13 @@ inline int build_int_from_shorts( jushort low, jushort high ) {
 // Convert pointer to intptr_t, for use in printing pointers.
 inline intptr_t p2i(const void * p) {
   return (intptr_t) p;
+}
+
+// swap a & b
+template<class T> static void swap(T& a, T& b) {
+  T tmp = a;
+  a = b;
+  b = tmp;
 }
 
 // Printf-style formatters for fixed- and variable-width types as pointers and

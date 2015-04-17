@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2002, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -203,9 +203,17 @@ class PSPromotionManager VALUE_OBJ_CLASS_SPEC {
 
   inline void process_popped_location_depth(StarTask p);
 
+  static bool should_scavenge(oop* p, bool check_to_space = false);
+  static bool should_scavenge(narrowOop* p, bool check_to_space = false);
+
+  template <class T, bool promote_immediately>
+  void copy_and_push_safe_barrier(T* p);
+
   template <class T> inline void claim_or_forward_depth(T* p);
 
   TASKQUEUE_STATS_ONLY(inline void record_steal(StarTask& p);)
+
+  void push_contents(oop obj);
 };
 
 #endif // SHARE_VM_GC_IMPLEMENTATION_PARALLELSCAVENGE_PSPROMOTIONMANAGER_HPP

@@ -3462,6 +3462,24 @@ bool GraphBuilder::try_inline_intrinsics(ciMethod* callee) {
     case vmIntrinsics::_putFloat  : return append_unsafe_put_obj(callee, T_FLOAT,   false);
     case vmIntrinsics::_putDouble : return append_unsafe_put_obj(callee, T_DOUBLE,  false);
 
+    case vmIntrinsics::_getShortUnaligned  :
+      return UseUnalignedAccesses ? append_unsafe_get_obj(callee, T_SHORT,   false) : false;
+    case vmIntrinsics::_getCharUnaligned   :
+      return UseUnalignedAccesses ? append_unsafe_get_obj(callee, T_CHAR,    false) : false;
+    case vmIntrinsics::_getIntUnaligned    :
+      return UseUnalignedAccesses ? append_unsafe_get_obj(callee, T_INT,     false) : false;
+    case vmIntrinsics::_getLongUnaligned   :
+      return UseUnalignedAccesses ? append_unsafe_get_obj(callee, T_LONG,    false) : false;
+
+    case vmIntrinsics::_putShortUnaligned  :
+      return UseUnalignedAccesses ? append_unsafe_put_obj(callee, T_SHORT,   false) : false;
+    case vmIntrinsics::_putCharUnaligned   :
+      return UseUnalignedAccesses ? append_unsafe_put_obj(callee, T_CHAR,    false) : false;
+    case vmIntrinsics::_putIntUnaligned    :
+      return UseUnalignedAccesses ? append_unsafe_put_obj(callee, T_INT,     false) : false;
+    case vmIntrinsics::_putLongUnaligned   :
+      return UseUnalignedAccesses ? append_unsafe_put_obj(callee, T_LONG,    false) : false;
+
     case vmIntrinsics::_getObjectVolatile : return append_unsafe_get_obj(callee, T_OBJECT,  true);
     case vmIntrinsics::_getBooleanVolatile: return append_unsafe_get_obj(callee, T_BOOLEAN, true);
     case vmIntrinsics::_getByteVolatile   : return append_unsafe_get_obj(callee, T_BYTE,    true);
@@ -4306,7 +4324,18 @@ void GraphBuilder::print_inlining(ciMethod* callee, const char* msg, bool succes
         log->inline_fail("reason unknown");
     }
   }
-
+#if INCLUDE_TRACE
+  EventCompilerInlining event;
+  if (event.should_commit()) {
+    event.set_compileID(compilation()->env()->task()->compile_id());
+    event.set_message(msg);
+    event.set_succeeded(success);
+    event.set_bci(bci());
+    event.set_caller(method()->get_Method());
+    event.set_callee(callee->to_trace_struct());
+    event.commit();
+  }
+#endif // INCLUDE_TRACE
   if (!PrintInlining && !compilation()->method()->has_option("PrintInlining")) {
     return;
   }

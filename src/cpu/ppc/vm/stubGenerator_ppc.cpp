@@ -608,7 +608,6 @@ class StubGenerator: public StubCodeGenerator {
   void gen_write_ref_array_pre_barrier(Register from, Register to, Register count, bool dest_uninitialized, Register Rtmp1) {
     BarrierSet* const bs = Universe::heap()->barrier_set();
     switch (bs->kind()) {
-      case BarrierSet::G1SATBCT:
       case BarrierSet::G1SATBCTLogging:
         // With G1, don't generate the call if we statically know that the target in uninitialized
         if (!dest_uninitialized) {
@@ -665,7 +664,6 @@ class StubGenerator: public StubCodeGenerator {
     BarrierSet* const bs = Universe::heap()->barrier_set();
 
     switch (bs->kind()) {
-      case BarrierSet::G1SATBCT:
       case BarrierSet::G1SATBCTLogging:
         {
           if (branchToEnd) {
@@ -694,7 +692,7 @@ class StubGenerator: public StubCodeGenerator {
             __ release();
           }
 
-          CardTableModRefBS* const ct = (CardTableModRefBS*)bs;
+          CardTableModRefBS* const ct = barrier_set_cast<CardTableModRefBS>(bs);
           assert(sizeof(*ct->byte_map_base) == sizeof(jbyte), "adjust this code");
           assert_different_registers(addr, count, tmp);
 

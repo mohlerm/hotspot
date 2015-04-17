@@ -32,13 +32,14 @@
 #include "compiler/methodLiveness.hpp"
 #include "prims/methodHandles.hpp"
 #include "utilities/bitMap.hpp"
+#include "trace/tracing.hpp"
 
 class ciMethodBlocks;
 class MethodLiveness;
 class BitMap;
 class Arena;
 class BCEscapeAnalyzer;
-
+class InlineTree;
 
 // ciMethod
 //
@@ -53,6 +54,7 @@ class ciMethod : public ciMetadata {
   friend class ciMethodHandle;
   friend class ciReplay;
   friend class ciCacheProfiles;
+  friend class InlineTree;
 
  private:
   // General method information.
@@ -95,12 +97,6 @@ class ciMethod : public ciMetadata {
 
   ciMethod(methodHandle h_m, ciInstanceKlass* holder);
   ciMethod(ciInstanceKlass* holder, ciSymbol* name, ciSymbol* signature, ciInstanceKlass* accessor);
-
-  Method* get_Method() const {
-    Method* m = (Method*)_metadata;
-    assert(m != NULL, "illegal use of unloaded method");
-    return m;
-  }
 
   oop loader() const                             { return _holder->loader(); }
 
@@ -159,6 +155,11 @@ class ciMethod : public ciMetadata {
     }
   }
 
+  Method* get_Method() const {
+    Method* m = (Method*)_metadata;
+    assert(m != NULL, "illegal use of unloaded method");
+    return m;
+  }
 
   // Method code and related information.
   address code()                                 { if (_code == NULL) load_code(); return _code; }
@@ -255,11 +256,12 @@ class ciMethod : public ciMetadata {
   // its calling environment.
   ciMethod* find_monomorphic_target(ciInstanceKlass* caller,
                                     ciInstanceKlass* callee_holder,
-                                    ciInstanceKlass* actual_receiver);
+                                    ciInstanceKlass* actual_receiver,
+                                    bool check_access = true);
 
   // Given a known receiver klass, find the target for the call.
   // Return NULL if the call has no target or is abstract.
-  ciMethod* resolve_invoke(ciKlass* caller, ciKlass* exact_receiver);
+  ciMethod* resolve_invoke(ciKlass* caller, ciKlass* exact_receiver, bool check_access = true);
 
   // Find the proper vtable index to invoke this method.
   int resolve_vtable_index(ciKlass* caller, ciKlass* receiver);
@@ -340,6 +342,10 @@ class ciMethod : public ciMetadata {
   // Print the name of this method in various incarnations.
   void print_name(outputStream* st = tty);
   void print_short_name(outputStream* st = tty);
+
+#if INCLUDE_TRACE
+  TraceStructCiMethod to_trace_struct() const;
+#endif
 };
 
 #endif // SHARE_VM_CI_CIMETHOD_HPP

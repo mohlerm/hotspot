@@ -327,6 +327,8 @@ class ciCacheProfiles : AllStatic {
 
   // Lookup data for a ciMethod
   static CompileRecord* find_compileRecord(Method* method);
+  // Lookup data for a methodHandle
+  static CompileRecord* find_compileRecord(methodHandle method);
 
 //  // Create and initialize a record for a ciInlineRecord
 //  static InlineRecord* new_inlineRecord(Method* method, int bci, int depth);
@@ -363,6 +365,7 @@ class ciCacheProfiles : AllStatic {
 //  class  CacheReplay;
 //  static CacheReplay* cache_state;
   static bool is_cached(Method* method);
+  static bool is_cached(methodHandle method);
 
   static bool is_initialized();
   static void is_initialized(bool flag);

@@ -1403,11 +1403,11 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
     if((strcmp("tiered", comment) == 0) && !FLAG_IS_DEFAULT(CacheProfiles)) {
       // if it's set trigger replayCompilation in case it's a cached method
       if(ciCacheProfiles::is_initialized() && ciCacheProfiles::is_cached(method())) {
-        tty->print(">>>>>> USE PROFILE Complevel: %d, Hotcount: %d <<<<<<<",comp_level, hot_count);
+        tty->print(">>>>>> USE PROFILE Complevel: %d, Hotcount: %d ",comp_level, hot_count);
         method->print_name(tty);
         method->print_short_name(tty);
-        //JavaThread *thread = JavaThread::current();
-        //assert(!thread->has_pending_exception(), "should have returned not OK");
+        tty->print("<<<<<<<");
+        tty->cr();
         ciCacheProfiles::replay(THREAD,method());
         return NULL;
       }

@@ -693,17 +693,17 @@ void ciCacheProfiles::initialize(TRAPS) {
     _comp_level = 0;
     // and continue as usual
 
-    // TODO replace initial sizes with command line params
-    _method_records = NEW_C_HEAP_ARRAY(MethodRecord*, 64, mtCompiler);
-    _method_data_records = NEW_C_HEAP_ARRAY(MethodDataRecord*,64, mtCompiler );
-    _compile_records = NEW_C_HEAP_ARRAY(CompileRecord*,4, mtCompiler );
-
     _method_records_pos = 0;
     _method_records_length = 64;
     _method_data_records_pos = 0;
     _method_data_records_length = 64;
     _compile_records_pos = 0;
     _compile_records_length = 4;
+
+    // TODO replace initial sizes with command line params
+    _method_records = NEW_C_HEAP_ARRAY(MethodRecord*, _method_records_length, mtCompiler);
+    _method_data_records = NEW_C_HEAP_ARRAY(MethodDataRecord*, _method_data_records_length, mtCompiler );
+    _compile_records = NEW_C_HEAP_ARRAY(CompileRecord*, _compile_records_length, mtCompiler );
 
     if (can_replay()) {
       process(THREAD);
@@ -799,9 +799,10 @@ void ciCacheProfiles::initialize(ciMethodData* m) {
     // This indicates some mismatch with the original environment and
     // the replay environment though it's not always enough to
     // interfere with reproducing a bug
-    tty->print_cr("Warning: requesting ciMethodData record for method with no data: ");
-    method->print_name(tty);
-    tty->cr();
+    // TODO fix this? or does it even need a fix?
+    //tty->print_cr("Warning: requesting ciMethodData record for method with no data: ");
+    //method->print_name(tty);
+    //tty->cr();
   } else {
     m->_state = rec->_state;
     m->_current_mileage = rec->_current_mileage;
@@ -852,9 +853,10 @@ void ciCacheProfiles::initialize(ciMethod* m) {
     // This indicates some mismatch with the original environment and
     // the replay environment though it's not always enough to
     // interfere with reproducing a bug
-    tty->print_cr("Warning: requesting ciMethod record for method with no data: ");
-    method->print_name(tty);
-    tty->cr();
+    // TODO fix this? or does it even need a fix?
+    //tty->print_cr("Warning: requesting ciMethod record for method with no data: ");
+    //method->print_name(tty);
+    //tty->cr();
   } else {
     EXCEPTION_CONTEXT;
     // m->_instructions_size = rec->_instructions_size;
@@ -890,6 +892,16 @@ bool ciCacheProfiles::is_cached(Method* method) {
   return find_compileRecord(method) != NULL;
 }
 
+// same function for a method holder
+bool ciCacheProfiles::is_cached(methodHandle method) {
+  if (!is_initialized()) {
+    return false;
+  }
+  //VM_ENTRY_MARK;
+  ASSERT_IN_VM;
+  ResourceMark rm;
+  return find_compileRecord(method) != NULL;
+}
 
 // Create and initialize a record for a ciMethod
 MethodRecord* ciCacheProfiles::new_methodRecord(char* klass_name, char* method_name, char* signature) {
@@ -906,8 +918,15 @@ MethodRecord* ciCacheProfiles::new_methodRecord(char* klass_name, char* method_n
     _method_records_pos++;
   } else {
     // grow
-    ;
-    // TODO
+    MethodRecord** old_method_records = _method_records;
+    int old_method_records_length = _method_records_length;
+    _method_records_length = _method_records_length*2;
+    _method_records = NEW_C_HEAP_ARRAY(MethodRecord*, _method_records_length, mtCompiler);
+    for(int i = 0; i< old_method_records_length; i++) {
+      _method_records[i] = old_method_records[i];
+    }
+    _method_records[_method_records_pos] = rec;
+    _method_records_pos++;
   }
   return rec;
 }
@@ -943,8 +962,15 @@ MethodDataRecord* ciCacheProfiles::new_methodDataRecord(char* klass_name, char* 
     _method_data_records_pos++;
   } else {
     // grow
-    ;
-    // TODO
+    MethodDataRecord** old_method_data_records = _method_data_records;
+    int old_method_data_records_length = _method_data_records_length;
+    _method_data_records_length = _method_data_records_length*2;
+    _method_data_records = NEW_C_HEAP_ARRAY(MethodDataRecord*, _method_data_records_length, mtCompiler);
+    for(int i = 0; i< old_method_data_records_length; i++) {
+      _method_data_records[i] = old_method_data_records[i];
+    }
+    _method_data_records[_method_data_records_pos] = rec;
+    _method_data_records_pos++;
   }
   return rec;
 }
@@ -980,8 +1006,15 @@ CompileRecord* ciCacheProfiles::new_compileRecord(char* klass_name, char* method
     _compile_records_pos++;
   } else {
     // grow
-    ;
-    // TODO
+    CompileRecord** old_compile_records = _compile_records;
+    int old_compile_records_length = _compile_records_length;
+    _compile_records_length = _compile_records_length*2;
+    _compile_records = NEW_C_HEAP_ARRAY(CompileRecord*, _compile_records_length, mtCompiler);
+    for(int i = 0; i< old_compile_records_length; i++) {
+      _compile_records[i] = old_compile_records[i];
+    }
+    _compile_records[_compile_records_pos] = rec;
+    _compile_records_pos++;
   }
   return rec;
 }
@@ -996,6 +1029,21 @@ CompileRecord* ciCacheProfiles::find_compileRecord(Method* method) {
     if (strcmp(rec->_klass_name, klass_name) == 0 &&
         strcmp(rec->_method_name, method_name) == 0 &&
         strcmp(rec->_signature, signature) == 0) {
+      return rec;
+    }
+  }
+  return NULL;
+}
+// Lookup data for a methodHandle
+CompileRecord* ciCacheProfiles::find_compileRecord(methodHandle mh) {
+  char* klass_name =  mh->method_holder()->name()->as_utf8();
+  char* method_name = mh->name()->as_utf8();
+  //char* signature = mh->signature()->as_utf8();
+  for (int i = 0; i < _compile_records_pos; i++) {
+    CompileRecord* rec = _compile_records[i];
+    if (strcmp(rec->_klass_name, klass_name) == 0 &&
+        strcmp(rec->_method_name, method_name) == 0) {
+    //    strcmp(rec->_signature, signature) == 0) {
       return rec;
     }
   }

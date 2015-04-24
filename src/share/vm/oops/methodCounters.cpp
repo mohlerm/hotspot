@@ -24,6 +24,7 @@
 #include "precompiled.hpp"
 #include "oops/methodCounters.hpp"
 #include "runtime/handles.inline.hpp"
+#include "ci/ciCacheProfiles.hpp"
 
 MethodCounters* MethodCounters::allocate(methodHandle mh, TRAPS) {
   ClassLoaderData* loader_data = mh->method_holder()->class_loader_data();
@@ -44,6 +45,17 @@ void MethodCounters::clear_counters() {
 #endif
 }
 
+
+bool MethodCounters::scale_if_cached(methodHandle mh, double& scale) {
+   //marcel: check if method is cached and lower threshold automatically
+    if(!FLAG_IS_DEFAULT(CacheProfiles) && ciCacheProfiles::is_initialized()) {
+      if(ciCacheProfiles::is_cached(mh)) {
+        scale = 0.01;
+        return true;
+      }
+    }
+    return false;
+}
 
 int MethodCounters::highest_comp_level() const {
 #ifdef TIERED

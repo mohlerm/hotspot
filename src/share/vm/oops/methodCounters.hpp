@@ -79,6 +79,8 @@ class MethodCounters: public MetaspaceObj {
 
     // Set per-method thresholds.
     double scale = 1.0;
+
+    scale_if_cached(mh, scale);
     CompilerOracle::has_option_value(mh, "CompileThresholdScaling", scale);
 
     int compile_threshold = Arguments::scaled_compile_threshold(CompileThreshold, scale);
@@ -141,6 +143,8 @@ class MethodCounters: public MetaspaceObj {
   float rate() const                             { return _rate; }
   void set_rate(float rate)                      { _rate = rate; }
 #endif
+
+  bool scale_if_cached(methodHandle mh, double& scale );
 
   int highest_comp_level() const;
   void set_highest_comp_level(int level);

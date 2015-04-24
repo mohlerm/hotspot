@@ -26,10 +26,18 @@
 #define SHARE_VM_RUNTIME_SIMPLETHRESHOLDPOLICY_INLINE_HPP
 
 #include "compiler/compilerOracle.hpp"
+#include "ci/ciCacheProfiles.hpp"
 
 template<CompLevel level>
 bool SimpleThresholdPolicy::call_predicate_helper(int i, int b, double scale, Method* method) {
   double threshold_scaling;
+
+  if(!FLAG_IS_DEFAULT(CacheProfiles) && ciCacheProfiles::is_initialized()) {
+    if(ciCacheProfiles::is_cached(method)) {
+      threshold_scaling = 0.01;
+      scale *= threshold_scaling;
+    }
+  }
   if (CompilerOracle::has_option_value(method, "CompileThresholdScaling", threshold_scaling)) {
     scale *= threshold_scaling;
   }
@@ -48,6 +56,13 @@ bool SimpleThresholdPolicy::call_predicate_helper(int i, int b, double scale, Me
 template<CompLevel level>
 bool SimpleThresholdPolicy::loop_predicate_helper(int i, int b, double scale, Method* method) {
   double threshold_scaling;
+
+  if(!FLAG_IS_DEFAULT(CacheProfiles) && ciCacheProfiles::is_initialized()) {
+    if(ciCacheProfiles::is_cached(method)) {
+      threshold_scaling = 0.01;
+      scale *= threshold_scaling;
+    }
+  }
   if (CompilerOracle::has_option_value(method, "CompileThresholdScaling", threshold_scaling)) {
     scale *= threshold_scaling;
   }

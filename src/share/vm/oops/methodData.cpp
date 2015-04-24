@@ -37,6 +37,7 @@
 #include "runtime/handles.inline.hpp"
 #include "runtime/orderAccess.inline.hpp"
 #include "utilities/copy.hpp"
+#include "ci/ciCacheProfiles.hpp"
 
 PRAGMA_FORMAT_MUTE_WARNINGS_FOR_GCC
 
@@ -1137,6 +1138,12 @@ void MethodData::init() {
 
   // Set per-method invoke- and backedge mask.
   double scale = 1.0;
+
+  if(!FLAG_IS_DEFAULT(CacheProfiles) && ciCacheProfiles::is_initialized()) {
+    if(ciCacheProfiles::is_cached(_method)) {
+      scale = 0.01;
+    }
+  }
   CompilerOracle::has_option_value(_method, "CompileThresholdScaling", scale);
   _invoke_mask = right_n_bits(Arguments::scaled_freq_log(Tier0InvokeNotifyFreqLog, scale)) << InvocationCounter::count_shift;
   _backedge_mask = right_n_bits(Arguments::scaled_freq_log(Tier0BackedgeNotifyFreqLog, scale)) << InvocationCounter::count_shift;

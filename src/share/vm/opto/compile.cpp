@@ -873,7 +873,7 @@ Compile::Compile( ciEnv* ci_env, C2Compiler* compiler, ciMethod* target, int osr
   }
   // Dump profile to allow profile caching
   if (DumpProfiles || method()->has_option("DumpProfile")) {
-    env()->dump_cache_profiles(_compile_id);
+    env()->dump_cache_profiles(_compile_id, method()->name()->as_utf8());
   }
 
   // Now that we know the size of all the monitors we can add a fixed slot

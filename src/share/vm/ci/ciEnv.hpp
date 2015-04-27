@@ -465,7 +465,7 @@ public:
   void dump_replay_data_unsafe(outputStream* out);
   void dump_compile_data(outputStream* out);
   // Dump the cached profiling information for the ciEnv to the stream.
-  void dump_cache_profiles(int compile_id);
+  void dump_cache_profiles(int compile_id, const char* methodName);
   void dump_cache_profiles(outputStream* out);
   void dump_cache_profiles_unsafe(outputStream* out);
 };

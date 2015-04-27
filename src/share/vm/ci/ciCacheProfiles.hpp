@@ -313,14 +313,17 @@ class ciCacheProfiles : AllStatic {
 
   // Create and initialize a record for a ciMethod
   static MethodRecord* new_methodRecord(char* klass_name, char* method_name, char* signature);
-
   // Lookup data for a ciMethod
   static MethodRecord* find_methodRecord(Method* method);
+  // Lookup data for a ciMethod
+  static MethodRecord* find_methodRecord(char* klass_name, char* method_name, char* signature);
 
   // Create and initialize a record for a ciMethodData
   static MethodDataRecord* new_methodDataRecord(char* klass_name, char* method_name, char* signature);
   // Lookup data for a ciMethodData
   static MethodDataRecord* find_methodDataRecord(Method* method);
+  // Lookup data for a ciMethodData
+  static MethodDataRecord* find_methodDataRecord(char* klass_name, char* method_name, char* signature);
 
   // Create and initialize a record for a ciCompile
   static CompileRecord* new_compileRecord(char* klass_name, char* method_name, char* signature);
@@ -329,6 +332,8 @@ class ciCacheProfiles : AllStatic {
   static CompileRecord* find_compileRecord(Method* method);
   // Lookup data for a methodHandle
   static CompileRecord* find_compileRecord(methodHandle method);
+  // Lookup data for a set of strings
+  static CompileRecord* find_compileRecord(char* klass_name, char* method_name, char* signature);
 
 //  // Create and initialize a record for a ciInlineRecord
 //  static InlineRecord* new_inlineRecord(Method* method, int bci, int depth);

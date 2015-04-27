@@ -906,7 +906,10 @@ bool ciCacheProfiles::is_cached(methodHandle method) {
 // Create and initialize a record for a ciMethod
 MethodRecord* ciCacheProfiles::new_methodRecord(char* klass_name, char* method_name, char* signature) {
   //MethodRecord* rec = NEW_C_HEAP_OBJ(MethodRecord, mtCompiler);
-  MethodRecord* rec = new MethodRecord();
+  MethodRecord* rec = find_methodRecord(klass_name, method_name, signature);
+  if(rec == NULL) {
+    rec = new MethodRecord();
+  }
   //ResourceMark rm;
   //char* klass_name =  method->method_holder()->name()->as_utf8();
   //char* method_name = method->name()->as_utf8();
@@ -947,10 +950,26 @@ MethodRecord* ciCacheProfiles::find_methodRecord(Method* method) {
   return NULL;
 }
 
+// Lookup data for a ciMethod
+MethodRecord* ciCacheProfiles::find_methodRecord(char* klass_name, char* method_name, char* signature) {
+  for (int i = 0; i < _method_records_pos; i++) {
+    MethodRecord* rec = _method_records[i];
+    if (strcmp(rec->_klass_name, klass_name) == 0 &&
+        strcmp(rec->_method_name, method_name) == 0 &&
+        strcmp(rec->_signature, signature) == 0) {
+      return rec;
+    }
+  }
+  return NULL;
+}
+
 // Create and initialize a record for a ciMethodData
 MethodDataRecord* ciCacheProfiles::new_methodDataRecord(char* klass_name, char* method_name, char* signature) {
   //MethodDataRecord* rec = NEW_C_HEAP_OBJ(MethodDataRecord, mtCompiler);
-  MethodDataRecord* rec = new MethodDataRecord();
+  MethodDataRecord* rec = find_methodDataRecord(klass_name, method_name, signature);
+  if(rec == NULL) {
+    rec = new MethodDataRecord();
+  }
   //ResourceMark rm;
   //char* klass_name =  method->method_holder()->name()->as_utf8();
   //char* method_name = method->name()->as_utf8();
@@ -990,11 +1009,26 @@ MethodDataRecord* ciCacheProfiles::find_methodDataRecord(Method* method) {
   }
   return NULL;
 }
+// Lookup data for a ciMethodData
+MethodDataRecord* ciCacheProfiles::find_methodDataRecord(char* klass_name, char* method_name, char* signature) {
+  for (int i = 0; i < _method_data_records_pos; i++) {
+    MethodDataRecord* rec = _method_data_records[i];
+    if (strcmp(rec->_klass_name, klass_name) == 0 &&
+        strcmp(rec->_method_name, method_name) == 0 &&
+        strcmp(rec->_signature, signature) == 0) {
+      return rec;
+    }
+  }
+  return NULL;
+}
 
 // Create and initialize a record for a ciCompile
 CompileRecord* ciCacheProfiles::new_compileRecord(char* klass_name, char* method_name, char* signature) {
   //CompileRecord* rec = NEW_C_HEAP_OBJ(CompileRecord, mtCompiler);
-  CompileRecord* rec = new CompileRecord();
+  CompileRecord* rec = find_compileRecord(klass_name, method_name, signature);
+  if(rec == NULL) {
+    rec = new CompileRecord();
+  }
 //  ResourceMark rm;
 //  char* klass_name =  method->method_holder()->name()->as_utf8();
 //  char* method_name = method->name()->as_utf8();
@@ -1044,6 +1078,18 @@ CompileRecord* ciCacheProfiles::find_compileRecord(methodHandle mh) {
     if (strcmp(rec->_klass_name, klass_name) == 0 &&
         strcmp(rec->_method_name, method_name) == 0) {
     //    strcmp(rec->_signature, signature) == 0) {
+      return rec;
+    }
+  }
+  return NULL;
+}
+// Lookup data for a ciMethod
+CompileRecord* ciCacheProfiles::find_compileRecord(char* klass_name, char* method_name, char* signature) {
+  for (int i = 0; i < _compile_records_pos; i++) {
+    CompileRecord* rec = _compile_records[i];
+    if (strcmp(rec->_klass_name, klass_name) == 0 &&
+        strcmp(rec->_method_name, method_name) == 0 &&
+        strcmp(rec->_signature, signature) == 0) {
       return rec;
     }
   }

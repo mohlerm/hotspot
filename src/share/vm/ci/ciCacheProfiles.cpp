@@ -694,11 +694,11 @@ void ciCacheProfiles::initialize(TRAPS) {
     // and continue as usual
 
     _method_records_pos = 0;
-    _method_records_length = 64;
+    _method_records_length = 1024;
     _method_data_records_pos = 0;
-    _method_data_records_length = 64;
+    _method_data_records_length = 1024;
     _compile_records_pos = 0;
-    _compile_records_length = 4;
+    _compile_records_length = 16;
 
     // TODO replace initial sizes with command line params
     _method_records = NEW_C_HEAP_ARRAY(MethodRecord*, _method_records_length, mtCompiler);
@@ -907,30 +907,30 @@ bool ciCacheProfiles::is_cached(methodHandle method) {
 MethodRecord* ciCacheProfiles::new_methodRecord(char* klass_name, char* method_name, char* signature) {
   //MethodRecord* rec = NEW_C_HEAP_OBJ(MethodRecord, mtCompiler);
   MethodRecord* rec = find_methodRecord(klass_name, method_name, signature);
+  // if we don't have a record yet, increase array
   if(rec == NULL) {
     rec = new MethodRecord();
+    rec->setupMethodRecord(klass_name, method_name, signature);
+    // if array has empty space
+    if(_method_records_pos<_method_records_length) {
+      _method_records[_method_records_pos] = rec;
+      _method_records_pos++;
+    } else {
+      // grow
+      MethodRecord** old_method_records = _method_records;
+      int old_method_records_length = _method_records_length;
+      _method_records_length = _method_records_length*2;
+      _method_records = NEW_C_HEAP_ARRAY(MethodRecord*, _method_records_length, mtCompiler);
+      for(int i = 0; i< old_method_records_length; i++) {
+        _method_records[i] = old_method_records[i];
+      }
+      _method_records[_method_records_pos] = rec;
+      _method_records_pos++;
+    }
+  } else {
+    rec->setupMethodRecord(klass_name, method_name, signature);
   }
   //ResourceMark rm;
-  //char* klass_name =  method->method_holder()->name()->as_utf8();
-  //char* method_name = method->name()->as_utf8();
-  //char * signature = method->signature()->as_utf8();
-  rec->setupMethodRecord(klass_name, method_name, signature);
-  // if array has empty space
-  if(_method_records_pos<_method_records_length) {
-    _method_records[_method_records_pos] = rec;
-    _method_records_pos++;
-  } else {
-    // grow
-    MethodRecord** old_method_records = _method_records;
-    int old_method_records_length = _method_records_length;
-    _method_records_length = _method_records_length*2;
-    _method_records = NEW_C_HEAP_ARRAY(MethodRecord*, _method_records_length, mtCompiler);
-    for(int i = 0; i< old_method_records_length; i++) {
-      _method_records[i] = old_method_records[i];
-    }
-    _method_records[_method_records_pos] = rec;
-    _method_records_pos++;
-  }
   return rec;
 }
 
@@ -967,30 +967,30 @@ MethodRecord* ciCacheProfiles::find_methodRecord(char* klass_name, char* method_
 MethodDataRecord* ciCacheProfiles::new_methodDataRecord(char* klass_name, char* method_name, char* signature) {
   //MethodDataRecord* rec = NEW_C_HEAP_OBJ(MethodDataRecord, mtCompiler);
   MethodDataRecord* rec = find_methodDataRecord(klass_name, method_name, signature);
+  // if we don't have a record yet, increase array
   if(rec == NULL) {
     rec = new MethodDataRecord();
+    rec->setupMethodDataRecord(klass_name, method_name, signature);
+    // if array has empty space
+    if(_method_data_records_pos<_method_data_records_length) {
+      _method_data_records[_method_data_records_pos] = rec;
+      _method_data_records_pos++;
+    } else {
+      // grow
+      MethodDataRecord** old_method_data_records = _method_data_records;
+      int old_method_data_records_length = _method_data_records_length;
+      _method_data_records_length = _method_data_records_length*2;
+      _method_data_records = NEW_C_HEAP_ARRAY(MethodDataRecord*, _method_data_records_length, mtCompiler);
+      for(int i = 0; i< old_method_data_records_length; i++) {
+        _method_data_records[i] = old_method_data_records[i];
+      }
+      _method_data_records[_method_data_records_pos] = rec;
+      _method_data_records_pos++;
+    }
+  } else {
+    rec->setupMethodDataRecord(klass_name, method_name, signature);
   }
   //ResourceMark rm;
-  //char* klass_name =  method->method_holder()->name()->as_utf8();
-  //char* method_name = method->name()->as_utf8();
-  //char * signature = method->signature()->as_utf8();
-  rec->setupMethodDataRecord(klass_name, method_name, signature);
-  // if array has empty space
-  if(_method_data_records_pos<_method_data_records_length) {
-    _method_data_records[_method_data_records_pos] = rec;
-    _method_data_records_pos++;
-  } else {
-    // grow
-    MethodDataRecord** old_method_data_records = _method_data_records;
-    int old_method_data_records_length = _method_data_records_length;
-    _method_data_records_length = _method_data_records_length*2;
-    _method_data_records = NEW_C_HEAP_ARRAY(MethodDataRecord*, _method_data_records_length, mtCompiler);
-    for(int i = 0; i< old_method_data_records_length; i++) {
-      _method_data_records[i] = old_method_data_records[i];
-    }
-    _method_data_records[_method_data_records_pos] = rec;
-    _method_data_records_pos++;
-  }
   return rec;
 }
 
@@ -1026,30 +1026,30 @@ MethodDataRecord* ciCacheProfiles::find_methodDataRecord(char* klass_name, char*
 CompileRecord* ciCacheProfiles::new_compileRecord(char* klass_name, char* method_name, char* signature) {
   //CompileRecord* rec = NEW_C_HEAP_OBJ(CompileRecord, mtCompiler);
   CompileRecord* rec = find_compileRecord(klass_name, method_name, signature);
+  // if we don't have a record yet, increase array
   if(rec == NULL) {
     rec = new CompileRecord();
+    rec->setupCompileRecord(klass_name, method_name, signature);
+    // if array has empty space
+    if(_compile_records_pos<_compile_records_length) {
+      _compile_records[_compile_records_pos] = rec;
+      _compile_records_pos++;
+    } else {
+      // grow
+      CompileRecord** old_compile_records = _compile_records;
+      int old_compile_records_length = _compile_records_length;
+      _compile_records_length = _compile_records_length*2;
+      _compile_records = NEW_C_HEAP_ARRAY(CompileRecord*, _compile_records_length, mtCompiler);
+      for(int i = 0; i< old_compile_records_length; i++) {
+        _compile_records[i] = old_compile_records[i];
+      }
+      _compile_records[_compile_records_pos] = rec;
+      _compile_records_pos++;
+    }
+  } else {
+    rec->setupCompileRecord(klass_name, method_name, signature);
   }
 //  ResourceMark rm;
-//  char* klass_name =  method->method_holder()->name()->as_utf8();
-//  char* method_name = method->name()->as_utf8();
-//  char * signature = method->signature()->as_utf8();
-  rec->setupCompileRecord(klass_name, method_name, signature);
-  // if array has empty space
-  if(_compile_records_pos<_compile_records_length) {
-    _compile_records[_compile_records_pos] = rec;
-    _compile_records_pos++;
-  } else {
-    // grow
-    CompileRecord** old_compile_records = _compile_records;
-    int old_compile_records_length = _compile_records_length;
-    _compile_records_length = _compile_records_length*2;
-    _compile_records = NEW_C_HEAP_ARRAY(CompileRecord*, _compile_records_length, mtCompiler);
-    for(int i = 0; i< old_compile_records_length; i++) {
-      _compile_records[i] = old_compile_records[i];
-    }
-    _compile_records[_compile_records_pos] = rec;
-    _compile_records_pos++;
-  }
   return rec;
 }
 

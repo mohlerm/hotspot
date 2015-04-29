@@ -117,8 +117,8 @@ public:
   int       _methods_length;
   void setupMethodDataRecord(char* k_name, char* m_name, char* s) {
     // TODO do not hardcode length
-    _klass_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
-    _method_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _klass_name = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
     _signature = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
     strcpy(_klass_name,k_name);
     strcpy(_method_name,m_name);
@@ -141,8 +141,8 @@ public:
     //_klass_name = NEW_C_HEAP_OBJ(char, mtCompiler);
     //_method_name = NEW_C_HEAP_OBJ(char, mtCompiler);
     //_signature = NEW_C_HEAP_OBJ(char, mtCompiler);
-    _klass_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
-    _method_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _klass_name = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
     _signature = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
     strcpy(_klass_name,k_name);
     strcpy(_method_name,m_name);
@@ -158,8 +158,8 @@ public:
   int _inline_depth;
   int _inline_bci;
   void setupInlineRecord(char* k_name, char* m_name, char* s) {
-    _klass_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
-    _method_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _klass_name = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
     _signature = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
     strcpy(_klass_name,k_name);
     strcpy(_method_name,m_name);
@@ -189,8 +189,8 @@ public:
   GrowableArray<InlineRecord*>* _inline_records;
 
   void setupCompileRecord(char* k_name, char* m_name, char* s) {
-    _klass_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
-    _method_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _klass_name = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
     _signature = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
     strcpy(_klass_name,k_name);
     strcpy(_method_name,m_name);

@@ -1332,9 +1332,9 @@ void ciEnv::dump_cache_profiles(int compile_id, const char* methodName) {
       if (replay_data_file != NULL) {
         fileStream replay_data_stream(replay_data_file, /*need_close=*/true);
         dump_cache_profiles(&replay_data_stream);
-        tty->print_cr("# Compiler cached profile is saved as: %s", buffer);
+        if(PrintCacheProfiles) tty->print_cr("# Compiler cached profile is saved as: %s", buffer);
       } else {
-        tty->print_cr("# Can't open file to dump cached profile.");
+        if(PrintCacheProfiles) tty->print_cr("# Can't open file to dump cached profile.");
       }
     }
   }

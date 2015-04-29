@@ -1405,11 +1405,13 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
       if(ciCacheProfiles::is_initialized()) {
         int cached_comp_level = ciCacheProfiles::is_cached(method());
         if(cached_comp_level > 0) {
-          tty->print(">>>>>> USE PROFILE Complevel: %d, Hotcount: %d ",cached_comp_level, hot_count);
-          method->print_name(tty);
-          method->print_short_name(tty);
-          tty->print("<<<<<<<");
-          tty->cr();
+          if(PrintCacheProfiles) {
+            tty->print(">>>>>> USE PROFILE Complevel: %d, Hotcount: %d ",cached_comp_level, hot_count);
+            method->print_name(tty);
+            method->print_short_name(tty);
+            tty->print("<<<<<<<");
+            tty->cr();
+          }
           ciCacheProfiles::replay(THREAD,method());
           return NULL;
         }

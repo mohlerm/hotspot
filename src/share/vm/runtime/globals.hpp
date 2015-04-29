@@ -3389,14 +3389,17 @@ class CommandLineFlags {
           "[default: ./replay_pid%p.log] (%p replaced with pid)")           \
 		  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	    \
 	experimental(bool, DumpProfiles, false,                                   \
-      "Cache profiling information for future VM runs")                     \
+          "Cache profiling information for future VM runs")                 \
                                                                             \
   experimental(bool, CacheProfiles, false,                                  \
-		  "Use profiling information")                                          \
+		       "Use profiling information")                                     \
 		  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	    \
   experimental(ccstr, CacheProfilesFile, NULL,                              \
-		  "File containing cached profiles"                                     \
-		  "[default: ./profiles_pid%p.log] (%p replaced with pid)")             \
+		       "File containing cached profiles"                                \
+		       "[default: ./profiles_pid%p.log] (%p replaced with pid)")        \
+		                                                                        \
+  experimental(bool, PrintCacheProfiles, false,                             \
+           "Prints cache profiling information")                            \
 		                                                                        \
   product(ccstr, InlineDataFile, NULL,                                      \
           "File containing inlining replay information"                     \

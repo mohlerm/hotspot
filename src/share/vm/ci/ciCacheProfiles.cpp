@@ -509,7 +509,7 @@ void ciCacheProfiles::replay_method(TRAPS, Method* method) {
       //reset();
     }
     else {
-      tty->print("ERROR IN COMPILE");
+      if(PrintCacheProfiles) tty->print("ERROR IN COMPILE");
     }
   }
 
@@ -819,7 +819,7 @@ void ciCacheProfiles::initialize(ciMethodData* m) {
       bool check2 = m->_data_size == rec->_data_length * (int)sizeof(rec->_data[0]);
       //assert(check1 || check2, "must agree");
       // TODO: think about that solution, dunno if it's valid
-      if(check1 && check2) {
+      if(check1 || check2) {
         // Write the correct ciObjects back into the profile data
         ciEnv* env = ciEnv::current();
         for (int i = 0; i < rec->_classes_length; i++) {
@@ -840,6 +840,8 @@ void ciCacheProfiles::initialize(ciMethodData* m) {
   #else
         Copy::conjoint_jints_atomic((jint *)rec->_data, (jint *)m->_data, rec->_data_length);
   #endif
+      } else {
+        if(PrintCacheProfiles) tty->print("ERROR on retrieving compile data for %s::%s: sizes do not match\n", rec->_klass_name, rec->_method_name);
       }
 
       // copy in the original header

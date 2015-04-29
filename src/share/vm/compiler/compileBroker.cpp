@@ -1402,14 +1402,17 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
     // first, check whether the CacheProfiles flag is set, if not continue as usual
     if(!(strcmp("replay", comment) == 0) && !FLAG_IS_DEFAULT(CacheProfiles)) {
       // if it's set trigger replayCompilation in case it's a cached method
-      if(ciCacheProfiles::is_initialized() && ciCacheProfiles::is_cached(method())) {
-        tty->print(">>>>>> USE PROFILE Complevel: %d, Hotcount: %d ",comp_level, hot_count);
-        method->print_name(tty);
-        method->print_short_name(tty);
-        tty->print("<<<<<<<");
-        tty->cr();
-        ciCacheProfiles::replay(THREAD,method());
-        return NULL;
+      if(ciCacheProfiles::is_initialized()) {
+        int cached_comp_level = ciCacheProfiles::is_cached(method());
+        if(cached_comp_level > 0) {
+          tty->print(">>>>>> USE PROFILE Complevel: %d, Hotcount: %d ",cached_comp_level, hot_count);
+          method->print_name(tty);
+          method->print_short_name(tty);
+          tty->print("<<<<<<<");
+          tty->cr();
+          ciCacheProfiles::replay(THREAD,method());
+          return NULL;
+        }
       }
     }
     compile_method_base(method, osr_bci, comp_level, hot_method, hot_count, comment, THREAD);

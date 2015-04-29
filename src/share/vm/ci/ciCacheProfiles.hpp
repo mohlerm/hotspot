@@ -96,7 +96,59 @@
 // is performed during normal java program execution.
 //
 // class to represent the cached compilations
+class MethodDataRecord : public CHeapObj<mtCompiler> {
+public:
+  char* _klass_name;
+  char* _method_name;
+  char* _signature;
 
+  int _state;
+  int _current_mileage;
+
+  intptr_t* _data;
+  char*     _orig_data;
+  Klass**   _classes;
+  Method**  _methods;
+  int*      _classes_offsets;
+  int*      _methods_offsets;
+  int       _data_length;
+  int       _orig_data_length;
+  int       _classes_length;
+  int       _methods_length;
+  void setupMethodDataRecord(char* k_name, char* m_name, char* s) {
+    // TODO do not hardcode length
+    _klass_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
+    strcpy(_klass_name,k_name);
+    strcpy(_method_name,m_name);
+    strcpy(_signature,s);
+  }
+};
+
+class MethodRecord : public CHeapObj<mtCompiler> {
+public:
+  char* _klass_name;
+  char* _method_name;
+  char* _signature;
+
+  int _instructions_size;
+  int _interpreter_invocation_count;
+  int _interpreter_throwout_count;
+  int _invocation_counter;
+  int _backedge_counter;
+  void setupMethodRecord(char* k_name, char* m_name, char* s) {
+    //_klass_name = NEW_C_HEAP_OBJ(char, mtCompiler);
+    //_method_name = NEW_C_HEAP_OBJ(char, mtCompiler);
+    //_signature = NEW_C_HEAP_OBJ(char, mtCompiler);
+    _klass_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
+    strcpy(_klass_name,k_name);
+    strcpy(_method_name,m_name);
+    strcpy(_signature,s);
+  }
+};
 class InlineRecord : public CHeapObj<mtCompiler> {
 public:
   char* _klass_name;
@@ -108,7 +160,7 @@ public:
   void setupInlineRecord(char* k_name, char* m_name, char* s) {
     _klass_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
     _method_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
-    _signature = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
     strcpy(_klass_name,k_name);
     strcpy(_method_name,m_name);
     strcpy(_signature,s);
@@ -117,16 +169,29 @@ public:
 
 class CompileRecord : public CHeapObj<mtCompiler> {
 public:
+
+  // "compile" data
+  ciKlass* _iklass;
+  Method*  _imethod;
+
+  MethodRecord**     _method_records;
+  MethodDataRecord** _method_data_records;
+ // int _method_records_length;
+  //int _method_data_records_length;
+  int _method_records_pos;
+  int _method_data_records_pos;
+
   char* _klass_name;
   char* _method_name;
   char* _signature;
   int   _entry_bci;
   int   _comp_level;
   GrowableArray<InlineRecord*>* _inline_records;
+
   void setupCompileRecord(char* k_name, char* m_name, char* s) {
     _klass_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
     _method_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
-    _signature = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
     strcpy(_klass_name,k_name);
     strcpy(_method_name,m_name);
     strcpy(_signature,s);
@@ -173,59 +238,6 @@ public:
  }
 };
 
-class MethodDataRecord : public CHeapObj<mtCompiler> {
-public:
-  char* _klass_name;
-  char* _method_name;
-  char* _signature;
-
-  int _state;
-  int _current_mileage;
-
-  intptr_t* _data;
-  char*     _orig_data;
-  Klass**   _classes;
-  Method**  _methods;
-  int*      _classes_offsets;
-  int*      _methods_offsets;
-  int       _data_length;
-  int       _orig_data_length;
-  int       _classes_length;
-  int       _methods_length;
-  void setupMethodDataRecord(char* k_name, char* m_name, char* s) {
-    _klass_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
-    _method_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
-    _signature = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
-    strcpy(_klass_name,k_name);
-    strcpy(_method_name,m_name);
-    strcpy(_signature,s);
-  }
-};
-
-class MethodRecord : public CHeapObj<mtCompiler> {
-public:
-  char* _klass_name;
-  char* _method_name;
-  char* _signature;
-
-  int _instructions_size;
-  int _interpreter_invocation_count;
-  int _interpreter_throwout_count;
-  int _invocation_counter;
-  int _backedge_counter;
-  void setupMethodRecord(char* k_name, char* m_name, char* s) {
-    //_klass_name = NEW_C_HEAP_OBJ(char, mtCompiler);
-    //_method_name = NEW_C_HEAP_OBJ(char, mtCompiler);
-    //_signature = NEW_C_HEAP_OBJ(char, mtCompiler);
-    _klass_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
-    _method_name = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
-    _signature = NEW_C_HEAP_ARRAY(char, 32, mtCompiler);;
-    strcpy(_klass_name,k_name);
-    strcpy(_method_name,m_name);
-    strcpy(_signature,s);
-  }
-};
-
 
 class ciCacheProfiles : AllStatic {
   CI_PACKAGE_ACCESS
@@ -247,16 +259,12 @@ class ciCacheProfiles : AllStatic {
   // "compile" data
   static ciKlass* _iklass;
   static Method*  _imethod;
-  static int      _entry_bci;
-  static int      _comp_level;
-
 
   static int replay_impl(TRAPS, Method* method);
-  static MethodRecord**     _method_records;
-  static MethodDataRecord** _method_data_records;
-  static CompileRecord**    _compile_records;
 
-  //static GrowableArray<InlineRecord*>* _inline_records;
+  static CompileRecord**    _compile_records;
+  static MethodRecord** _method_records;
+  static MethodDataRecord** _method_data_records;
 
   static int _method_records_pos;
   static int _method_data_records_pos;
@@ -310,20 +318,15 @@ class ciCacheProfiles : AllStatic {
   static void process_ciMethodData(TRAPS);
   static void process_JvmtiExport(TRAPS);
 
-
   // Create and initialize a record for a ciMethod
   static MethodRecord* new_methodRecord(char* klass_name, char* method_name, char* signature);
   // Lookup data for a ciMethod
   static MethodRecord* find_methodRecord(Method* method);
-  // Lookup data for a ciMethod
-  static MethodRecord* find_methodRecord(char* klass_name, char* method_name, char* signature);
 
   // Create and initialize a record for a ciMethodData
   static MethodDataRecord* new_methodDataRecord(char* klass_name, char* method_name, char* signature);
   // Lookup data for a ciMethodData
   static MethodDataRecord* find_methodDataRecord(Method* method);
-  // Lookup data for a ciMethodData
-  static MethodDataRecord* find_methodDataRecord(char* klass_name, char* method_name, char* signature);
 
   // Create and initialize a record for a ciCompile
   static CompileRecord* new_compileRecord(char* klass_name, char* method_name, char* signature);
@@ -369,8 +372,8 @@ class ciCacheProfiles : AllStatic {
 
 //  class  CacheReplay;
 //  static CacheReplay* cache_state;
-  static bool is_cached(Method* method);
-  static bool is_cached(methodHandle method);
+  static int is_cached(Method* method);
+  static int is_cached(methodHandle method);
 
   static bool is_initialized();
   static void is_initialized(bool flag);

@@ -10,14 +10,14 @@ JAVACPATH = '../../../build/linux-x86_64-normal-server-fastdebug/jdk/bin/javac'
 JAVAARGS = ['-agentlib:hprof=cpu=times','-XX:+UnlockDiagnosticVMOptions', '-XX:-UseOnStackReplacement', '-XX:+UnlockExperimentalVMOptions']
 JAVAARGS_VERBOSE = ['-XX:+PrintCompilation', '-XX:+TraceDeoptimization']
 JAVAARGS_DEBUG = ['-XX:+PrintCacheProfiles']
-JAVAARGS_USE = ['-XX:+CacheProfiles', '-XX:CacheProfilesFile=cached_profiles.log']
+JAVAARGS_USE = ['-XX:+CacheProfiles']
 JAVAARGS_CREATE = ['-XX:+DumpProfiles', '-XX:CompileCommandFile=createCommands.txt']
 #JAVAARGS_CREATE = ['-XX:CompileCommandFile=createCommands.txt']
 
 NROFRUNS = 1
 VERBOSE = True
 DEBUG = True
-RUN_BASELINE = False
+RUN_BASELINE = True
 RUN_CREATE = True  
 RUN_USE = True
 

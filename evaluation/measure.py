@@ -3,20 +3,22 @@ import re, sys, os, time
 from subprocess import call, check_call, check_output, CalledProcessError
 
 # useful flags: -Xint (only interpreter), -Xcomp (compile everything)
-JAVAPATH = '../../hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/java'
-JAVACPATH = '../hs-comp/build/linux-x86_64-normal-server-fastdebug/jdk/bin/javac'
+JAVAPATH = '../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java'
+JAVACPATH = '../../../build/linux-x86_64-normal-server-fastdebug/jdk/bin/javac'
 #JAVAARGS_USE = ['-agentlib:hprof=cpu=times','-XX:+UnlockDiagnosticVMOptions', '-XX:+PrintCompilation', '-XX:-UseOnStackReplacement', '-XX:+UnlockExperimentalVMOptions', '-XX:+TraceDeoptimization', '-Xbatch', '-XX:+CacheProfiles', '-XX:CacheProfilesFile=cached_profiles.log', '-XX:CompileCommandFile=useCommands.txt']
 
-JAVAARGS = ['-agentlib:hprof=cpu=times','-XX:+UnlockDiagnosticVMOptions', '-XX:-UseOnStackReplacement', '-XX:+UnlockExperimentalVMOptions', '-Xbatch']
+JAVAARGS = ['-agentlib:hprof=cpu=times','-XX:+UnlockDiagnosticVMOptions', '-XX:-UseOnStackReplacement', '-XX:+UnlockExperimentalVMOptions']
 JAVAARGS_VERBOSE = ['-XX:+PrintCompilation', '-XX:+TraceDeoptimization']
-JAVAARGS_USE = ['-XX:+CacheProfiles', '-XX:CacheProfilesFile=cached_profiles.log']
-#JAVAARGS_CREATE = ['-XX:+DumpProfiles', '-XX:CompileCommandFile=createCommands.txt']
-JAVAARGS_CREATE = ['-XX:CompileCommandFile=createCommands.txt']
+JAVAARGS_DEBUG = ['-XX:+PrintCacheProfiles']
+JAVAARGS_USE = ['-XX:+CacheProfiles']
+JAVAARGS_CREATE = ['-XX:+DumpProfiles', '-XX:CompileCommandFile=createCommands.txt']
+#JAVAARGS_CREATE = ['-XX:CompileCommandFile=createCommands.txt']
 
-NROFRUNS = 5
+NROFRUNS = 1
 VERBOSE = True
+DEBUG = True
 RUN_BASELINE = True
-RUN_CREATE = True
+RUN_CREATE = True  
 RUN_USE = True
 
 
@@ -39,9 +41,9 @@ def printEvalResults(name, methodNames, evalResult):
         avgTime = (sum(evalResult.timeListDict[method])/len(evalResult.timeListDict[method]))
         avgPercent = (sum(evalResult.percentListDict[method])/len(evalResult.percentListDict[method]))
         avgCount = (sum(evalResult.invocationCountDict[method])/len(evalResult.invocationCountDict[method]))
-        print(">>> Total time:        %s ms" % avgTime)
-        print(">>> Total percentage:  %s %%" % avgPercent)
-        print(">>> Invocation count:  %s" % avgCount)
+        print(">>> Total time:        %s ms" % round(avgTime,2))
+        print(">>> Total percentage:  %s %%" % round(avgPercent,2))
+        print(">>> Invocation count:  %s" % round(avgCount,2))
         print(">>> Time per method:   %s ms" % round((float(avgTime)*(avgPercent/100)/avgCount),2)) 
     print("-----------------------------------")
 
@@ -53,6 +55,8 @@ def runHotspot(javaargs, className, methodNames):
 
     if(VERBOSE):
         hotspotCall.extend(JAVAARGS_VERBOSE)
+    if(DEBUG):
+        hotspotCall.extend(JAVAARGS_DEBUG)
     if(javaargs == "CREATE"):
         hotspotCall.extend(JAVAARGS_CREATE)
     elif(javaargs == "USE"):
@@ -91,11 +95,11 @@ try:
     evalCreate = EvalResult(methodNames)
     evalUse = EvalResult(methodNames)
     if(RUN_BASELINE):
-        evalBaseline = runHotspot("", className, methodNames)
+        evalBaseline = runHotspot("BASELINE", className, methodNames)
     if(RUN_CREATE):
-        evalCreate = runHotspot(JAVAARGS_CREATE, className, methodNames)
+        evalCreate = runHotspot("CREATE", className, methodNames)
     if(RUN_USE):
-        evalUse = runHotspot(JAVAARGS_USE, className, methodNames)
+        evalUse = runHotspot("USE", className, methodNames)
     print("------------ RESULTS --------------")
     print("------------ RUNS: "+ str(NROFRUNS) + " --------------")
     if(RUN_BASELINE):

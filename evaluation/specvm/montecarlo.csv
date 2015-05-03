@@ -1,6 +1,8 @@
-,Warmup,Iteration 1
-Create Profile,8.17,116.39
-Use Profiles,129.2,131.94
-Baseline w/o IL,8.21,113.63
-Baseline JDK8,120.49,123.66
+Names,Warmup,Iteration 1
+cr. Profile noOSR,8.38,121.29
+use Profile noOSR,129.21,131.95
+Baseline noOSR,8.21,113.63
+cr. Profile OSR,45.84,46.34
+use Profile OSR,46.00,45.73
+Baseline OSR,44.27,45.19
 Baseline JDK9,134.83,131.91

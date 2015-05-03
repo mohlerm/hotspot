@@ -1,0 +1,163 @@
+[09:07:35] marcel@miraculix ~/b/SPECjvm2008$ ./run-benchmark.sh create
+
+SPECjvm2008 Base
+  Properties file:   none
+  Benchmarks:        scimark.lu.small
+
+  WARNING: Run will not be compliant.
+  Not a compliant sequence of benchmarks for publication.
+  Property specjvm.run.checksum.validation must be true for publication.
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   check
+  Run mode:    static run
+  Test type:   functional
+  Threads:     1
+  Iterations:  1
+  Run length:  1 operation
+
+Iteration 1 (1 operation) begins: Thu Apr 30 09:08:03 CEST 2015
+Iteration 1 (1 operation) ends:   Thu Apr 30 09:08:03 CEST 2015
+Iteration 1 (1 operation) result: PASSED
+
+Valid run!
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.lu.small
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Thu Apr 30 09:08:03 CEST 2015
+Warmup (120s) ends:   Thu Apr 30 09:10:05 CEST 2015
+Warmup (120s) result: 214.23 ops/m
+
+Iteration 1 (240s) begins: Thu Apr 30 09:10:05 CEST 2015
+Iteration 1 (240s) ends:   Thu Apr 30 09:14:06 CEST 2015
+Iteration 1 (240s) result: 237.42 ops/m
+
+Valid run!
+Score on scimark.lu.small: 237.42 ops/m
+
+Results are stored in: 
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.055/SPECjvm2008.055.raw
+Generating reports in:
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.055
+
+Noncompliant composite result: 237.42 ops/m
+[09:14:16] marcel@miraculix ~/b/SPECjvm2008$ ./run-benchmark.sh use
+
+SPECjvm2008 Base
+  Properties file:   none
+  Benchmarks:        scimark.lu.small
+
+  WARNING: Run will not be compliant.
+  Not a compliant sequence of benchmarks for publication.
+  Property specjvm.run.checksum.validation must be true for publication.
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   check
+  Run mode:    static run
+  Test type:   functional
+  Threads:     1
+  Iterations:  1
+  Run length:  1 operation
+
+Iteration 1 (1 operation) begins: Thu Apr 30 09:14:25 CEST 2015
+Iteration 1 (1 operation) ends:   Thu Apr 30 09:14:25 CEST 2015
+Iteration 1 (1 operation) result: PASSED
+
+Valid run!
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.lu.small
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Thu Apr 30 09:14:25 CEST 2015
+Warmup (120s) ends:   Thu Apr 30 09:16:27 CEST 2015
+Warmup (120s) result: 233.80 ops/m
+
+Iteration 1 (240s) begins: Thu Apr 30 09:16:27 CEST 2015
+Iteration 1 (240s) ends:   Thu Apr 30 09:20:29 CEST 2015
+Iteration 1 (240s) result: 233.39 ops/m
+
+Valid run!
+Score on scimark.lu.small: 233.39 ops/m
+
+Results are stored in: 
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.056/SPECjvm2008.056.raw
+Generating reports in:
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.056
+
+Noncompliant composite result: 233.39 ops/m
+[09:20:39] marcel@miraculix ~/b/SPECjvm2008$ ./run-benchmark.sh baseline
+
+SPECjvm2008 Base
+  Properties file:   none
+  Benchmarks:        scimark.lu.small
+
+  WARNING: Run will not be compliant.
+  Not a compliant sequence of benchmarks for publication.
+  Property specjvm.run.checksum.validation must be true for publication.
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   check
+  Run mode:    static run
+  Test type:   functional
+  Threads:     1
+  Iterations:  1
+  Run length:  1 operation
+
+Iteration 1 (1 operation) begins: Thu Apr 30 09:22:58 CEST 2015
+Iteration 1 (1 operation) ends:   Thu Apr 30 09:22:58 CEST 2015
+Iteration 1 (1 operation) result: PASSED
+
+Valid run!
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.lu.small
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Thu Apr 30 09:22:58 CEST 2015
+Warmup (120s) ends:   Thu Apr 30 09:24:59 CEST 2015
+Warmup (120s) result: 236.20 ops/m
+
+Iteration 1 (240s) begins: Thu Apr 30 09:24:59 CEST 2015
+Iteration 1 (240s) ends:   Thu Apr 30 09:29:00 CEST 2015
+Iteration 1 (240s) result: 235.51 ops/m
+
+Valid run!
+Score on scimark.lu.small: 235.51 ops/m
+
+Results are stored in: 
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.057/SPECjvm2008.057.raw
+Generating reports in:
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.057
+
+Noncompliant composite result: 235.51 ops/m
+

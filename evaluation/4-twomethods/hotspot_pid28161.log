@@ -1,0 +1,394 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hotspot_log version='160 1' process='28161' time_ms='1430294109445'>
+<vm_version>
+<name>
+OpenJDK 64-Bit Server VM
+</name>
+<release>
+1.9.0-internal-debug-marcel_2015_04_17_10_57-b00
+</release>
+<info>
+OpenJDK 64-Bit Server VM (1.9.0-internal-debug-marcel_2015_04_17_10_57-b00) for linux-amd64 JRE (1.9.0-internal-marcel_2015_04_17_10_57-b00), built on Apr 29 2015 09:53:17 by &quot;marcel&quot; with gcc 4.9.2 20150304 (prerelease)
+</info>
+</vm_version>
+<vm_arguments>
+<args>
+-agentlib:hprof=cpu=times -XX:+UnlockDiagnosticVMOptions -XX:-UseOnStackReplacement -XX:+UnlockExperimentalVMOptions -Xbatch -XX:+PrintCompilation -XX:+TraceDeoptimization -XX:CompileCommandFile=createCommands.txt 
+</args>
+<command>
+TwoMethods
+</command>
+<launcher>
+SUN_STANDARD
+</launcher>
+<properties>
+java.vm.specification.name=Java Virtual Machine Specification
+java.vm.version=1.9.0-internal-debug-marcel_2015_04_17_10_57-b00
+java.vm.name=OpenJDK 64-Bit Server VM
+java.vm.info=mixed mode, sharing
+sun.boot.library.path=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64
+java.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.home=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk
+java.class.path=.
+sun.boot.class.path=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.rmi:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.security.auth:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.jcmd:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.attach:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.transaction:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.security.jgss:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.hprof.agent:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.zipfs:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.jvmstat:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.sql.rowset:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.security.jgss:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.hotspot.agent:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.datatransfer:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.scripting:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.logging:/hom
+java.vm.specification.vendor=Oracle Corporation
+java.vm.specification.version=1.9
+java.vm.vendor=Oracle Corporation
+sun.java.command=TwoMethods
+sun.java.launcher=SUN_STANDARD
+</properties>
+</vm_arguments>
+<tty>
+<writer thread='140551777302272'/>
+CompileCommand: option TwoMethods.method1 double CompileThresholdScaling = 0.010000
+CompileCommand: option TwoMethods.method2 double CompileThresholdScaling = 0.010000
+CompileCommand: option TwoMethods.method1 bool DumpProfile = true
+CompileCommand: option TwoMethods.method2 bool DumpProfile = true
+    565    1     n 0       java.lang.Thread::currentThread (native)   (static)
+<writer thread='140551351617280'/>
+    589    2    b  4       com.sun.demo.jvmti.hprof.Tracker::CallSite (43 bytes)
+<writer thread='140551350564608'/>
+    595    3    b  4       com.sun.demo.jvmti.hprof.Tracker::ReturnSite (43 bytes)
+<writer thread='140551777302272'/>
+    624    4     n 0       com.sun.demo.jvmti.hprof.Tracker::nativeCallSite (native)   (static)
+    625    5     n 0       com.sun.demo.jvmti.hprof.Tracker::nativeReturnSite (native)   (static)
+<writer thread='140551349511936'/>
+    630    6    b  3       java.lang.Object::&lt;init&gt; (1 bytes)
+    633    7    b  3       java.lang.System::getSecurityManager (20 bytes)
+<writer thread='140551777302272'/>
+<blob name='MethodHandlesAdapterBlob' size='182000'>
+<sect index='1' size='182000' free='177714'/>
+</blob>
+<writer thread='140551349511936'/>
+    664    8    b  3       java.lang.StringBuilder::append (22 bytes)
+    673    9    b  3       java.lang.String::getChars (78 bytes)
+<writer thread='140551351617280'/>
+    710   10    b  4       java.lang.String::charAt (45 bytes)
+<writer thread='140551349511936'/>
+    750   11    b  3       java.lang.ref.Reference::get (19 bytes)
+<writer thread='140551777302272'/>
+    752   12     n 0       java.lang.System::arraycopy (native)   (static)
+<writer thread='140551349511936'/>
+    779   13    b  3       java.util.Arrays::copyOf (35 bytes)
+    797   14    b  3       java.lang.String::hashCode (69 bytes)
+    808   15    b  3       java.lang.AbstractStringBuilder::expandCapacity (66 bytes)
+    823   16    b  3       java.util.Arrays::copyOfRange (79 bytes)
+    853   17    b  3       java.lang.Math::min (27 bytes)
+    858   18    b  3       java.lang.String::&lt;init&gt; (103 bytes)
+    922   19    b  1       java.lang.Object::&lt;init&gt; (1 bytes)
+    923    6       3       java.lang.Object::&lt;init&gt; (1 bytes)   made not entrant
+    950   20    b  3       java.lang.String::length (22 bytes)
+    954   21    b  3       java.lang.AbstractStringBuilder::ensureCapacityInternal (30 bytes)
+   1008   22    b  3       java.lang.String::indexOf (110 bytes)
+   1428   23    b  3       TwoMethods::method1 (159 bytes)
+   1630   24    b  3       sun.misc.FDBigInteger::&lt;init&gt; (44 bytes)
+   1641   25    b  3       sun.misc.FDBigInteger::trimLeadingZeros (71 bytes)
+   1649   26    b  3       sun.misc.FDBigInteger::makeImmutable (22 bytes)
+   1654   27    b  3       sun.misc.FDBigInteger::mult (68 bytes)
+   1661   28    b  3       sun.misc.FDBigInteger::mult (80 bytes)
+   1871   29    b  3       java.lang.String::indexOf (23 bytes)
+   1880   30    b  3       TwoMethods::method2 (158 bytes)
+<writer thread='140551350564608'/>
+   2193   31 %  b  4       TwoMethods::method1 @ 50 (159 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140551351617280'/>
+   2209   32    b  4       TwoMethods::method1 (159 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+   2274   23       3       TwoMethods::method1 (159 bytes)   made not entrant
+<writer thread='140551777302272'/>
+DEOPT PACKING thread 0x00007fd4bc052800 Deoptimized frame (sp=0x00007fd4c2c22690 unextended sp=0x00007fd4c2c22690, fp=0x00007fd4c2c22860, real_fp=0x00007fd4c2c22800, pc=0x00007fd4acaecaf7)
+     nmethod   2275   23       3       TwoMethods::method1 (159 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007fd4c2c22690, unextended_sp=0x00007fd4c2c22690, fp=0x00007fd4c2c22860, pc=0x00007fd4acaecaf7)
+TwoMethods.method1(TwoMethods.java:28) - goto @ bci 66 
+     Created vframeArray 0x00007fd4bc289920
+DEOPT UNPACKING thread 0x00007fd4bc052800 vframeArray 0x00007fd4bc289920 mode 0
+     {method} {0x00007fd4ab2368f8} &apos;method1&apos; &apos;(D)D&apos; in &apos;TwoMethods&apos; - goto @ bci 66 sp = 0x00007fd4c2c22778
+<writer thread='140551350564608'/>
+   2484   33 %  b  4       TwoMethods::method2 @ 51 (158 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140551351617280'/>
+   2502   34    b  4       TwoMethods::method2 (158 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+   2534   30       3       TwoMethods::method2 (158 bytes)   made not entrant
+<writer thread='140551777302272'/>
+DEOPT PACKING thread 0x00007fd4bc052800 Deoptimized frame (sp=0x00007fd4c2c22680 unextended sp=0x00007fd4c2c22680, fp=0x00007fd4c2c22860, real_fp=0x00007fd4c2c227f0, pc=0x00007fd4acaf466f)
+     nmethod   2535   30       3       TwoMethods::method2 (158 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007fd4c2c22680, unextended_sp=0x00007fd4c2c22680, fp=0x00007fd4c2c22860, pc=0x00007fd4acaf466f)
+TwoMethods.method2(TwoMethods.java:43) - goto @ bci 65 
+     Created vframeArray 0x00007fd4bc28ad00
+DEOPT UNPACKING thread 0x00007fd4bc052800 vframeArray 0x00007fd4bc28ad00 mode 0
+     {method} {0x00007fd4ab236a60} &apos;method2&apos; &apos;(D)D&apos; in &apos;TwoMethods&apos; - goto @ bci 65 sp = 0x00007fd4c2c22768
+<uncommon_trap thread='140551777302272' reason='unstable_if' action='reinterpret' compile_id='32' compiler='C2' level='4' stamp='2.716'>
+Uncommon trap occurred in TwoMethods::method1 (@0x00007fd4b401bde8) thread=140551777302272 reason=unstable_if action=reinterpret unloaded_class_index=-1
+<jvms bci='54' method='TwoMethods method1 (D)D' bytes='159' count='3' backedge_count='30000001' iicount='3'/>
+</uncommon_trap>
+   2715   32       4       TwoMethods::method1 (159 bytes)   made not entrant
+DEOPT PACKING thread 0x00007fd4bc052800 Compiled frame (sp=0x00007fd4c2c227c0 unextended sp=0x00007fd4c2c227c0, fp=0x4294eb1ad4700000, real_fp=0x00007fd4c2c22800, pc=0x00007fd4b401bde8)
+     nmethod   2715   32       4       TwoMethods::method1 (159 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007fd4c2c227c0, unextended_sp=0x00007fd4c2c227c0, fp=0x4294eb1ad4700000, pc=0x00007fd4b401bde8)
+TwoMethods.method1(TwoMethods.java:28) - if_icmpge @ bci 54 
+     Created vframeArray 0x00007fd4bc289920
+DEOPT UNPACKING thread 0x00007fd4bc052800 vframeArray 0x00007fd4bc289920 mode 2
+     {method} {0x00007fd4ab2368f8} &apos;method1&apos; &apos;(D)D&apos; in &apos;TwoMethods&apos; - if_icmpge @ bci 54 sp = 0x00007fd4c2c22768
+<uncommon_trap thread='140551777302272' reason='unstable_if' action='reinterpret' compile_id='34' compiler='C2' level='4' stamp='2.735'>
+Uncommon trap occurred in TwoMethods::method2 (@0x00007fd4b401d360) thread=140551777302272 reason=unstable_if action=reinterpret unloaded_class_index=-1
+<jvms bci='53' method='TwoMethods method2 (D)D' bytes='158' count='3' backedge_count='30000001' iicount='3'/>
+</uncommon_trap>
+   2734   34       4       TwoMethods::method2 (158 bytes)   made not entrant
+DEOPT PACKING thread 0x00007fd4bc052800 Compiled frame (sp=0x00007fd4c2c227b0 unextended sp=0x00007fd4c2c227b0, fp=0x429402462f600000, real_fp=0x00007fd4c2c227f0, pc=0x00007fd4b401d360)
+     nmethod   2734   34       4       TwoMethods::method2 (158 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007fd4c2c227b0, unextended_sp=0x00007fd4c2c227b0, fp=0x429402462f600000, pc=0x00007fd4b401d360)
+TwoMethods.method2(TwoMethods.java:43) - ifle @ bci 53 
+     Created vframeArray 0x00007fd4bc28ad00
+DEOPT UNPACKING thread 0x00007fd4bc052800 vframeArray 0x00007fd4bc28ad00 mode 2
+     {method} {0x00007fd4ab236a60} &apos;method2&apos; &apos;(D)D&apos; in &apos;TwoMethods&apos; - ifle @ bci 53 sp = 0x00007fd4c2c22760
+<writer thread='140551349511936'/>
+   2739   35    b  3       TwoMethods::method1 (159 bytes)
+   3083   36    b  3       TwoMethods::method2 (158 bytes)
+   3389   37    b  3       java.lang.AbstractStringBuilder::append (74 bytes)
+<writer thread='140551350564608'/>
+   3440   38    b  4       TwoMethods::method1 (159 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+   3535   35       3       TwoMethods::method1 (159 bytes)   made not entrant
+<writer thread='140551777302272'/>
+DEOPT PACKING thread 0x00007fd4bc052800 Deoptimized frame (sp=0x00007fd4c2c22690 unextended sp=0x00007fd4c2c22690, fp=0x00007fd4c2c22860, real_fp=0x00007fd4c2c22800, pc=0x00007fd4acaf8ec7)
+     nmethod   3536   35       3       TwoMethods::method1 (159 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007fd4c2c22690, unextended_sp=0x00007fd4c2c22690, fp=0x00007fd4c2c22860, pc=0x00007fd4acaf8ec7)
+TwoMethods.method1(TwoMethods.java:28) - goto @ bci 66 
+     Created vframeArray 0x00007fd4bc289980
+DEOPT UNPACKING thread 0x00007fd4bc052800 vframeArray 0x00007fd4bc289980 mode 0
+     {method} {0x00007fd4ab2368f8} &apos;method1&apos; &apos;(D)D&apos; in &apos;TwoMethods&apos; - goto @ bci 66 sp = 0x00007fd4c2c22778
+<writer thread='140551351617280'/>
+   3731   39    b  4       TwoMethods::method2 (158 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+   3831   36       3       TwoMethods::method2 (158 bytes)   made not entrant
+<writer thread='140551777302272'/>
+DEOPT PACKING thread 0x00007fd4bc052800 Deoptimized frame (sp=0x00007fd4c2c22680 unextended sp=0x00007fd4c2c22680, fp=0x00007fd4c2c22860, real_fp=0x00007fd4c2c227f0, pc=0x00007fd4acafd73f)
+     nmethod   3831   36       3       TwoMethods::method2 (158 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007fd4c2c22680, unextended_sp=0x00007fd4c2c22680, fp=0x00007fd4c2c22860, pc=0x00007fd4acafd73f)
+TwoMethods.method2(TwoMethods.java:43) - goto @ bci 65 
+     Created vframeArray 0x00007fd4bc28a1b0
+DEOPT UNPACKING thread 0x00007fd4bc052800 vframeArray 0x00007fd4bc28a1b0 mode 0
+     {method} {0x00007fd4ab236a60} &apos;method2&apos; &apos;(D)D&apos; in &apos;TwoMethods&apos; - goto @ bci 65 sp = 0x00007fd4c2c22768
+<writer thread='140551349511936'/>
+   4105   40    b  3       java.nio.Buffer::position (17 bytes)
+   4118   41    b  3       java.nio.ByteBuffer::arrayOffset (51 bytes)
+   4213   42    b  3       java.nio.Buffer::position (55 bytes)
+   4244   43    b  3       java.nio.Buffer::limit (17 bytes)
+   4271   44    b  3       java.nio.CharBuffer::arrayOffset (51 bytes)
+   4442   45    b  3       java.lang.ThreadLocal::getMap (21 bytes)
+   4466   46    b  3       java.lang.ThreadLocal::access$400 (21 bytes)
+   4479   47    b  3       java.io.BufferedWriter::ensureOpen (30 bytes)
+   4488   48    b  3       sun.nio.cs.UTF_8$Encoder::encodeArrayLoop (538 bytes)
+   4648   49    b  3       java.nio.CharBuffer::position (22 bytes)
+   4654   50    b  3       java.nio.charset.CoderResult::isUnderflow (27 bytes)
+   4659   51    b  3       java.io.PrintStream::ensureOpen (34 bytes)
+   4706   52    b  3       java.lang.ThreadLocal::get (59 bytes)
+   4885   53  s b  3       java.io.BufferedOutputStream::flush (24 bytes)
+   4899   54    b  3       java.io.OutputStream::flush (13 bytes)
+   5028   55    b  3       java.nio.ByteBuffer::array (51 bytes)
+   5245   56    b  3       java.lang.StringBuilder::toString (33 bytes)
+   5268   57    b  3       java.nio.Buffer::&lt;init&gt; (133 bytes)
+   5342   58    b  3       java.nio.Buffer::limit (74 bytes)
+   5385   59    b  3       java.nio.ByteBuffer::position (24 bytes)
+   5422   60    b  3       java.nio.ByteBuffer::position (22 bytes)
+   5430   61    b  3       java.nio.CharBuffer::array (51 bytes)
+   5439   62    b  3       sun.nio.cs.UTF_8::updatePositions (35 bytes)
+   5446   63    b  3       java.io.Writer::write (23 bytes)
+   5452   64   !b  3       java.io.BufferedWriter::write (131 bytes)
+   5477   65    b  3       java.io.OutputStreamWriter::write (25 bytes)
+   5481   66    b  3       sun.nio.cs.StreamEncoder::ensureOpen (32 bytes)
+   5486   67    b  3       sun.nio.cs.StreamEncoder::implWrite (172 bytes)
+   5541   68    b  3       java.nio.CharBuffer::limit (22 bytes)
+   5547   69    b  3       sun.nio.cs.UTF_8$Encoder::encodeLoop (52 bytes)
+   5556   70    b  3       java.io.OutputStreamWriter::flushBuffer (20 bytes)
+   5560   71    b  3       sun.nio.cs.StreamEncoder::isOpen (21 bytes)
+   5566   72    b  3       sun.nio.cs.StreamEncoder::implFlushBuffer (31 bytes)
+   5573   73    b  3       java.nio.ByteBuffer::flip (23 bytes)
+   5577   74   !b  3       java.io.PrintStream::write (85 bytes)
+   5593   75  s b  3       java.io.BufferedOutputStream::write (85 bytes)
+   5603   76    b  3       java.io.BufferedOutputStream::flushBuffer (41 bytes)
+   5607   77    b  3       java.io.FileOutputStream::write (36 bytes)
+<writer thread='140551777302272'/>
+   5615   78     n 0       java.io.FileOutputStream::writeBytes (native)   
+<writer thread='140551349511936'/>
+   5616   79    b  3       java.nio.ByteBuffer::clear (23 bytes)
+   5801   80    b  3       java.lang.Math::max (27 bytes)
+<writer thread='140551777302272'/>
+   6070   81     n 0       java.lang.Double::doubleToRawLongBits (native)   (static)
+<writer thread='140551349511936'/>
+   6219   82   !b  3       java.io.BufferedWriter::flushBuffer (71 bytes)
+   6242   83   !b  3       sun.nio.cs.StreamEncoder::write (102 bytes)
+   6272   84    b  3       java.nio.CharBuffer::&lt;init&gt; (36 bytes)
+   6277   85   !b  3       java.nio.charset.CharsetEncoder::encode (325 bytes)
+   6385   86    b  3       java.nio.CharBuffer::hasArray (36 bytes)
+   6390   87    b  3       java.nio.ByteBuffer::hasArray (36 bytes)
+   6394   88    b  3       java.nio.charset.CoderResult::isOverflow (28 bytes)
+   6398   89   !b  3       sun.nio.cs.StreamEncoder::flushBuffer (58 bytes)
+   6414   90    b  3       sun.nio.cs.StreamEncoder::writeBytes (148 bytes)
+   6475   91    b  3       sun.misc.FDBigInteger::size (26 bytes)
+   6499   92    b  3       java.lang.ThreadLocal$ThreadLocalMap::getEntry (63 bytes)
+   6583   93    b  3       sun.misc.FDBigInteger::multAndCarryBy10 (66 bytes)
+   6688   94    b  3       sun.misc.FDBigInteger::cmp (203 bytes)
+   6768   95    b  3       sun.misc.FDBigInteger::quoRemIteration (361 bytes)
+   6864   96    b  3       sun.misc.FDBigInteger::addAndCmp (388 bytes)
+   6962   97    b  3       sun.misc.FDBigInteger::multBy10 (210 bytes)
+   7128   98    b  3       sun.misc.FDBigInteger::multDiffMe (313 bytes)
+   7775   99    b  3       java.io.PrintStream::print (29 bytes)
+   7784  100   !b  3       java.io.PrintStream::newLine (89 bytes)
+   7840  101    b  3       sun.misc.FloatingDecimal$BinaryToASCIIBuffer::toJavaFormatString (37 bytes)
+   7896  102    b  3       java.lang.Double::toString (19 bytes)
+   7922  103    b  3       sun.misc.FloatingDecimal::toJavaFormatString (24 bytes)
+   7939  104    b  3       sun.misc.FloatingDecimal::getBinaryToASCIIConverter (22 bytes)
+   7948  105    b  3       sun.misc.FloatingDecimal::getBinaryToASCIIConverter (223 bytes)
+   8003  106    b  3       java.lang.Long::numberOfTrailingZeros (140 bytes)
+   8018  107   !b  3       java.io.PrintStream::println (40 bytes)
+   8200  108    b  3       sun.misc.FDBigInteger::valueOfPow52 (143 bytes)
+   8588  109    b  3       sun.misc.FDBigInteger::leftShift (66 bytes)
+   8911  110    b  3       sun.misc.FDBigInteger::leftShift (435 bytes)
+<writer thread='140551350564608'/>
+   9119  111    b  4       sun.misc.FDBigInteger::trimLeadingZeros (71 bytes)
+   9142   25       3       sun.misc.FDBigInteger::trimLeadingZeros (71 bytes)   made not entrant
+<writer thread='140551349511936'/>
+   9179  112    b  3       sun.misc.FDBigInteger::big5pow (61 bytes)
+<writer thread='140551777302272'/>
+   9417  113     n 0       java.lang.Double::longBitsToDouble (native)   (static)
+<writer thread='140551349511936'/>
+   9443  114    b  3       sun.misc.FloatingDecimal$BinaryToASCIIBuffer::estimateDecExp (214 bytes)
+<writer thread='140551351617280'/>
+   9555  115    b  4       sun.misc.FDBigInteger::multAndCarryBy10 (66 bytes)
+   9582   93       3       sun.misc.FDBigInteger::multAndCarryBy10 (66 bytes)   made not entrant
+<writer thread='140551349511936'/>
+   9890  116   !b  3       java.io.PrintStream::write (99 bytes)
+   9934  117    b  3       sun.misc.FloatingDecimal$BinaryToASCIIBuffer::getChars (518 bytes)
+  10092  118    b  3       sun.misc.FloatingDecimal$BinaryToASCIIBuffer::dtoa (1533 bytes)
+<writer thread='140551350564608'/>
+  10594  119    b  4       sun.nio.cs.UTF_8$Encoder::encodeArrayLoop (538 bytes)
+  10714   48       3       sun.nio.cs.UTF_8$Encoder::encodeArrayLoop (538 bytes)   made not entrant
+<writer thread='140551349511936'/>
+  10889  120    b  3       java.util.ArrayList::add (45 bytes)
+  10895  121    b  3       java.util.ArrayList::ensureExplicitCapacity (42 bytes)
+  10930  122    b  3       java.lang.Number::&lt;init&gt; (17 bytes)
+  10942  123    b  3       java.lang.Long::longValue (21 bytes)
+  10947  124    b  3       java.util.ArrayList::access$100 (21 bytes)
+<writer thread='140551777302272'/>
+C1 Runtime statistics:
+ _resolve_invoke_virtual_cnt:     25
+ _resolve_invoke_opt_virtual_cnt: 131
+ _resolve_invoke_static_cnt:      594
+ _handle_wrong_method_cnt:        6
+ _ic_miss_cnt:                    1
+ _generic_arraycopy_cnt:          0
+ _generic_arraycopystub_cnt:      0
+ _byte_arraycopy_cnt:             0
+ _short_arraycopy_cnt:            0
+ _int_arraycopy_cnt:              0
+ _long_arraycopy_cnt:             0
+ _primitive_arraycopy_cnt:        0
+ _oop_arraycopy_cnt (C):          0
+ _oop_arraycopy_cnt (stub):       0
+ _arraycopy_slowcase_cnt:         0
+ _arraycopy_checkcast_cnt:        0
+ _arraycopy_checkcast_attempt_cnt:0
+ _new_type_array_slowcase_cnt:    0
+ _new_object_array_slowcase_cnt:  0
+ _new_instance_slowcase_cnt:      70
+ _new_multi_array_slowcase_cnt:   0
+ _monitorenter_slowcase_cnt:      0
+ _monitorexit_slowcase_cnt:       0
+ _patch_code_slowcase_cnt:        0
+ _throw_range_check_exception_count:            0:
+ _throw_index_exception_count:                  0:
+ _throw_div0_exception_count:                   0:
+ _throw_null_pointer_exception_count:           0:
+ _throw_class_cast_exception_count:             0:
+ _throw_incompatible_class_change_error_count:  0:
+ _throw_array_store_exception_count:            0:
+ _throw_count:                                  0:
+
+<statistics type='deoptimization'>
+Deoptimization traps recorded:
+     6 (100.0%) total
+                       constraint/none/nop: 4 (66.7%)
+         unstable_if/reinterpret/if_icmpge: 1 (16.7%)
+              unstable_if/reinterpret/ifle: 1 (16.7%)
+</statistics>
+<statistics type='SharedRuntime'>
+    1 inline cache miss in compiled
+    6 wrong method
+  594 unresolved static call site
+   25 unresolved virtual call site
+  131 unresolved opt virtual call site
+    6 slow partial subtype
+  560 byte array copies
+ 4073 short array copies
+   44 int array copies
+   12 long array copies
+AdapterHandlerTable: empty 183 longest 3 total 140 average 1.272727
+AdapterHandlerTable: lookups 5586 buckets 5414 equals 5152 hits 5152 compact 5152
+</statistics>
+<statistics type='nmethod'>
+Statistics for 7 native nmethods:
+ N. total size  = 7200
+ N. relocation  = 616
+ N. main code   = 4400
+Statistics for 117 bytecoded nmethods:
+ total in heap  = 508320
+ relocation     = 37184
+ constants      = 352
+ main code      = 240672
+ stub code      = 38520
+ oops           = 400
+ scopes data    = 52456
+ scopes pcs     = 86832
+ dependencies   = 1392
+ handler table  = 7816
+ nul chk table  = 2560
+Debug Data Chunks: 12996, shared 1419+4647, non-SP&apos;s elided 90
+PcDesc Statistics:  1034 queries, 10.16 comparisons per query
+  caches=117 queries=1034/0, hits=0+36, tests=4224+6279, adds=998
+</statistics>
+<statistics type='opto'>
+--- Compiler Statistics ---
+Methods seen: 117  Methods parsed: 117  Nodes created: 25313
+Blocks parsed: 315  Blocks seen: 420
+196 original NULL checks - 159 elided (81%); optimizer leaves 36,
+2 made implicit ( 5%)
+CCP: 12  constants found: 0
+Total frameslots = 184, Max frameslots = 32
+Inserted 0 spill loads, 0 spill stores, 0 mem-mem moves and 0 copies.
+Total load cost=      0, store cost =      0, mem-mem cost =  0.00, copy cost =     0.
+Adjusted spill cost =       0.
+Conservatively coalesced 557 copies, 0 pairs, 277 post alloc.
+Used cisc instruction  9,  remained in register 59
+Average allocation trips 1.000000
+High Pressure Blocks = 0, Low Pressure Blocks = 0
+Nops added 0 bytes to total of 16416 bytes, for 0.00%
+Peephole: peephole rules applied: 0
+PhaseIdealLoop=69, sum _unique=81292
+</statistics>
+<statistics type='intrinsic'>
+Compiler intrinsic usage:
+     1 ( 2.4%) _min (worked)
+     6 (14.6%) _nanoTime (worked)
+    34 (82.9%) _currentThread (worked)
+    41 (100.0%) total (worked)
+</statistics>
+<writer thread='140551359018752'/>
+<destroy_vm stamp='11.017'/>
+<tty_done stamp='11.047'/>
+</tty>
+<hotspot_log_done stamp='11.047'/>
+</hotspot_log>

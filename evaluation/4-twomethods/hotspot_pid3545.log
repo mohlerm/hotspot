@@ -1,0 +1,2227 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hotspot_log version='160 1' process='3545' time_ms='1430374954580'>
+<vm_version>
+<name>
+OpenJDK 64-Bit Server VM
+</name>
+<release>
+1.9.0-internal-debug-marcel_2015_04_17_10_57-b00
+</release>
+<info>
+OpenJDK 64-Bit Server VM (1.9.0-internal-debug-marcel_2015_04_17_10_57-b00) for linux-amd64 JRE (1.9.0-internal-marcel_2015_04_17_10_57-b00), built on Apr 29 2015 11:35:43 by &quot;marcel&quot; with gcc 4.9.2 20150304 (prerelease)
+</info>
+</vm_version>
+<vm_arguments>
+<args>
+-XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:+UseOnStackReplacement -XX:+UnlockExperimentalVMOptions -XX:+CacheProfiles -XX:CacheProfilesFile=cached_profiles.log -XX:+TraceDeoptimization -Xbatch -XX:+CIPrintRequests 
+</args>
+<command>
+TwoMethods
+</command>
+<launcher>
+SUN_STANDARD
+</launcher>
+<properties>
+java.vm.specification.name=Java Virtual Machine Specification
+java.vm.version=1.9.0-internal-debug-marcel_2015_04_17_10_57-b00
+java.vm.name=OpenJDK 64-Bit Server VM
+java.vm.info=mixed mode, sharing
+sun.boot.library.path=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64
+java.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.home=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk
+java.class.path=.
+sun.boot.class.path=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.rmi:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.security.auth:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.jcmd:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.attach:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.transaction:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.security.jgss:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.hprof.agent:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.zipfs:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.jvmstat:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.sql.rowset:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.security.jgss:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.hotspot.agent:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.datatransfer:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.scripting:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.logging:/hom
+java.vm.specification.vendor=Oracle Corporation
+java.vm.specification.version=1.9
+java.vm.vendor=Oracle Corporation
+sun.java.command=TwoMethods
+sun.java.launcher=SUN_STANDARD
+</properties>
+</vm_arguments>
+<tty>
+<writer thread='140657034360576'/>
+request:  java.lang.String::indexOf comment: tiered count: 337 hot: yes
+<writer thread='140656212383488'/>
+    517    1    b  3       java.lang.String::indexOf (70 bytes)
+<writer thread='140657034360576'/>
+request:  java.lang.String::hashCode comment: tiered count: 602 hot: yes
+<writer thread='140656212383488'/>
+    529    2    b  3       java.lang.String::hashCode (53 bytes)
+<writer thread='140657034360576'/>
+request:  java.lang.StringBuilder::append comment: tiered count: 256 hot: yes
+<writer thread='140656212383488'/>
+    538    3    b  3       java.lang.StringBuilder::append (8 bytes)
+<writer thread='140657034360576'/>
+request:  java.lang.String::getChars comment: tiered count: 256 hot: yes
+<writer thread='140656212383488'/>
+    542    4    b  3       java.lang.String::getChars (62 bytes)
+<writer thread='140657034360576'/>
+request:  java.lang.String::charAt comment: tiered count: 17280 hot: yes
+<writer thread='140656214488832'/>
+    553    5    b  4       java.lang.String::charAt (29 bytes)
+<writer thread='140657034360576'/>
+request:  java.lang.String::equals comment: tiered count: 806 hot: yes
+<writer thread='140656212383488'/>
+    562    6    b  3       java.lang.String::equals (81 bytes)
+<writer thread='140657034360576'/>
+request:  java.lang.Object::&lt;init&gt; comment: tiered count: 2304 hot: yes
+<writer thread='140656212383488'/>
+    570    7    b  3       java.lang.Object::&lt;init&gt; (1 bytes)
+<writer thread='140657034360576'/>
+request:  java.lang.String::lastIndexOf comment: tiered count: 328 hot: yes
+<writer thread='140656212383488'/>
+    574    8    b  3       java.lang.String::lastIndexOf (52 bytes)
+<writer thread='140657034360576'/>
+request:  java.lang.System::getSecurityManager comment: tiered count: 384 hot: yes
+<writer thread='140656212383488'/>
+    581    9    b  3       java.lang.System::getSecurityManager (4 bytes)
+<writer thread='140657034360576'/>
+request:  java.lang.ref.Reference::get comment: tiered count: 896 hot: yes
+<writer thread='140656212383488'/>
+    584   10    b  1       java.lang.ref.Reference::get (5 bytes)
+<writer thread='140657034360576'/>
+request:  sun.nio.cs.UTF_8$Encoder::encode comment: tiered count: 330 hot: yes
+<writer thread='140656212383488'/>
+    585   11    b  3       sun.nio.cs.UTF_8$Encoder::encode (359 bytes)
+<writer thread='140657034360576'/>
+    624   12     n 0       java.lang.System::arraycopy (native)   (static)
+request:  java.io.UnixFileSystem::normalize comment: tiered count: 177 hot: yes
+<writer thread='140656212383488'/>
+    627   13    b  3       java.io.UnixFileSystem::normalize (75 bytes)
+<writer thread='140657034360576'/>
+request:  java.util.Arrays::copyOf comment: tiered count: 256 hot: yes
+<writer thread='140656212383488'/>
+    641   14    b  3       java.util.Arrays::copyOf (19 bytes)
+<writer thread='140657034360576'/>
+request:  java.util.Arrays::copyOfRange comment: tiered count: 640 hot: yes
+<writer thread='140656212383488'/>
+    651   15    b  3       java.util.Arrays::copyOfRange (63 bytes)
+<writer thread='140657034360576'/>
+request:  java.lang.AbstractStringBuilder::expandCapacity comment: tiered count: 256 hot: yes
+<writer thread='140656212383488'/>
+    670   16    b  3       java.lang.AbstractStringBuilder::expandCapacity (50 bytes)
+<writer thread='140657034360576'/>
+request:  java.lang.String::&lt;init&gt; comment: tiered count: 640 hot: yes
+<writer thread='140656212383488'/>
+    679   17    b  3       java.lang.String::&lt;init&gt; (82 bytes)
+<writer thread='140657034360576'/>
+request:  java.lang.String::length comment: tiered count: 1280 hot: yes
+<writer thread='140656212383488'/>
+    707   18    b  3       java.lang.String::length (6 bytes)
+<writer thread='140657034360576'/>
+request:  sun.nio.cs.UTF_8$Decoder::decode comment: tiered count: 117 hot: yes
+<writer thread='140656212383488'/>
+    718   19    b  3       sun.nio.cs.UTF_8$Decoder::decode (779 bytes)
+<writer thread='140657034360576'/>
+request:  java.lang.AbstractStringBuilder::ensureCapacityInternal comment: tiered count: 384 hot: yes
+<writer thread='140656212383488'/>
+   1270   20    b  3       java.lang.AbstractStringBuilder::ensureCapacityInternal (16 bytes)
+<writer thread='140657034360576'/>
+<blob name='MethodHandlesAdapterBlob' size='182000'>
+<sect index='1' size='182000' free='177714'/>
+</blob>
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1354   21    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1383   21       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1383   22    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1391   22       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1392   23    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1405   23       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1405   24    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1413   24       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1414   25    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1422   25       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1423   26    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1431   26       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1432   27    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1440   27       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1440   28    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1449   28       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1449   29    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1457   29       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1457   30    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1466   30       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1466   31    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1477   31       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1478   32    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1490   32       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1490   33    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1512   33       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1512   34    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1527   34       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1527   35    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1543   35       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1543   36    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1562   36       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1562   37    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1578   37       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1578   38    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1604   38       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1604   39    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1622   39       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1622   40    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1631   40       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1631   41    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1641   41       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1641   42    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1650   42       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1650   43    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1659   43       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1659   44    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1669   44       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1669   45    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1680   45       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1681   46    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1690   46       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1690   47    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1699   47       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1699   48    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1709   48       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1709   49    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1719   49       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1719   50    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1728   50       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1728   51    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1737   51       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1738   52    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1747   52       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1747   53    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1759   53       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1759   54    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1769   54       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1770   55    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1779   55       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1779   56    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1788   56       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1788   57    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1798   57       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1798   58    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1807   58       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1807   59    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1816   59       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1817   60    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1826   60       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1826   61    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1835   61       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1835   62    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1844   62       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1845   63    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1854   63       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1854   64    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1866   64       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1866   65    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1876   65       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1877   66    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1886   66       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1886   67    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1895   67       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1895   68    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1904   68       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1905   69    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1914   69       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1914   70    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1923   70       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1923   71    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1932   71       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1933   72    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1942   72       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1942   73    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1951   73       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1951   74    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1960   74       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1961   75    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1970   75       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1970   76    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1979   76       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1980   77    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1989   77       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   1989   78    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   1998   78       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   1998   79    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2022   79       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2023   80    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2032   80       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2033   81    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2048   81       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2048   82    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2063   82       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2064   83    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2077   83       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2077   84    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2087   84       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2087   85    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2095   85       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2096   86    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2104   86       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2104   87    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2128   87       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2128   88    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2143   88       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2143   89    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2157   89       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2157   90    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2165   90       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2165   91    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2174   91       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2174   92    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2183   92       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2183   93    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2192   93       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2192   94    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2200   94       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2201   95    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2210   95       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2210   96    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2219   96       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2219   97    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2227   97       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2228   98    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2236   98       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2237   99    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2245   99       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2245  100    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2254  100       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2254  101    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2263  101       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2263  102    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2272  102       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2272  103    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2284  103       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2285  104    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2293  104       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2293  105    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2302  105       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2302  106    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2310  106       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2311  107    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2319  107       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2319  108    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2327  108       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2328  109    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2336  109       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2336  110    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2345  110       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2345  111    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2353  111       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2353  112    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2362  112       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2362  113    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2371  113       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2371  114    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2379  114       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2379  115    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2388  115       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2389  116    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2398  116       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2398  117    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2406  117       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2407  118    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2415  118       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2415  119    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2424  119       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2424  120    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2432  120       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2432  121    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2449  121       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2450  122    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2459  122       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2460  123    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2474  123       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2474  124    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2485  124       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2485  125    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2494  125       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2494  126    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2502  126       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2502  127    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2510  127       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2511  128    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2519  128       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2519  129    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2527  129       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2527  130    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2535  130       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2535  131    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2547  131       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2547  132    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2556  132       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2556  133    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2564  133       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2565  134    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2573  134       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2573  135    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2582  135       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2582  136    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2591  136       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2591  137    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2600  137       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2600  138    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2608  138       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2608  139    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2617  139       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2617  140    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2625  140       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2625  141    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2633  141       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2634  142    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2642  142       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2642  143    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2654  143       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2654  144    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2663  144       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2663  145    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2671  145       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2672  146    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2681  146       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2682  147    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2690  147       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2691  148    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2699  148       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2700  149    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2708  149       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2709  150    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2717  150       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2718  151    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2726  151       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2727  152    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2735  152       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2735  153    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2744  153       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2744  154    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2753  154       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2753  155    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2762  155       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2762  156    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2771  156       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2771  157    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2779  157       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2780  158    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2788  158       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2788  159    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2796  159       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2797  160    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2805  160       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2805  161    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2814  161       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2815  162    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2823  162       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2823  163    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2832  163       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2832  164    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2840  164       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2840  165    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2848  165       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2849  166    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2857  166       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2857  167    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2865  167       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2866  168    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2874  168       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2874  169    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2883  169       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2883  170    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2891  170       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2891  171    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2899  171       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2899  172    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2909  172       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2909  173    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2918  173       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2918  174    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2926  174       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2927  175    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2935  175       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2935  176    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2943  176       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2944  177    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2952  177       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2953  178    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2962  178       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2962  179    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2973  179       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2974  180    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2983  180       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   2983  181    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   2992  181       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   2992  182    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3001  182       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3001  183    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3011  183       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3011  184    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3020  184       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3020  185    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3029  185       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3029  186    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3038  186       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3039  187    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3048  187       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3048  188    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3057  188       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3058  189    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3067  189       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3067  190    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3076  190       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3076  191    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3085  191       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3086  192    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3095  192       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3095  193    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3104  193       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3104  194    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3113  194       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3113  195    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3124  195       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3124  196    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3140  196       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3141  197    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3152  197       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3152  198    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3161  198       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3161  199    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3171  199       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3171  200    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3181  200       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3181  201    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3190  201       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3190  202    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3199  202       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3200  203    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3209  203       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3209  204    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3218  204       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3219  205    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3228  205       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3228  206    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3243  206       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3243  207    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3258  207       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3258  208    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3267  208       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3268  209    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3277  209       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3277  210    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3287  210       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3288  211    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3298  211       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3298  212    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3311  212       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3312  213    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3321  213       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3321  214    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3335  214       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3335  215    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3345  215       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3345  216    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3359  216       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3359  217    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3368  217       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3369  218    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3382  218       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3383  219    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3392  219       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3392  220    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3406  220       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3406  221    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3415  221       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3415  222    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3424  222       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3424  223    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3432  223       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3433  224    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3448  224       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3448  225    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3457  225       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3457  226    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3470  226       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3471  227    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3479  227       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3479  228    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3488  228       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3488  229    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3496  229       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3496  230    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3509  230       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3510  231    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3518  231       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3518  232    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3526  232       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3527  233    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3535  233       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3535  234    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3544  234       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3544  235    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3552  235       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3552  236    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3561  236       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3561  237    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3570  237       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3570  238    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3578  238       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3579  239    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3588  239       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3588  240    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3597  240       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3597  241    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3605  241       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3606  242    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3614  242       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3615  243    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3624  243       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3625  244    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3633  244       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3634  245    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3643  245       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3643  246    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3651  246       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3652  247    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3661  247       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3661  248    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3669  248       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3670  249    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3678  249       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3679  250    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3695  250       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3695  251    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3704  251       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3704  252    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3720  252       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3720  253    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3735  253       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3735  254    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3749  254       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3749  255    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3758  255       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3758  256    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3766  256       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3767  257    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3775  257       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3776  258    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3788  258       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3789  259    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3797  259       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3797  260    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3806  260       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3806  261    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3814  261       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3815  262    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3824  262       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3824  263    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3833  263       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3834  264    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3842  264       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3843  265    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3852  265       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3852  266    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3861  266       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3862  267    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3882  267       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3882  268    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3891  268       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3891  269    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3905  269       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3906  270    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3916  270       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3916  271    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3925  271       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3925  272    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3933  272       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3934  273    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3942  273       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3942  274    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3951  274       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3951  275    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3959  275       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3959  276    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3968  276       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3968  277    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3977  277       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3977  278    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3987  278       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   3987  279    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   3995  279       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   3995  280    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4004  280       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4004  281    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4012  281       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4012  282    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4026  282       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4027  283    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4035  283       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4035  284    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4044  284       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4044  285    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4052  285       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4053  286    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4061  286       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4062  287    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4070  287       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4070  288    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4079  288       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4079  289    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4090  289       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4090  290    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4099  290       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4099  291    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4108  291       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4108  292    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4117  292       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4117  293    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4125  293       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4125  294    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4133  294       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4134  295    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4142  295       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4142  296    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4151  296       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4151  297    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4160  297       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4160  298    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4168  298       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4169  299    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4177  299       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4177  300    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4187  300       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4187  301    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4196  301       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4196  302    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4205  302       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4205  303    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4213  303       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4214  304    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4222  304       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4222  305    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4231  305       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4232  306    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4240  306       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4240  307    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4249  307       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4250  308    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4277  308       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4278  309    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4301  309       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4302  310    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4316  310       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4317  311    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4326  311       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4327  312    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4339  312       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4339  313    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4348  313       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4348  314    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4357  314       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4357  315    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4366  315       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4366  316    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4374  316       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4374  317    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4383  317       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4383  318    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4395  318       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4396  319    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4406  319       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4406  320    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4415  320       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4415  321    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4424  321       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4424  322    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4434  322       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4434  323    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4443  323       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4443  324    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4458  324       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4458  325    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4467  325       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4467  326    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4484  326       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4484  327    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4493  327       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4493  328    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4517  328       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4517  329    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4544  329       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4544  330    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4567  330       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4568  331    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4597  331       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4597  332    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4615  332       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4616  333    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4637  333       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4638  334    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4667  334       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4667  335    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4694  335       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4695  336    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4724  336       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4724  337    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4753  337       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4753  338    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4775  338       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4776  339    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4800  339       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4801  340    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4829  340       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4830  341    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4858  341       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4858  342    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4881  342       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4881  343    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4900  343       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4901  344    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4919  344       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4920  345    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4928  345       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4929  346    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4955  346       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   4956  347    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   4979  347       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   4980  348    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5008  348       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5012  349    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5042  349       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5043  350    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5071  350       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5071  351    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5092  351       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5093  352    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5116  352       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5116  353    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5145  353       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5145  354    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5170  354       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5171  355    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5200  355       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5201  356    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5230  356       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5230  357    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5252  357       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5252  358    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5273  358       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5274  359    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5302  359       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5303  360    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5317  360       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5317  361    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5340  361       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5341  362    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5367  362       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5368  363    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5386  363       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5387  364    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5409  364       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5409  365    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5433  365       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5434  366    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5450  366       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5451  367    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5459  367       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5460  368    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5486  368       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5486  369    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5495  369       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5496  370    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5512  370       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5512  371    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5520  371       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5521  372    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5531  372       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5531  373    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5540  373       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5541  374    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5550  374       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5550  375    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5558  375       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5559  376    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5567  376       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5567  377    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5576  377       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5577  378    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5585  378       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5585  379    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5594  379       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5594  380    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5603  380       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5603  381    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5612  381       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5613  382    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5641  382       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5641  383    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5655  383       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5655  384    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5675  384       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5675  385    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5688  385       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5689  386    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5697  386       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5697  387    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5706  387       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5706  388    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5715  388       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5716  389    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5725  389       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5726  390    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5734  390       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5734  391    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5743  391       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5743  392    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5751  392       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5751  393    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5760  393       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5760  394    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5769  394       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5769  395    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5778  395       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5778  396    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5787  396       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5787  397    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5796  397       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5796  398    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5805  398       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5805  399    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5813  399       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5813  400    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5822  400       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5823  401    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5834  401       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5834  402    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5842  402       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5843  403    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5857  403       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5857  404    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5865  404       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5866  405    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5874  405       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5874  406    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5883  406       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5883  407    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5891  407       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5891  408    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5900  408       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5900  409    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5908  409       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5909  410    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5924  410       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5924  411    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5935  411       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5935  412    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5944  412       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5945  413    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5955  413       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5955  414    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5963  414       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5963  415    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5972  415       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5972  416    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5981  416       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5981  417    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5989  417       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   5989  418    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   5997  418       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   5998  419    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   6006  419       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656214488832'/>
+   6006  420    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+   6014  420       4       TwoMethods::method1 (157 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140656213436160'/>
+   6014  421    b  4       TwoMethods::method1 (157 bytes)
+<writer thread='140657034360576'/>
+made not compilable on levels 0 1 2 3 4  TwoMethods::method1 (157 bytes)   decompile_count &gt; PerMethodRecompilationCutoff
+<make_not_compilable thread='140657034360576' osr='0' level='4' reason='decompile_count > PerMethodRecompilationCutoff' method='TwoMethods method1 (D)D' bytes='157' count='1' backedge_count='3624' iicount='1' decompiles='401' stamp='6.023'/>
+   6022  421       4       TwoMethods::method1 (157 bytes)   made not entrant
+<writer thread='140656208172800'/>
+C1 Runtime statistics:
+ _resolve_invoke_virtual_cnt:     0
+ _resolve_invoke_opt_virtual_cnt: 3
+ _resolve_invoke_static_cnt:      1
+ _handle_wrong_method_cnt:        0
+ _ic_miss_cnt:                    0
+ _generic_arraycopy_cnt:          0
+ _generic_arraycopystub_cnt:      0
+ _byte_arraycopy_cnt:             0
+ _short_arraycopy_cnt:            0
+ _int_arraycopy_cnt:              0
+ _long_arraycopy_cnt:             0
+ _primitive_arraycopy_cnt:        0
+ _oop_arraycopy_cnt (C):          0
+ _oop_arraycopy_cnt (stub):       0
+ _arraycopy_slowcase_cnt:         0
+ _arraycopy_checkcast_cnt:        0
+ _arraycopy_checkcast_attempt_cnt:0
+ _new_type_array_slowcase_cnt:    0
+ _new_object_array_slowcase_cnt:  0
+ _new_instance_slowcase_cnt:      0
+ _new_multi_array_slowcase_cnt:   0
+ _monitorenter_slowcase_cnt:      0
+ _monitorexit_slowcase_cnt:       0
+ _patch_code_slowcase_cnt:        0
+ _throw_range_check_exception_count:            0:
+ _throw_index_exception_count:                  0:
+ _throw_div0_exception_count:                   0:
+ _throw_null_pointer_exception_count:           0:
+ _throw_class_cast_exception_count:             0:
+ _throw_incompatible_class_change_error_count:  0:
+ _throw_array_store_exception_count:            0:
+ _throw_count:                                  0:
+
+<statistics type='SharedRuntime'>
+    0 inline cache miss in compiled
+    0 wrong method
+    1 unresolved static call site
+    0 unresolved virtual call site
+    3 unresolved opt virtual call site
+    7 slow partial subtype
+   12 byte array copies
+   95 short array copies
+   12 int array copies
+   12 long array copies
+AdapterHandlerTable: empty 190 longest 3 total 132 average 1.281553
+AdapterHandlerTable: lookups 5387 buckets 5214 equals 4961 hits 4961 compact 4961
+</statistics>
+<statistics type='nmethod'>
+Statistics for 1 native nmethods:
+ N. total size  = 1056
+ N. relocation  = 88
+ N. main code   = 656
+Statistics for 420 bytecoded nmethods:
+ total in heap  = 607128
+ relocation     = 28960
+ constants      = 12832
+ main code      = 196064
+ stub code      = 13856
+ oops           = 3216
+ scopes data    = 64528
+ scopes pcs     = 148752
+ dependencies   = 3432
+ handler table  = 96
+ nul chk table  = 552
+Debug Data Chunks: 11155, shared 1832+934, non-SP&apos;s elided 10
+PcDesc Statistics:  42 queries, 10.60 comparisons per query
+  caches=420 queries=42/0, hits=0+1, tests=144+301, adds=41
+</statistics>
+<statistics type='opto'>
+--- Compiler Statistics ---
+Methods seen: 402  Methods parsed: 402  Nodes created: 203374
+Blocks parsed: 3612  Blocks seen: 3613
+6 original NULL checks - 3 elided (50%); optimizer leaves 18,
+0 made implicit ( 0%)
+CCP: 402  constants found: 0
+Total frameslots = 3284, Max frameslots = 32
+Inserted 0 spill loads, 0 spill stores, 0 mem-mem moves and 0 copies.
+Total load cost=      0, store cost =      0, mem-mem cost =  0.00, copy cost =     0.
+Adjusted spill cost =       0.
+Conservatively coalesced 38 copies, 0 pairs, 1609 post alloc.
+Used cisc instruction  0,  remained in register 2
+Average allocation trips 1.002392
+High Pressure Blocks = 0, Low Pressure Blocks = 0
+Nops added 0 bytes to total of 142139 bytes, for 0.00%
+Peephole: peephole rules applied: 0
+PhaseIdealLoop=3210, sum _unique=715096
+</statistics>
+<statistics type='intrinsic'>
+Compiler intrinsic usage:
+   802 (100.0%) _nanoTime (worked)
+   802 (100.0%) total (worked)
+</statistics>
+<tty_done stamp='16.178'/>
+</tty>
+<hotspot_log_done stamp='16.178'/>
+</hotspot_log>

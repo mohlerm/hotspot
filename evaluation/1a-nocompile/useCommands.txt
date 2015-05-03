@@ -1,0 +1,2 @@
+option NoCompile.method1 double CompileThresholdScaling 0.01
+

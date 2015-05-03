@@ -1,0 +1,486 @@
+JAVA PROFILE 1.0.1, created Tue Apr 21 18:14:29 2015
+
+Copyright (c) 2003, 2005, Oracle and/or its affiliates. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+  - Neither the name of Oracle nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+Header for -agentlib:hprof (or -Xrunhprof) ASCII Output (JDK 5.0 JVMTI based)
+
+WARNING!  This file format is under development, and is subject to
+change without notice.
+
+This file contains the following types of records:
+
+THREAD START
+THREAD END      mark the lifetime of Java threads
+
+TRACE           represents a Java stack trace.  Each trace consists
+                of a series of stack frames.  Other records refer to
+                TRACEs to identify (1) where object allocations have
+                taken place, (2) the frames in which GC roots were
+                found, and (3) frequently executed methods.
+
+HEAP DUMP       is a complete snapshot of all live objects in the Java
+                heap.  Following distinctions are made:
+
+                ROOT    root set as determined by GC
+                CLS     classes 
+                OBJ     instances
+                ARR     arrays
+
+SITES           is a sorted list of allocation sites.  This identifies
+                the most heavily allocated object types, and the TRACE
+                at which those allocations occurred.
+
+CPU SAMPLES     is a statistical profile of program execution.  The VM
+                periodically samples all running threads, and assigns
+                a quantum to active TRACEs in those threads.  Entries
+                in this record are TRACEs ranked by the percentage of
+                total quanta they consumed; top-ranked TRACEs are
+                typically hot spots in the program.
+
+CPU TIME        is a profile of program execution obtained by measuring
+                the time spent in individual methods (excluding the time
+                spent in callees), as well as by counting the number of
+                times each method is called. Entries in this record are
+                TRACEs ranked by the percentage of total CPU time. The
+                "count" field indicates the number of times each TRACE 
+                is invoked.
+
+MONITOR TIME    is a profile of monitor contention obtained by measuring
+                the time spent by a thread waiting to enter a monitor.
+                Entries in this record are TRACEs ranked by the percentage
+                of total monitor contention time and a brief description
+                of the monitor.  The "count" field indicates the number of 
+                times the monitor was contended at that TRACE.
+
+MONITOR DUMP    is a complete snapshot of all the monitors and threads in 
+                the System.
+
+HEAP DUMP, SITES, CPU SAMPLES|TIME and MONITOR DUMP|TIME records are generated 
+at program exit.  They can also be obtained during program execution by typing 
+Ctrl-\ (on Solaris) or by typing Ctrl-Break (on Win32).
+
+--------
+
+THREAD START (obj=50000173, id = 200002, name="HPROF gc_finish watcher", group="system")
+THREAD START (obj=50000173, id = 200001, name="main", group="main")
+THREAD END (id = 200001)
+THREAD START (obj=50000173, id = 200003, name="DestroyJavaVM", group="main")
+THREAD END (id = 200003)
+TRACE 301843:
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301502:
+	LongNoBranches.method1(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301586:
+	LongNoBranches.method8(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301538:
+	LongNoBranches.method4(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301550:
+	LongNoBranches.method5(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301514:
+	LongNoBranches.method2(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301598:
+	LongNoBranches.method9(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301562:
+	LongNoBranches.method6(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301526:
+	LongNoBranches.method3(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301574:
+	LongNoBranches.method7(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301512:
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method2(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301548:
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method5(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301584:
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method8(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301536:
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method4(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301608:
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method10(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301560:
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method6(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301596:
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method9(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301500:
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method1(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301572:
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method7(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301524:
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method3(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301573:
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method7(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301501:
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method1(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301597:
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method9(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301561:
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method6(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301585:
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method8(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301525:
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method3(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301609:
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method10(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301513:
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method2(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301537:
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method4(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301549:
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method5(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301595:
+	java.util.concurrent.atomic.AtomicLong.compareAndSet(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method9(LongNoBranches.java:Unknown line)
+TRACE 301498:
+	java.util.concurrent.atomic.AtomicLong.get(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method1(LongNoBranches.java:Unknown line)
+TRACE 301534:
+	java.util.concurrent.atomic.AtomicLong.get(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method4(LongNoBranches.java:Unknown line)
+TRACE 301571:
+	java.util.concurrent.atomic.AtomicLong.compareAndSet(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method7(LongNoBranches.java:Unknown line)
+TRACE 301511:
+	java.util.concurrent.atomic.AtomicLong.compareAndSet(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method2(LongNoBranches.java:Unknown line)
+TRACE 301570:
+	java.util.concurrent.atomic.AtomicLong.get(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method7(LongNoBranches.java:Unknown line)
+TRACE 301523:
+	java.util.concurrent.atomic.AtomicLong.compareAndSet(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method3(LongNoBranches.java:Unknown line)
+TRACE 301522:
+	java.util.concurrent.atomic.AtomicLong.get(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method3(LongNoBranches.java:Unknown line)
+TRACE 301546:
+	java.util.concurrent.atomic.AtomicLong.get(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method5(LongNoBranches.java:Unknown line)
+TRACE 301510:
+	java.util.concurrent.atomic.AtomicLong.get(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method2(LongNoBranches.java:Unknown line)
+TRACE 301607:
+	java.util.concurrent.atomic.AtomicLong.compareAndSet(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method10(LongNoBranches.java:Unknown line)
+TRACE 301535:
+	java.util.concurrent.atomic.AtomicLong.compareAndSet(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method4(LongNoBranches.java:Unknown line)
+TRACE 301558:
+	java.util.concurrent.atomic.AtomicLong.get(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method6(LongNoBranches.java:Unknown line)
+TRACE 301559:
+	java.util.concurrent.atomic.AtomicLong.compareAndSet(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method6(LongNoBranches.java:Unknown line)
+TRACE 301582:
+	java.util.concurrent.atomic.AtomicLong.get(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method8(LongNoBranches.java:Unknown line)
+TRACE 301583:
+	java.util.concurrent.atomic.AtomicLong.compareAndSet(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method8(LongNoBranches.java:Unknown line)
+TRACE 301594:
+	java.util.concurrent.atomic.AtomicLong.get(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method9(LongNoBranches.java:Unknown line)
+TRACE 301547:
+	java.util.concurrent.atomic.AtomicLong.compareAndSet(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method5(LongNoBranches.java:Unknown line)
+TRACE 301499:
+	java.util.concurrent.atomic.AtomicLong.compareAndSet(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method1(LongNoBranches.java:Unknown line)
+TRACE 301606:
+	java.util.concurrent.atomic.AtomicLong.get(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.method10(LongNoBranches.java:Unknown line)
+TRACE 301610:
+	LongNoBranches.method10(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301489:
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301605:
+	java.util.Random.<init>(Random.java:Unknown line)
+	LongNoBranches.method10(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301490:
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301426:
+	java.lang.Class.privateGetDeclaredMethods(Class.java:Unknown line)
+	java.lang.Class.privateGetMethodRecursive(Class.java:Unknown line)
+	java.lang.Class.getMethod0(Class.java:Unknown line)
+	java.lang.Class.getMethod(Class.java:Unknown line)
+TRACE 301487:
+	java.util.concurrent.atomic.AtomicLong.get(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301488:
+	java.util.concurrent.atomic.AtomicLong.compareAndSet(AtomicLong.java:Unknown line)
+	java.util.Random.next(Random.java:Unknown line)
+	java.util.Random.nextDouble(Random.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 300724:
+	java.lang.String.<init>(String.java:Unknown line)
+	sun.net.www.ParseUtil.encodePath(ParseUtil.java:Unknown line)
+	sun.misc.URLClassPath$FileLoader.getResource(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath.getResource(URLClassPath.java:Unknown line)
+TRACE 301685:
+	sun.misc.FDBigInteger.mult(FDBigInteger.java:Unknown line)
+	sun.misc.FDBigInteger.<clinit>(FDBigInteger.java:Unknown line)
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.dtoa(FloatingDecimal.java:Unknown line)
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.access$100(FloatingDecimal.java:Unknown line)
+TRACE 300038:
+	java.lang.String.indexOf(String.java:Unknown line)
+	java.lang.ClassLoader.checkName(ClassLoader.java:Unknown line)
+	java.lang.ClassLoader.findLoadedClass(ClassLoader.java:Unknown line)
+	java.lang.ClassLoader.loadClass(ClassLoader.java:Unknown line)
+TRACE 300023:
+	java.lang.String.lastIndexOf(String.java:Unknown line)
+	java.lang.String.lastIndexOf(String.java:Unknown line)
+	sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:Unknown line)
+	java.lang.ClassLoader.loadClass(ClassLoader.java:Unknown line)
+TRACE 301686:
+	sun.misc.FDBigInteger.<clinit>(FDBigInteger.java:Unknown line)
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.dtoa(FloatingDecimal.java:Unknown line)
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.access$100(FloatingDecimal.java:Unknown line)
+	sun.misc.FloatingDecimal.getBinaryToASCIIConverter(FloatingDecimal.java:Unknown line)
+TRACE 301684:
+	sun.misc.FDBigInteger.<init>(FDBigInteger.java:Unknown line)
+	sun.misc.FDBigInteger.mult(FDBigInteger.java:Unknown line)
+	sun.misc.FDBigInteger.<clinit>(FDBigInteger.java:Unknown line)
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.dtoa(FloatingDecimal.java:Unknown line)
+TRACE 300135:
+	java.io.UnixFileSystem.normalize(UnixFileSystem.java:Unknown line)
+	java.io.File.<init>(File.java:Unknown line)
+	sun.misc.URLClassPath$JImageLoader.<init>(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath$3.run(URLClassPath.java:Unknown line)
+TRACE 301483:
+	java.lang.Number.<init>(Number.java:Unknown line)
+	java.util.concurrent.atomic.AtomicLong.<init>(AtomicLong.java:Unknown line)
+	java.util.Random.<init>(Random.java:Unknown line)
+	java.util.Random.<init>(Random.java:Unknown line)
+TRACE 301493:
+	java.util.Random.seedUniquifier(Random.java:Unknown line)
+	java.util.Random.<init>(Random.java:Unknown line)
+	LongNoBranches.method1(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301545:
+	java.util.Random.<init>(Random.java:Unknown line)
+	LongNoBranches.method5(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 301568:
+	java.util.Random.<init>(Random.java:Unknown line)
+	java.util.Random.<init>(Random.java:Unknown line)
+	LongNoBranches.method7(LongNoBranches.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+TRACE 300692:
+	java.lang.AbstractStringBuilder.ensureCapacityInternal(AbstractStringBuilder.java:Unknown line)
+	java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:Unknown line)
+	java.lang.StringBuilder.append(StringBuilder.java:Unknown line)
+	java.net.URLStreamHandler.parseURL(URLStreamHandler.java:Unknown line)
+TRACE 300698:
+	java.lang.StringBuilder.toString(StringBuilder.java:Unknown line)
+	java.net.URLStreamHandler.parseURL(URLStreamHandler.java:Unknown line)
+	sun.net.www.protocol.file.Handler.parseURL(Handler.java:Unknown line)
+	java.net.URL.<init>(URL.java:Unknown line)
+TRACE 301648:
+	sun.misc.FloatingDecimal.<clinit>(FloatingDecimal.java:Unknown line)
+	java.lang.Double.toString(Double.java:Unknown line)
+	LongNoBranches.main(LongNoBranches.java:Unknown line)
+CPU TIME (ms) BEGIN (total = 125073) Tue Apr 21 18:16:34 2015
+rank   self  accum   count trace method
+   1 37.29% 37.29%       1 301843 LongNoBranches.main
+   2  4.09% 41.38%     300 301502 LongNoBranches.method1
+   3  4.08% 45.46%     300 301586 LongNoBranches.method8
+   4  4.08% 49.54%     300 301538 LongNoBranches.method4
+   5  4.07% 53.60%     300 301550 LongNoBranches.method5
+   6  4.04% 57.64%     300 301514 LongNoBranches.method2
+   7  4.01% 61.66%     300 301598 LongNoBranches.method9
+   8  4.00% 65.65%     300 301562 LongNoBranches.method6
+   9  3.98% 69.63%     300 301526 LongNoBranches.method3
+  10  3.94% 73.57%     300 301574 LongNoBranches.method7
+  11  1.26% 74.83%   60000 301512 java.util.Random.next
+  12  1.25% 76.07%   60000 301548 java.util.Random.next
+  13  1.24% 77.31%   60000 301584 java.util.Random.next
+  14  1.24% 78.55%   60000 301536 java.util.Random.next
+  15  1.23% 79.78%   60000 301608 java.util.Random.next
+  16  1.22% 81.00%   60000 301560 java.util.Random.next
+  17  1.21% 82.21%   60000 301596 java.util.Random.next
+  18  1.20% 83.41%   60000 301500 java.util.Random.next
+  19  1.19% 84.60%   60000 301572 java.util.Random.next
+  20  1.19% 85.79%   60000 301524 java.util.Random.next
+  21  0.69% 86.48%   30000 301573 java.util.Random.nextDouble
+  22  0.64% 87.13%   30000 301501 java.util.Random.nextDouble
+  23  0.64% 87.76%   30000 301597 java.util.Random.nextDouble
+  24  0.63% 88.40%   30000 301561 java.util.Random.nextDouble
+  25  0.63% 89.03%   30000 301585 java.util.Random.nextDouble
+  26  0.62% 89.64%   30000 301525 java.util.Random.nextDouble
+  27  0.61% 90.25%   30000 301609 java.util.Random.nextDouble
+  28  0.60% 90.85%   30000 301513 java.util.Random.nextDouble
+  29  0.60% 91.45%   30000 301537 java.util.Random.nextDouble
+  30  0.59% 92.04%   30000 301549 java.util.Random.nextDouble
+  31  0.35% 92.39%   60000 301595 java.util.concurrent.atomic.AtomicLong.compareAndSet
+  32  0.34% 92.73%   60000 301498 java.util.concurrent.atomic.AtomicLong.get
+  33  0.34% 93.07%   60000 301534 java.util.concurrent.atomic.AtomicLong.get
+  34  0.34% 93.41%   60000 301571 java.util.concurrent.atomic.AtomicLong.compareAndSet
+  35  0.33% 93.74%   60000 301511 java.util.concurrent.atomic.AtomicLong.compareAndSet
+  36  0.33% 94.07%   60000 301570 java.util.concurrent.atomic.AtomicLong.get
+  37  0.33% 94.41%   60000 301523 java.util.concurrent.atomic.AtomicLong.compareAndSet
+  38  0.33% 94.74%   60000 301522 java.util.concurrent.atomic.AtomicLong.get
+  39  0.33% 95.06%   60000 301546 java.util.concurrent.atomic.AtomicLong.get
+  40  0.33% 95.39%   60000 301510 java.util.concurrent.atomic.AtomicLong.get
+  41  0.33% 95.72%   60000 301607 java.util.concurrent.atomic.AtomicLong.compareAndSet
+  42  0.32% 96.04%   60000 301535 java.util.concurrent.atomic.AtomicLong.compareAndSet
+  43  0.32% 96.36%   60000 301558 java.util.concurrent.atomic.AtomicLong.get
+  44  0.32% 96.68%   60000 301559 java.util.concurrent.atomic.AtomicLong.compareAndSet
+  45  0.32% 96.99%   60000 301582 java.util.concurrent.atomic.AtomicLong.get
+  46  0.32% 97.31%   60000 301583 java.util.concurrent.atomic.AtomicLong.compareAndSet
+  47  0.31% 97.62%   60000 301594 java.util.concurrent.atomic.AtomicLong.get
+  48  0.31% 97.93%   60000 301547 java.util.concurrent.atomic.AtomicLong.compareAndSet
+  49  0.31% 98.23%   60000 301499 java.util.concurrent.atomic.AtomicLong.compareAndSet
+  50  0.30% 98.54%   60000 301606 java.util.concurrent.atomic.AtomicLong.get
+  51  0.28% 98.82%     300 301610 LongNoBranches.method10
+  52  0.12% 98.94%    6000 301489 java.util.Random.next
+  53  0.09% 99.03%     300 301605 java.util.Random.<init>
+  54  0.05% 99.08%    3000 301490 java.util.Random.nextDouble
+  55  0.05% 99.13%       1 301426 java.lang.Class.privateGetDeclaredMethods
+  56  0.04% 99.16%    6000 301487 java.util.concurrent.atomic.AtomicLong.get
+  57  0.03% 99.19%    6000 301488 java.util.concurrent.atomic.AtomicLong.compareAndSet
+  58  0.03% 99.22%       1 300724 java.lang.String.<init>
+  59  0.03% 99.25%     326 301685 sun.misc.FDBigInteger.mult
+  60  0.03% 99.28%      23 300038 java.lang.String.indexOf
+  61  0.02% 99.30%      12 300023 java.lang.String.lastIndexOf
+  62  0.02% 99.32%       1 301686 sun.misc.FDBigInteger.<clinit>
+  63  0.02% 99.33%     326 301684 sun.misc.FDBigInteger.<init>
+  64  0.02% 99.35%       4 300135 java.io.UnixFileSystem.normalize
+  65  0.01% 99.37%    3001 301483 java.lang.Number.<init>
+  66  0.01% 99.38%     300 301493 java.util.Random.seedUniquifier
+  67  0.01% 99.39%     300 301545 java.util.Random.<init>
+  68  0.01% 99.40%     300 301568 java.util.Random.<init>
+  69  0.01% 99.41%       6 300692 java.lang.AbstractStringBuilder.ensureCapacityInternal
+  70  0.01% 99.42%       2 300698 java.lang.StringBuilder.toString
+  71  0.01% 99.43%       1 301648 sun.misc.FloatingDecimal.<clinit>
+CPU TIME (ms) END

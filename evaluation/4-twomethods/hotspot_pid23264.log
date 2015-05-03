@@ -1,0 +1,656 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hotspot_log version='160 1' process='23264' time_ms='1430293746653'>
+<vm_version>
+<name>
+OpenJDK 64-Bit Server VM
+</name>
+<release>
+1.9.0-internal-debug-marcel_2015_04_17_10_57-b00
+</release>
+<info>
+OpenJDK 64-Bit Server VM (1.9.0-internal-debug-marcel_2015_04_17_10_57-b00) for linux-amd64 JRE (1.9.0-internal-marcel_2015_04_17_10_57-b00), built on Apr 29 2015 09:46:20 by &quot;marcel&quot; with gcc 4.9.2 20150304 (prerelease)
+</info>
+</vm_version>
+<vm_arguments>
+<args>
+-XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:+UseOnStackReplacement -XX:+UnlockExperimentalVMOptions -XX:CompileCommandFile=createCommands.txt -XX:-DumpProfiles -Xbatch -XX:+CIPrintRequests 
+</args>
+<command>
+TwoMethods
+</command>
+<launcher>
+SUN_STANDARD
+</launcher>
+<properties>
+java.vm.specification.name=Java Virtual Machine Specification
+java.vm.version=1.9.0-internal-debug-marcel_2015_04_17_10_57-b00
+java.vm.name=OpenJDK 64-Bit Server VM
+java.vm.info=mixed mode, sharing
+sun.boot.library.path=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64
+java.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.home=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk
+java.class.path=.
+sun.boot.class.path=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.rmi:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.security.auth:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.jcmd:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.attach:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.transaction:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.security.jgss:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.hprof.agent:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.zipfs:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.jvmstat:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.sql.rowset:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.security.jgss:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.hotspot.agent:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.datatransfer:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.scripting:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.logging:/hom
+java.vm.specification.vendor=Oracle Corporation
+java.vm.specification.version=1.9
+java.vm.vendor=Oracle Corporation
+sun.java.command=TwoMethods
+sun.java.launcher=SUN_STANDARD
+</properties>
+</vm_arguments>
+<tty>
+<writer thread='140304984999680'/>
+CompileCommand: option TwoMethods.method1 double CompileThresholdScaling = 0.010000
+CompileCommand: option TwoMethods.method2 double CompileThresholdScaling = 0.010000
+CompileCommand: option TwoMethods.method1 bool DumpProfile = true
+CompileCommand: option TwoMethods.method2 bool DumpProfile = true
+request:  java.lang.String::hashCode comment: tiered count: 600 hot: yes
+<writer thread='140304362714880'/>
+    467    1    b  3       java.lang.String::hashCode (53 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.String::equals comment: tiered count: 806 hot: yes
+<writer thread='140304362714880'/>
+    479    2    b  3       java.lang.String::equals (81 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.System::getSecurityManager comment: tiered count: 384 hot: yes
+<writer thread='140304362714880'/>
+    486    3    b  3       java.lang.System::getSecurityManager (4 bytes)
+<writer thread='140304984999680'/>
+<blob name='MethodHandlesAdapterBlob' size='182000'>
+<sect index='1' size='182000' free='177714'/>
+</blob>
+request:  java.lang.String::indexOf comment: tiered count: 337 hot: yes
+<writer thread='140304362714880'/>
+    510    4    b  3       java.lang.String::indexOf (70 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.StringBuilder::append comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+    521    5    b  3       java.lang.StringBuilder::append (8 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.String::getChars comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+    524    6    b  3       java.lang.String::getChars (62 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.String::charAt comment: tiered count: 17280 hot: yes
+<writer thread='140304364820224'/>
+    536    7    b  4       java.lang.String::charAt (29 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.Object::&lt;init&gt; comment: tiered count: 2304 hot: yes
+<writer thread='140304362714880'/>
+    541    8    b  3       java.lang.Object::&lt;init&gt; (1 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.ref.Reference::get comment: tiered count: 896 hot: yes
+<writer thread='140304362714880'/>
+    556    9    b  1       java.lang.ref.Reference::get (5 bytes)
+<writer thread='140304984999680'/>
+    557   10     n 0       java.lang.System::arraycopy (native)   (static)
+request:  sun.nio.cs.UTF_8$Encoder::encode comment: tiered count: 330 hot: yes
+<writer thread='140304362714880'/>
+    559   11    b  3       sun.nio.cs.UTF_8$Encoder::encode (359 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.UnixFileSystem::normalize comment: tiered count: 177 hot: yes
+<writer thread='140304362714880'/>
+    608   12    b  3       java.io.UnixFileSystem::normalize (75 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.String::lastIndexOf comment: tiered count: 328 hot: yes
+<writer thread='140304362714880'/>
+    622   13    b  3       java.lang.String::lastIndexOf (52 bytes)
+<writer thread='140304984999680'/>
+request:  java.util.Arrays::copyOf comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+    645   14    b  3       java.util.Arrays::copyOf (19 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.AbstractStringBuilder::expandCapacity comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+    664   15    b  3       java.lang.AbstractStringBuilder::expandCapacity (50 bytes)
+<writer thread='140304984999680'/>
+request:  java.util.Arrays::copyOfRange comment: tiered count: 640 hot: yes
+<writer thread='140304362714880'/>
+    676   16    b  3       java.util.Arrays::copyOfRange (63 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.Math::min comment: tiered count: 2048 hot: yes
+<writer thread='140304362714880'/>
+    695   17    b  3       java.lang.Math::min (11 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.String::&lt;init&gt; comment: tiered count: 640 hot: yes
+<writer thread='140304362714880'/>
+    697   18    b  3       java.lang.String::&lt;init&gt; (82 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.String::length comment: tiered count: 1280 hot: yes
+<writer thread='140304362714880'/>
+    731   19    b  3       java.lang.String::length (6 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.AbstractStringBuilder::ensureCapacityInternal comment: tiered count: 384 hot: yes
+<writer thread='140304362714880'/>
+    733   20    b  3       java.lang.AbstractStringBuilder::ensureCapacityInternal (16 bytes)
+<writer thread='140304984999680'/>
+request:  sun.nio.cs.UTF_8$Decoder::decode comment: tiered count: 118 hot: yes
+<writer thread='140304362714880'/>
+    737   21    b  3       sun.nio.cs.UTF_8$Decoder::decode (779 bytes)
+<writer thread='140304984999680'/>
+request:  TwoMethods::method1 comment: tiered count: 1 hot: yes
+<writer thread='140304362714880'/>
+   1353   22    b  3       TwoMethods::method1 (145 bytes)
+<writer thread='140304984999680'/>
+request:  TwoMethods::method1 osr_bci: 43 comment: tiered count: 424 hot: yes
+<writer thread='140304363767552'/>
+   1472   23 %  b  4       TwoMethods::method1 @ 43 (145 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140304984999680'/>
+   1541   23 %     4       TwoMethods::method1 @ 43 (145 bytes)   made not entrant
+request:  TwoMethods::method2 comment: tiered count: 1 hot: yes
+<writer thread='140304362714880'/>
+   1543   24    b  3       TwoMethods::method2 (144 bytes)
+<writer thread='140304984999680'/>
+request:  TwoMethods::method2 osr_bci: 44 comment: tiered count: 424 hot: yes
+<writer thread='140304364820224'/>
+   1701   25 %  b  4       TwoMethods::method2 @ 44 (144 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::mult comment: tiered count: 219 hot: yes
+<writer thread='140304362714880'/>
+   1818   26    b  3       sun.misc.FDBigInteger::mult (64 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::&lt;init&gt; comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   1836   27    b  3       sun.misc.FDBigInteger::&lt;init&gt; (30 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::trimLeadingZeros comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   1846   28    b  3       sun.misc.FDBigInteger::trimLeadingZeros (57 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::makeImmutable comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   1861   29    b  3       sun.misc.FDBigInteger::makeImmutable (6 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::mult comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   1866   30    b  3       sun.misc.FDBigInteger::mult (44 bytes)
+<writer thread='140304984999680'/>
+request:  TwoMethods::method1 osr_bci: 43 comment: tiered count: 856 hot: yes
+<writer thread='140304363767552'/>
+   1881   31 %  b  4       TwoMethods::method1 @ 43 (145 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140304984999680'/>
+request:  TwoMethods::method1 comment: tiered count: 2 hot: yes
+<writer thread='140304364820224'/>
+   1896   32    b  4       TwoMethods::method1 (145 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+   1955   22       3       TwoMethods::method1 (145 bytes)   made not entrant
+<writer thread='140304984999680'/>
+   1988   31 %     4       TwoMethods::method1 @ 43 (145 bytes)   made not entrant
+request:  TwoMethods::method2 comment: tiered count: 2 hot: yes
+<writer thread='140304363767552'/>
+   1991   33    b  4       TwoMethods::method2 (144 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+   2045   24       3       TwoMethods::method2 (144 bytes)   made not entrant
+<writer thread='140304984999680'/>
+request:  java.lang.String::indexOf comment: tiered count: 384 hot: yes
+<writer thread='140304362714880'/>
+   2075   34    b  3       java.lang.String::indexOf (7 bytes)
+<writer thread='140304984999680'/>
+   2106   32       4       TwoMethods::method1 (145 bytes)   made not entrant
+   2127   33       4       TwoMethods::method2 (144 bytes)   made not entrant
+request:  TwoMethods::method1 comment: tiered count: 3 hot: yes
+<writer thread='140304362714880'/>
+   2127   35    b  3       TwoMethods::method1 (145 bytes)
+<writer thread='140304984999680'/>
+request:  TwoMethods::method1 osr_bci: 43 comment: tiered count: 872 hot: yes
+<writer thread='140304362714880'/>
+   2292   36 %  b  3       TwoMethods::method1 @ 43 (145 bytes)
+<writer thread='140304984999680'/>
+request:  TwoMethods::method1 osr_bci: 43 comment: tiered count: 1304 hot: yes
+<writer thread='140304364820224'/>
+   2396   37 %  b  4       TwoMethods::method1 @ 43 (145 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+   2438   36 %     3       TwoMethods::method1 @ 43 (145 bytes)   made not entrant
+<writer thread='140304984999680'/>
+request:  TwoMethods::method1 comment: tiered count: 3 hot: yes
+<writer thread='140304363767552'/>
+   2439   38    b  4       TwoMethods::method1 (145 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+   2505   35       3       TwoMethods::method1 (145 bytes)   made not entrant
+<writer thread='140304984999680'/>
+request:  TwoMethods::method2 comment: tiered count: 3 hot: yes
+<writer thread='140304362714880'/>
+   2524   39    b  3       TwoMethods::method2 (144 bytes)
+<writer thread='140304984999680'/>
+request:  java.nio.Buffer::position comment: tiered count: 128 hot: yes
+<writer thread='140304362714880'/>
+   2649   40    b  1       java.nio.Buffer::position (5 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.AbstractStringBuilder::append comment: tiered count: 383 hot: yes
+<writer thread='140304362714880'/>
+   2726   41    b  3       java.lang.AbstractStringBuilder::append (50 bytes)
+<writer thread='140304984999680'/>
+request:  java.nio.Buffer::limit comment: tiered count: 128 hot: yes
+<writer thread='140304362714880'/>
+   2750   42    b  1       java.nio.Buffer::limit (5 bytes)
+<writer thread='140304984999680'/>
+request:  java.nio.ByteBuffer::arrayOffset comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   2860   43    b  3       java.nio.ByteBuffer::arrayOffset (35 bytes)
+<writer thread='140304984999680'/>
+request:  TwoMethods::method2 comment: tiered count: 8 hot: yes
+<writer thread='140304364820224'/>
+   2893   44    b  4       TwoMethods::method2 (144 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+   2958   39       3       TwoMethods::method2 (144 bytes)   made not entrant
+<writer thread='140304984999680'/>
+request:  java.nio.Buffer::position comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   2988   45    b  3       java.nio.Buffer::position (43 bytes)
+<writer thread='140304984999680'/>
+request:  java.nio.CharBuffer::arrayOffset comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   3021   46    b  3       java.nio.CharBuffer::arrayOffset (35 bytes)
+<writer thread='140304984999680'/>
+   3055   47     n 0       java.lang.Thread::currentThread (native)   (static)
+request:  sun.nio.cs.UTF_8$Encoder::encodeArrayLoop comment: tiered count: 103 hot: yes
+<writer thread='140304362714880'/>
+   3074   48    b  3       sun.nio.cs.UTF_8$Encoder::encodeArrayLoop (489 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.ThreadLocal::getMap comment: tiered count: 512 hot: yes
+<writer thread='140304362714880'/>
+   3435   49    b  3       java.lang.ThreadLocal::getMap (5 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.ThreadLocal::access$400 comment: tiered count: 512 hot: yes
+<writer thread='140304362714880'/>
+   3452   50    b  1       java.lang.ThreadLocal::access$400 (5 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.BufferedWriter::ensureOpen comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   3453   51    b  3       java.io.BufferedWriter::ensureOpen (18 bytes)
+<writer thread='140304984999680'/>
+request:  java.nio.charset.CoderResult::isUnderflow comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   3457   52    b  3       java.nio.charset.CoderResult::isUnderflow (13 bytes)
+<writer thread='140304984999680'/>
+request:  sun.nio.cs.StreamEncoder::isOpen comment: tiered count: 128 hot: yes
+<writer thread='140304362714880'/>
+   3459   53    b  1       sun.nio.cs.StreamEncoder::isOpen (5 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.PrintStream::ensureOpen comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   3460   54    b  3       java.io.PrintStream::ensureOpen (18 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.FileDescriptor::access$100 comment: tiered count: 128 hot: yes
+<writer thread='140304362714880'/>
+   3463   55    b  1       java.io.FileDescriptor::access$100 (5 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.ThreadLocal::get comment: tiered count: 512 hot: yes
+<writer thread='140304362714880'/>
+   3485   56    b  3       java.lang.ThreadLocal::get (38 bytes)
+<writer thread='140304984999680'/>
+request:  java.nio.CharBuffer::position comment: tiered count: 333 hot: yes
+<writer thread='140304362714880'/>
+   3569   57    b  3       java.nio.CharBuffer::position (6 bytes)
+<writer thread='140304984999680'/>
+request:  java.nio.CharBuffer::position comment: tiered count: 333 hot: yes
+<writer thread='140304362714880'/>
+   3577   58    b  3       java.nio.CharBuffer::position (8 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.BufferedOutputStream::flush comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   3591   59  s b  3       java.io.BufferedOutputStream::flush (12 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.OutputStream::flush comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   3597   60    b  3       java.io.OutputStream::flush (1 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.StringBuilder::toString comment: tiered count: 268 hot: yes
+<writer thread='140304362714880'/>
+   3767   61    b  3       java.lang.StringBuilder::toString (17 bytes)
+<writer thread='140304984999680'/>
+request:  java.nio.Buffer::&lt;init&gt; comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   3786   62    b  3       java.nio.Buffer::&lt;init&gt; (121 bytes)
+<writer thread='140304984999680'/>
+request:  java.nio.Buffer::limit comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   3854   63    b  3       java.nio.Buffer::limit (62 bytes)
+<writer thread='140304984999680'/>
+request:  java.nio.ByteBuffer::position comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   3889   64    b  3       java.nio.ByteBuffer::position (8 bytes)
+<writer thread='140304984999680'/>
+request:  java.nio.ByteBuffer::position comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   3923   65    b  3       java.nio.ByteBuffer::position (6 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.Writer::write comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   3929   66    b  3       java.io.Writer::write (11 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.BufferedWriter::write comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   3939   67   !b  3       java.io.BufferedWriter::write (117 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.OutputStreamWriter::write comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   3974   68    b  3       java.io.OutputStreamWriter::write (11 bytes)
+<writer thread='140304984999680'/>
+request:  sun.nio.cs.StreamEncoder::ensureOpen comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   3979   69    b  3       sun.nio.cs.StreamEncoder::ensureOpen (18 bytes)
+<writer thread='140304984999680'/>
+request:  sun.nio.cs.StreamEncoder::implWrite comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   3982   70    b  3       sun.nio.cs.StreamEncoder::implWrite (156 bytes)
+<writer thread='140304984999680'/>
+request:  java.nio.CharBuffer::limit comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   4022   71    b  3       java.nio.CharBuffer::limit (6 bytes)
+<writer thread='140304984999680'/>
+request:  sun.nio.cs.UTF_8$Encoder::encodeLoop comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   4026   72    b  3       sun.nio.cs.UTF_8$Encoder::encodeLoop (28 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.OutputStreamWriter::flushBuffer comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   4035   73    b  3       java.io.OutputStreamWriter::flushBuffer (8 bytes)
+<writer thread='140304984999680'/>
+request:  sun.nio.cs.StreamEncoder::implFlushBuffer comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   4037   74    b  3       sun.nio.cs.StreamEncoder::implFlushBuffer (15 bytes)
+<writer thread='140304984999680'/>
+request:  java.nio.ByteBuffer::flip comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   4041   75    b  3       java.nio.ByteBuffer::flip (7 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.PrintStream::write comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   4043   76   !b  3       java.io.PrintStream::write (69 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.BufferedOutputStream::write comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   4054   77  s b  3       java.io.BufferedOutputStream::write (67 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.FileOutputStream::write comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   4068   78    b  3       java.io.FileOutputStream::write (20 bytes)
+<writer thread='140304984999680'/>
+   4072   79     n 0       java.io.FileOutputStream::writeBytes (native)   
+request:  java.nio.ByteBuffer::clear comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   4073   80    b  3       java.nio.ByteBuffer::clear (7 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.Math::max comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   4207   81    b  3       java.lang.Math::max (11 bytes)
+<writer thread='140304984999680'/>
+   4355   82     n 0       java.lang.Double::doubleToRawLongBits (native)   (static)
+request:  java.io.BufferedWriter::flushBuffer comment: tiered count: 383 hot: yes
+<writer thread='140304362714880'/>
+   4424   83   !b  3       java.io.BufferedWriter::flushBuffer (53 bytes)
+<writer thread='140304984999680'/>
+request:  sun.nio.cs.StreamEncoder::write comment: tiered count: 383 hot: yes
+<writer thread='140304362714880'/>
+   4452   84   !b  3       sun.nio.cs.StreamEncoder::write (78 bytes)
+<writer thread='140304984999680'/>
+request:  java.nio.charset.CharsetEncoder::encode comment: tiered count: 383 hot: yes
+<writer thread='140304362714880'/>
+   4477   85   !b  3       java.nio.charset.CharsetEncoder::encode (285 bytes)
+<writer thread='140304984999680'/>
+request:  java.nio.charset.CoderResult::isOverflow comment: tiered count: 383 hot: yes
+<writer thread='140304362714880'/>
+   4553   86    b  3       java.nio.charset.CoderResult::isOverflow (14 bytes)
+<writer thread='140304984999680'/>
+request:  sun.nio.cs.StreamEncoder::flushBuffer comment: tiered count: 383 hot: yes
+<writer thread='140304362714880'/>
+   4556   87   !b  3       sun.nio.cs.StreamEncoder::flushBuffer (42 bytes)
+<writer thread='140304984999680'/>
+request:  sun.nio.cs.StreamEncoder::writeBytes comment: tiered count: 383 hot: yes
+<writer thread='140304362714880'/>
+   4564   88    b  3       sun.nio.cs.StreamEncoder::writeBytes (132 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::size comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   4604   89    b  3       sun.misc.FDBigInteger::size (10 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.ThreadLocal$ThreadLocalMap::getEntry comment: tiered count: 638 hot: yes
+<writer thread='140304362714880'/>
+   4606   90    b  3       java.lang.ThreadLocal$ThreadLocalMap::getEntry (42 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::multAndCarryBy10 comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   4648   91    b  3       sun.misc.FDBigInteger::multAndCarryBy10 (50 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::cmp comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   4684   92    b  3       sun.misc.FDBigInteger::cmp (147 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::quoRemIteration comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   4734   93    b  3       sun.misc.FDBigInteger::quoRemIteration (337 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::addAndCmp comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   4761   94    b  3       sun.misc.FDBigInteger::addAndCmp (292 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::size comment: tiered count: 1280 hot: yes
+<writer thread='140304362714880'/>
+   4791   95    b  1       sun.misc.FDBigInteger::size (10 bytes)
+   4792   89       3       sun.misc.FDBigInteger::size (10 bytes)   made not entrant
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::multBy10 comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   4816   96    b  3       sun.misc.FDBigInteger::multBy10 (178 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::multDiffMe comment: tiered count: 383 hot: yes
+<writer thread='140304362714880'/>
+   4870   97    b  3       sun.misc.FDBigInteger::multDiffMe (297 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FloatingDecimal$BinaryToASCIIBuffer::dtoa comment: tiered count: 232 hot: yes
+<writer thread='140304362714880'/>
+   5030   98    b  3       sun.misc.FloatingDecimal$BinaryToASCIIBuffer::dtoa (1509 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.BufferedWriter::newLine comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   5683   99    b  3       java.io.BufferedWriter::newLine (8 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FloatingDecimal$BinaryToASCIIBuffer::toJavaFormatString comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   5708  100    b  3       sun.misc.FloatingDecimal$BinaryToASCIIBuffer::toJavaFormatString (23 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FloatingDecimal::toJavaFormatString comment: tiered count: 257 hot: yes
+<writer thread='140304362714880'/>
+   5718  101    b  3       sun.misc.FloatingDecimal::toJavaFormatString (10 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FloatingDecimal::getBinaryToASCIIConverter comment: tiered count: 257 hot: yes
+<writer thread='140304362714880'/>
+   5729  102    b  3       sun.misc.FloatingDecimal::getBinaryToASCIIConverter (6 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FloatingDecimal::getBinaryToASCIIConverter comment: tiered count: 257 hot: yes
+<writer thread='140304362714880'/>
+   5736  103    b  3       sun.misc.FloatingDecimal::getBinaryToASCIIConverter (183 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.PrintStream::println comment: tiered count: 258 hot: yes
+<writer thread='140304362714880'/>
+   5778  104   !b  3       java.io.PrintStream::println (24 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.PrintStream::print comment: tiered count: 258 hot: yes
+<writer thread='140304362714880'/>
+   5787  105    b  3       java.io.PrintStream::print (13 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.PrintStream::write comment: tiered count: 258 hot: yes
+<writer thread='140304362714880'/>
+   5790  106   !b  3       java.io.PrintStream::write (83 bytes)
+<writer thread='140304984999680'/>
+request:  java.io.PrintStream::newLine comment: tiered count: 258 hot: yes
+<writer thread='140304362714880'/>
+   5810  107   !b  3       java.io.PrintStream::newLine (73 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::valueOfPow52 comment: tiered count: 272 hot: yes
+<writer thread='140304362714880'/>
+   5960  108    b  3       sun.misc.FDBigInteger::valueOfPow52 (101 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::leftShift comment: tiered count: 236 hot: yes
+<writer thread='140304362714880'/>
+   6050  109    b  3       sun.misc.FDBigInteger::leftShift (395 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::trimLeadingZeros comment: tiered count: 5376 hot: yes
+<writer thread='140304363767552'/>
+   6412  110    b  4       sun.misc.FDBigInteger::trimLeadingZeros (57 bytes)
+   6430   28       3       sun.misc.FDBigInteger::trimLeadingZeros (57 bytes)   made not entrant
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::leftShift comment: tiered count: 343 hot: yes
+<writer thread='140304362714880'/>
+   6441  111    b  3       sun.misc.FDBigInteger::leftShift (50 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FDBigInteger::big5pow comment: tiered count: 309 hot: yes
+<writer thread='140304362714880'/>
+   6475  112    b  3       sun.misc.FDBigInteger::big5pow (37 bytes)
+<writer thread='140304984999680'/>
+   6525  113     n 0       java.lang.Double::longBitsToDouble (native)   (static)
+request:  sun.misc.FDBigInteger::multAndCarryBy10 comment: tiered count: 5376 hot: yes
+<writer thread='140304364820224'/>
+   6564  114    b  4       sun.misc.FDBigInteger::multAndCarryBy10 (50 bytes)
+   6605   91       3       sun.misc.FDBigInteger::multAndCarryBy10 (50 bytes)   made not entrant
+<writer thread='140304984999680'/>
+request:  java.lang.Long::numberOfTrailingZeros comment: tiered count: 360 hot: yes
+<writer thread='140304362714880'/>
+   6648  115    b  3       java.lang.Long::numberOfTrailingZeros (116 bytes)
+<writer thread='140304984999680'/>
+request:  sun.misc.FloatingDecimal$BinaryToASCIIBuffer::estimateDecExp comment: tiered count: 268 hot: yes
+<writer thread='140304362714880'/>
+   6656  116    b  3       sun.misc.FloatingDecimal$BinaryToASCIIBuffer::estimateDecExp (182 bytes)
+<writer thread='140304984999680'/>
+request:  sun.nio.cs.UTF_8$Encoder::encodeArrayLoop comment: tiered count: 757 hot: yes
+<writer thread='140304363767552'/>
+   6780  117    b  4       sun.nio.cs.UTF_8$Encoder::encodeArrayLoop (489 bytes)
+   6820   48       3       sun.nio.cs.UTF_8$Encoder::encodeArrayLoop (489 bytes)   made not entrant
+<writer thread='140304984999680'/>
+request:  sun.misc.FloatingDecimal$BinaryToASCIIBuffer::getChars comment: tiered count: 383 hot: yes
+<writer thread='140304362714880'/>
+   6853  118    b  3       sun.misc.FloatingDecimal$BinaryToASCIIBuffer::getChars (502 bytes)
+<writer thread='140304984999680'/>
+request:  java.util.ArrayList::add comment: tiered count: 256 hot: yes
+<writer thread='140304362714880'/>
+   7084  119    b  3       java.util.ArrayList::add (29 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.Object::&lt;init&gt; comment: tiered count: 5632 hot: yes
+<writer thread='140304362714880'/>
+   7108  120    b  1       java.lang.Object::&lt;init&gt; (1 bytes)
+   7111    8       3       java.lang.Object::&lt;init&gt; (1 bytes)   made not entrant
+<writer thread='140304984999680'/>
+request:  java.util.ArrayList::access$100 comment: tiered count: 128 hot: yes
+<writer thread='140304362714880'/>
+   7111  121    b  1       java.util.ArrayList::access$100 (5 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.Number::&lt;init&gt; comment: tiered count: 384 hot: yes
+<writer thread='140304362714880'/>
+   7115  122    b  3       java.lang.Number::&lt;init&gt; (5 bytes)
+<writer thread='140304984999680'/>
+request:  java.lang.Long::longValue comment: tiered count: 257 hot: yes
+<writer thread='140304362714880'/>
+   7121  123    b  3       java.lang.Long::longValue (5 bytes)
+<writer thread='140304984999680'/>
+C1 Runtime statistics:
+ _resolve_invoke_virtual_cnt:     21
+ _resolve_invoke_opt_virtual_cnt: 140
+ _resolve_invoke_static_cnt:      34
+ _handle_wrong_method_cnt:        8
+ _ic_miss_cnt:                    3
+ _generic_arraycopy_cnt:          0
+ _generic_arraycopystub_cnt:      0
+ _byte_arraycopy_cnt:             0
+ _short_arraycopy_cnt:            0
+ _int_arraycopy_cnt:              0
+ _long_arraycopy_cnt:             0
+ _primitive_arraycopy_cnt:        0
+ _oop_arraycopy_cnt (C):          0
+ _oop_arraycopy_cnt (stub):       0
+ _arraycopy_slowcase_cnt:         0
+ _arraycopy_checkcast_cnt:        0
+ _arraycopy_checkcast_attempt_cnt:0
+ _new_type_array_slowcase_cnt:    0
+ _new_object_array_slowcase_cnt:  0
+ _new_instance_slowcase_cnt:      70
+ _new_multi_array_slowcase_cnt:   0
+ _monitorenter_slowcase_cnt:      0
+ _monitorexit_slowcase_cnt:       0
+ _patch_code_slowcase_cnt:        0
+ _throw_range_check_exception_count:            0:
+ _throw_index_exception_count:                  0:
+ _throw_div0_exception_count:                   0:
+ _throw_null_pointer_exception_count:           0:
+ _throw_class_cast_exception_count:             0:
+ _throw_incompatible_class_change_error_count:  0:
+ _throw_array_store_exception_count:            0:
+ _throw_count:                                  0:
+
+<statistics type='deoptimization'>
+Deoptimization traps recorded:
+    12 (100.0%) total
+         unloaded/reinterpret/invokestatic: 1 (8.3%)
+                       constraint/none/nop: 8 (66.7%)
+         unstable_if/reinterpret/if_icmpge: 2 (16.7%)
+              unstable_if/reinterpret/ifle: 1 (8.3%)
+</statistics>
+<statistics type='SharedRuntime'>
+    3 inline cache miss in compiled
+    8 wrong method
+   34 unresolved static call site
+   21 unresolved virtual call site
+  140 unresolved opt virtual call site
+    6 slow partial subtype
+  560 byte array copies
+ 4075 short array copies
+   44 int array copies
+   12 long array copies
+AdapterHandlerTable: empty 183 longest 3 total 140 average 1.272727
+AdapterHandlerTable: lookups 5574 buckets 5401 equals 5140 hits 5140 compact 5140
+</statistics>
+<statistics type='nmethod'>
+Statistics for 5 native nmethods:
+ N. total size  = 5152
+ N. relocation  = 440
+ N. main code   = 3152
+Statistics for 118 bytecoded nmethods:
+ total in heap  = 513784
+ relocation     = 33048
+ constants      = 448
+ main code      = 276320
+ stub code      = 27280
+ oops           = 320
+ scopes data    = 50736
+ scopes pcs     = 75968
+ dependencies   = 984
+ handler table  = 4600
+ nul chk table  = 3144
+Debug Data Chunks: 10677, shared 1294+3061, non-SP&apos;s elided 75
+PcDesc Statistics:  541 queries, 9.84 comparisons per query
+  caches=118 queries=541/0, hits=0+31, tests=2164+3161, adds=510
+</statistics>
+<statistics type='opto'>
+--- Compiler Statistics ---
+Methods seen: 113  Methods parsed: 113  Nodes created: 19023
+Blocks parsed: 190  Blocks seen: 230
+253 original NULL checks - 202 elided (79%); optimizer leaves 40,
+11 made implicit (27%)
+CCP: 12  constants found: 0
+Total frameslots = 184, Max frameslots = 32
+Inserted 0 spill loads, 0 spill stores, 0 mem-mem moves and 0 copies.
+Total load cost=      0, store cost =      0, mem-mem cost =  0.00, copy cost =     0.
+Adjusted spill cost =       0.
+Conservatively coalesced 339 copies, 0 pairs, 146 post alloc.
+Used cisc instruction  7,  remained in register 61
+Average allocation trips 1.214286
+High Pressure Blocks = 0, Low Pressure Blocks = 0
+Nops added 0 bytes to total of 13473 bytes, for 0.00%
+Peephole: peephole rules applied: 0
+PhaseIdealLoop=86, sum _unique=62501
+</statistics>
+<statistics type='intrinsic'>
+Compiler intrinsic usage:
+     1 (10.0%) _min (worked)
+     9 (90.0%) _nanoTime (worked)
+    10 (100.0%) total (worked)
+</statistics>
+<writer thread='140304571111168'/>
+<destroy_vm stamp='7.141'/>
+<tty_done stamp='7.185'/>
+</tty>
+<hotspot_log_done stamp='7.185'/>
+</hotspot_log>

@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hotspot_log version='160 1' process='18513' time_ms='1430293417842'>
+<vm_version>
+<name>
+OpenJDK 64-Bit Server VM
+</name>
+<release>
+1.9.0-internal-debug-marcel_2015_04_17_10_57-b00
+</release>
+<info>
+OpenJDK 64-Bit Server VM (1.9.0-internal-debug-marcel_2015_04_17_10_57-b00) for linux-amd64 JRE (1.9.0-internal-marcel_2015_04_17_10_57-b00), built on Apr 29 2015 09:38:24 by &quot;marcel&quot; with gcc 4.9.2 20150304 (prerelease)
+</info>
+</vm_version>
+<vm_arguments>
+<args>
+-XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:+UseOnStackReplacement -XX:+UnlockExperimentalVMOptions -XX:+CacheProfiles -XX:CacheProfilesFile=cached_profiles.log -XX:+TraceDeoptimization -Xbatch -XX:+CIPrintRequests 
+</args>
+<command>
+TwoMethods
+</command>
+<launcher>
+SUN_STANDARD
+</launcher>
+<properties>
+java.vm.specification.name=Java Virtual Machine Specification
+java.vm.version=1.9.0-internal-debug-marcel_2015_04_17_10_57-b00
+java.vm.name=OpenJDK 64-Bit Server VM
+java.vm.info=mixed mode, sharing
+sun.boot.library.path=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64
+java.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.home=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk
+java.class.path=.
+sun.boot.class.path=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.rmi:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.security.auth:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.jcmd:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.attach:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.transaction:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.security.jgss:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.hprof.agent:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.zipfs:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.jvmstat:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.sql.rowset:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.security.jgss:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.hotspot.agent:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.datatransfer:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.scripting:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.logging:/hom
+java.vm.specification.vendor=Oracle Corporation
+java.vm.specification.version=1.9
+java.vm.vendor=Oracle Corporation
+sun.java.command=TwoMethods
+sun.java.launcher=SUN_STANDARD
+</properties>
+</vm_arguments>
+<tty>
+<writer thread='140068257941248'/>
+request:  java.lang.String::indexOf comment: tiered count: 337 hot: yes
+<writer thread='140067704985344'/>
+    465    1    b  3       java.lang.String::indexOf (70 bytes)
+<writer thread='140068257941248'/>
+request:  java.lang.String::hashCode comment: tiered count: 602 hot: yes
+<writer thread='140067704985344'/>
+    477    2    b  3       java.lang.String::hashCode (53 bytes)
+<writer thread='140068257941248'/>
+request:  java.lang.StringBuilder::append comment: tiered count: 256 hot: yes
+<writer thread='140067704985344'/>
+    484    3    b  3       java.lang.StringBuilder::append (8 bytes)
+<writer thread='140068257941248'/>
+request:  java.lang.String::getChars comment: tiered count: 256 hot: yes
+<writer thread='140067704985344'/>
+    486    4    b  3       java.lang.String::getChars (62 bytes)
+<writer thread='140068257941248'/>
+request:  java.lang.String::charAt comment: tiered count: 17280 hot: yes
+<writer thread='140067707090688'/>
+    498    5    b  4       java.lang.String::charAt (29 bytes)
+<writer thread='140068257941248'/>
+request:  java.lang.String::lastIndexOf comment: tiered count: 328 hot: yes
+<writer thread='140067704985344'/>
+    503    6    b  3       java.lang.String::lastIndexOf (52 bytes)
+<writer thread='140068257941248'/>
+request:  java.lang.String::equals comment: tiered count: 806 hot: yes
+<writer thread='140067704985344'/>
+    518    7    b  3       java.lang.String::equals (81 bytes)
+<writer thread='140068257941248'/>
+request:  java.lang.Object::&lt;init&gt; comment: tiered count: 2304 hot: yes
+<writer thread='140067704985344'/>
+    525    8    b  3       java.lang.Object::&lt;init&gt; (1 bytes)
+<writer thread='140068257941248'/>
+request:  java.lang.System::getSecurityManager comment: tiered count: 384 hot: yes
+<writer thread='140067704985344'/>
+    532    9    b  3       java.lang.System::getSecurityManager (4 bytes)
+<writer thread='140068257941248'/>
+request:  java.lang.ref.Reference::get comment: tiered count: 896 hot: yes
+<writer thread='140067704985344'/>
+    537   10    b  1       java.lang.ref.Reference::get (5 bytes)
+<writer thread='140068257941248'/>
+request:  sun.nio.cs.UTF_8$Encoder::encode comment: tiered count: 330 hot: yes
+<writer thread='140067704985344'/>
+    538   11    b  3       sun.nio.cs.UTF_8$Encoder::encode (359 bytes)
+<writer thread='140068257941248'/>
+    578   12     n 0       java.lang.System::arraycopy (native)   (static)
+request:  java.io.UnixFileSystem::normalize comment: tiered count: 177 hot: yes
+<writer thread='140067704985344'/>
+    581   13    b  3       java.io.UnixFileSystem::normalize (75 bytes)
+<writer thread='140068257941248'/>
+request:  java.util.Arrays::copyOf comment: tiered count: 256 hot: yes
+<writer thread='140067704985344'/>
+    595   14    b  3       java.util.Arrays::copyOf (19 bytes)
+<writer thread='140068257941248'/>
+request:  java.lang.Math::min comment: tiered count: 2048 hot: yes
+<writer thread='140067704985344'/>
+    605   15    b  3       java.lang.Math::min (11 bytes)
+<writer thread='140068257941248'/>
+request:  java.util.Arrays::copyOfRange comment: tiered count: 640 hot: yes
+<writer thread='140067704985344'/>
+    607   16    b  3       java.util.Arrays::copyOfRange (63 bytes)
+<writer thread='140068257941248'/>
+request:  java.lang.AbstractStringBuilder::expandCapacity comment: tiered count: 256 hot: yes
+<writer thread='140067704985344'/>
+    625   17    b  3       java.lang.AbstractStringBuilder::expandCapacity (50 bytes)
+<writer thread='140068257941248'/>
+request:  java.lang.String::&lt;init&gt; comment: tiered count: 640 hot: yes
+<writer thread='140067704985344'/>
+    635   18    b  3       java.lang.String::&lt;init&gt; (82 bytes)
+<writer thread='140068257941248'/>
+request:  java.lang.String::length comment: tiered count: 1280 hot: yes
+<writer thread='140067704985344'/>
+    669   19    b  3       java.lang.String::length (6 bytes)
+<writer thread='140068257941248'/>
+request:  sun.nio.cs.UTF_8$Decoder::decode comment: tiered count: 117 hot: yes
+<writer thread='140067704985344'/>
+    681   20    b  3       sun.nio.cs.UTF_8$Decoder::decode (779 bytes)
+<writer thread='140068257941248'/>
+request:  java.lang.AbstractStringBuilder::ensureCapacityInternal comment: tiered count: 384 hot: yes
+<writer thread='140067704985344'/>
+   1234   21    b  3       java.lang.AbstractStringBuilder::ensureCapacityInternal (16 bytes)
+<writer thread='140068257941248'/>
+<blob name='MethodHandlesAdapterBlob' size='182000'>
+<sect index='1' size='182000' free='177714'/>
+</blob>
+request:  java.lang.Object::&lt;init&gt; comment: tiered count: 2560 hot: yes
+<writer thread='140067704985344'/>
+   1282   22    b  1       java.lang.Object::&lt;init&gt; (1 bytes)
+   1284    8       3       java.lang.Object::&lt;init&gt; (1 bytes)   made not entrant
+<writer thread='140068257941248'/>
+request:  java.lang.String::indexOf comment: tiered count: 384 hot: yes
+<writer thread='140067704985344'/>
+   1286   23    b  3       java.lang.String::indexOf (7 bytes)
+<writer thread='140068257941248'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 1 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140067706038016'/>
+   1303   24    b  4       TwoMethods::method1 (145 bytes)
+<tty_done stamp='1.324'/>
+</tty>
+<hotspot_log_done stamp='1.324'/>
+</hotspot_log>

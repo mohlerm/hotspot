@@ -1,0 +1,230 @@
+[12:32:38] marcel@miraculix ~/b/SPECjvm2008$ ./run-benchmark.sh create
+
+SPECjvm2008 Base
+  Properties file:   none
+  Benchmarks:        scimark.fft.large scimark.lu.large scimark.sor.large scimark.sparse.large scimark.fft.small scimark.lu.small scimark.sor.small scimark.sparse.small scimark.monte_carlo
+
+  WARNING: Run will not be compliant.
+  Not a compliant sequence of benchmarks for publication.
+  Property specjvm.run.checksum.validation must be true for publication.
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   check
+  Run mode:    static run
+  Test type:   functional
+  Threads:     1
+  Iterations:  1
+  Run length:  1 operation
+
+Iteration 1 (1 operation) begins: Thu Apr 30 12:33:16 CEST 2015
+Iteration 1 (1 operation) ends:   Thu Apr 30 12:33:16 CEST 2015
+Iteration 1 (1 operation) result: PASSED
+
+Valid run!
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.fft.large
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Thu Apr 30 12:33:16 CEST 2015
+Warmup (120s) ends:   Thu Apr 30 12:36:02 CEST 2015
+Warmup (120s) result: 7.10 ops/m
+
+Iteration 1 (240s) begins: Thu Apr 30 12:36:02 CEST 2015
+Iteration 1 (240s) ends:   Thu Apr 30 12:40:13 CEST 2015
+Iteration 1 (240s) result: 18.30 ops/m
+
+Valid run!
+Score on scimark.fft.large: 18.30 ops/m
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.lu.large
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Thu Apr 30 12:40:13 CEST 2015
+Warmup (120s) ends:   Thu Apr 30 12:51:13 CEST 2015
+Warmup (120s) result: 0.67 ops/m
+
+Iteration 1 (240s) begins: Thu Apr 30 12:51:13 CEST 2015
+Iteration 1 (240s) ends:   Thu Apr 30 13:02:15 CEST 2015
+Iteration 1 (240s) result: 0.65 ops/m
+
+Valid run!
+Score on scimark.lu.large: 0.65 ops/m
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.sor.large
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Thu Apr 30 13:02:15 CEST 2015
+Warmup (120s) ends:   Thu Apr 30 13:07:08 CEST 2015
+Warmup (120s) result: 2.35 ops/m
+
+Iteration 1 (240s) begins: Thu Apr 30 13:07:08 CEST 2015
+Iteration 1 (240s) ends:   Thu Apr 30 13:13:48 CEST 2015
+Iteration 1 (240s) result: 2.32 ops/m
+
+Valid run!
+Score on scimark.sor.large: 2.32 ops/m
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.sparse.large
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Thu Apr 30 13:13:48 CEST 2015
+Warmup (120s) ends:   Thu Apr 30 13:17:55 CEST 2015
+Warmup (120s) result: 1.79 ops/m
+
+Iteration 1 (240s) begins: Thu Apr 30 13:17:55 CEST 2015
+Iteration 1 (240s) ends:   Thu Apr 30 13:24:12 CEST 2015
+Iteration 1 (240s) result: 1.79 ops/m
+
+Valid run!
+Score on scimark.sparse.large: 1.79 ops/m
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.fft.small
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Thu Apr 30 13:24:12 CEST 2015
+Warmup (120s) ends:   Thu Apr 30 13:26:14 CEST 2015
+Warmup (120s) result: 206.97 ops/m
+
+Iteration 1 (240s) begins: Thu Apr 30 13:26:14 CEST 2015
+Iteration 1 (240s) ends:   Thu Apr 30 13:30:15 CEST 2015
+Iteration 1 (240s) result: 214.35 ops/m
+
+Valid run!
+Score on scimark.fft.small: 214.35 ops/m
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.lu.small
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Thu Apr 30 13:30:15 CEST 2015
+Warmup (120s) ends:   Thu Apr 30 13:32:17 CEST 2015
+Warmup (120s) result: 210.74 ops/m
+
+Iteration 1 (240s) begins: Thu Apr 30 13:32:17 CEST 2015
+Iteration 1 (240s) ends:   Thu Apr 30 13:36:18 CEST 2015
+Iteration 1 (240s) result: 231.94 ops/m
+
+Valid run!
+Score on scimark.lu.small: 231.94 ops/m
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.sor.small
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Thu Apr 30 13:36:18 CEST 2015
+Warmup (120s) ends:   Thu Apr 30 13:38:20 CEST 2015
+Warmup (120s) result: 19.40 ops/m
+
+Iteration 1 (240s) begins: Thu Apr 30 13:38:20 CEST 2015
+Iteration 1 (240s) ends:   Thu Apr 30 13:42:22 CEST 2015
+Iteration 1 (240s) result: 168.90 ops/m
+
+Valid run!
+Score on scimark.sor.small: 168.90 ops/m
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.sparse.small
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Thu Apr 30 13:42:23 CEST 2015
+Warmup (120s) ends:   Thu Apr 30 13:46:23 CEST 2015
+Warmup (120s) result: 4.74 ops/m
+
+Iteration 1 (240s) begins: Thu Apr 30 13:46:23 CEST 2015
+Iteration 1 (240s) ends:   Thu Apr 30 13:50:25 CEST 2015
+Iteration 1 (240s) result: 104.11 ops/m
+
+Valid run!
+Score on scimark.sparse.small: 104.11 ops/m
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.monte_carlo
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Thu Apr 30 13:50:25 CEST 2015
+Warmup (120s) ends:   Thu Apr 30 13:53:33 CEST 2015
+Warmup (120s) result: 8.23 ops/m
+
+Iteration 1 (240s) begins: Thu Apr 30 13:53:33 CEST 2015
+Iteration 1 (240s) ends:   Thu Apr 30 13:57:37 CEST 2015
+Iteration 1 (240s) result: 118.46 ops/m
+
+Valid run!
+Score on scimark.monte_carlo: 118.46 ops/m
+
+Results are stored in: 
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.058/SPECjvm2008.058.raw
+Generating reports in:
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.058
+
+Noncompliant composite result: 30.08 ops/m

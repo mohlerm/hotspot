@@ -1,0 +1,297 @@
+-------------------------
+>>>  CREATE PROFILES  <<<
+-------------------------
+[12:03:35] marcel@miraculix ~/b/SPECjvm2008$ ./run-benchmark.sh create
+
+SPECjvm2008 Base
+  Properties file:   none
+  Benchmarks:        scimark.monte_carlo
+
+  WARNING: Run will not be compliant.
+  Not a compliant sequence of benchmarks for publication.
+  Property specjvm.run.checksum.validation must be true for publication.
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   check
+  Run mode:    static run
+  Test type:   functional
+  Threads:     1
+  Iterations:  1
+  Run length:  1 operation
+
+Iteration 1 (1 operation) begins: Wed Apr 29 12:04:14 CEST 2015
+Iteration 1 (1 operation) ends:   Wed Apr 29 12:04:14 CEST 2015
+Iteration 1 (1 operation) result: PASSED
+
+Valid run!
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.monte_carlo
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Wed Apr 29 12:04:14 CEST 2015
+Warmup (120s) ends:   Wed Apr 29 12:07:26 CEST 2015
+Warmup (120s) result: 8.17 ops/m
+
+Iteration 1 (240s) begins: Wed Apr 29 12:07:26 CEST 2015
+Iteration 1 (240s) ends:   Wed Apr 29 12:11:28 CEST 2015
+Iteration 1 (240s) result: 116.39 ops/m
+
+Valid run!
+Score on scimark.monte_carlo: 116.39 ops/m
+
+Results are stored in: 
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.046/SPECjvm2008.046.raw
+Generating reports in:
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.046
+
+Noncompliant composite result: 116.39 ops/m
+
+-------------------------
+>>>   USE PROFILES    <<<
+-------------------------
+
+[12:11:37] marcel@miraculix ~/b/SPECjvm2008$ ./run-benchmark.sh use
+
+SPECjvm2008 Base
+  Properties file:   none
+  Benchmarks:        scimark.monte_carlo
+
+  WARNING: Run will not be compliant.
+  Not a compliant sequence of benchmarks for publication.
+  Property specjvm.run.checksum.validation must be true for publication.
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   check
+  Run mode:    static run
+  Test type:   functional
+  Threads:     1
+  Iterations:  1
+  Run length:  1 operation
+
+Iteration 1 (1 operation) begins: Wed Apr 29 12:12:59 CEST 2015
+Iteration 1 (1 operation) ends:   Wed Apr 29 12:12:59 CEST 2015
+Iteration 1 (1 operation) result: PASSED
+
+Valid run!
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.monte_carlo
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Wed Apr 29 12:12:59 CEST 2015
+Warmup (120s) ends:   Wed Apr 29 12:15:02 CEST 2015
+Warmup (120s) result: 129.20 ops/m
+
+Iteration 1 (240s) begins: Wed Apr 29 12:15:02 CEST 2015
+Iteration 1 (240s) ends:   Wed Apr 29 12:19:05 CEST 2015
+Iteration 1 (240s) result: 131.94 ops/m
+
+Valid run!
+Score on scimark.monte_carlo: 131.94 ops/m
+
+Results are stored in: 
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.047/SPECjvm2008.047.raw
+Generating reports in:
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.047
+
+Noncompliant composite result: 131.94 ops/m
+
+-------------------------
+>>>  BASELINE w/o il  <<<
+-------------------------
+
+[12:19:13] marcel@miraculix ~/b/SPECjvm2008$ ./run-benchmark.sh baseline
+
+SPECjvm2008 Base
+  Properties file:   none
+  Benchmarks:        scimark.monte_carlo
+
+  WARNING: Run will not be compliant.
+  Not a compliant sequence of benchmarks for publication.
+  Property specjvm.run.checksum.validation must be true for publication.
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   check
+  Run mode:    static run
+  Test type:   functional
+  Threads:     1
+  Iterations:  1
+  Run length:  1 operation
+
+Iteration 1 (1 operation) begins: Wed Apr 29 17:59:45 CEST 2015
+Iteration 1 (1 operation) ends:   Wed Apr 29 17:59:46 CEST 2015
+Iteration 1 (1 operation) result: PASSED
+
+Valid run!
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.monte_carlo
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Wed Apr 29 17:59:46 CEST 2015
+Warmup (120s) ends:   Wed Apr 29 18:02:56 CEST 2015
+Warmup (120s) result: 8.21 ops/m
+
+Iteration 1 (240s) begins: Wed Apr 29 18:02:56 CEST 2015
+Iteration 1 (240s) ends:   Wed Apr 29 18:06:59 CEST 2015
+Iteration 1 (240s) result: 113.63 ops/m
+
+Valid run!
+Score on scimark.monte_carlo: 113.63 ops/m
+
+Results are stored in: 
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.048/SPECjvm2008.048.raw
+Generating reports in:
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.048
+
+Noncompliant composite result: 113.63 ops/m
+
+-------------------------
+>>>   BASELINE JDK8   <<<
+-------------------------
+[18:24:37] marcel@miraculix ~/b/SPECjvm2008$ 
+java -jar SPECjvm2008.jar -ikv scimark.monte_carlo
+
+SPECjvm2008 Base
+  Properties file:   none
+  Benchmarks:        scimark.monte_carlo
+
+  WARNING: Run will not be compliant.
+  Not a compliant sequence of benchmarks for publication.
+  Property specjvm.run.checksum.validation must be true for publication.
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   check
+  Run mode:    static run
+  Test type:   functional
+  Threads:     1
+  Iterations:  1
+  Run length:  1 operation
+
+Iteration 1 (1 operation) begins: Wed Apr 29 18:28:50 CEST 2015
+Iteration 1 (1 operation) ends:   Wed Apr 29 18:28:50 CEST 2015
+Iteration 1 (1 operation) result: PASSED
+
+Valid run!
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.monte_carlo
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Wed Apr 29 18:28:50 CEST 2015
+Warmup (120s) ends:   Wed Apr 29 18:30:53 CEST 2015
+Warmup (120s) result: 120.49 ops/m
+
+Iteration 1 (240s) begins: Wed Apr 29 18:30:53 CEST 2015
+Iteration 1 (240s) ends:   Wed Apr 29 18:34:56 CEST 2015
+Iteration 1 (240s) result: 123.66 ops/m
+
+Valid run!
+Score on scimark.monte_carlo: 123.66 ops/m
+
+Results are stored in: 
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.051/SPECjvm2008.051.raw
+Generating reports in:
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.051
+
+Noncompliant composite result: 123.66 ops/m
+
+-------------------------
+>>>   BASELINE JDK9   <<<
+-------------------------
+
+[18:35:52] marcel@miraculix ~/b/SPECjvm2008$ 
+/home/marcel/downloads/jdk1.9.0/bin/java -Xbootclasspath/p:lib/javac.jar -jar SPECjvm2008.jar -ikv scimark.monte_carlo
+
+SPECjvm2008 Base
+  Properties file:   none
+  Benchmarks:        scimark.monte_carlo
+
+  WARNING: Run will not be compliant.
+  Not a compliant sequence of benchmarks for publication.
+  Property specjvm.run.checksum.validation must be true for publication.
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   check
+  Run mode:    static run
+  Test type:   functional
+  Threads:     1
+  Iterations:  1
+  Run length:  1 operation
+
+Iteration 1 (1 operation) begins: Wed Apr 29 18:36:28 CEST 2015
+Iteration 1 (1 operation) ends:   Wed Apr 29 18:36:28 CEST 2015
+Iteration 1 (1 operation) result: PASSED
+
+Valid run!
+
+
+--- --- --- --- --- --- --- --- ---
+
+  Benchmark:   scimark.monte_carlo
+  Run mode:    timed run
+  Test type:   multi
+  Threads:     4
+  Warmup:      120s
+  Iterations:  1
+  Run length:  240s
+
+Warmup (120s) begins: Wed Apr 29 18:36:28 CEST 2015
+Warmup (120s) ends:   Wed Apr 29 18:38:31 CEST 2015
+Warmup (120s) result: 134.83 ops/m
+
+Iteration 1 (240s) begins: Wed Apr 29 18:38:31 CEST 2015
+Iteration 1 (240s) ends:   Wed Apr 29 18:42:34 CEST 2015
+Iteration 1 (240s) result: 131.91 ops/m
+
+Valid run!
+Score on scimark.monte_carlo: 131.91 ops/m
+
+Results are stored in: 
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.053/SPECjvm2008.053.raw
+Generating reports in:
+/home/marcel/bin/SPECjvm2008/results/SPECjvm2008.053
+
+Noncompliant composite result: 131.91 ops/m
+
+
+

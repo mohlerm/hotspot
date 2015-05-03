@@ -1,0 +1,408 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hotspot_log version='160 1' process='25361' time_ms='1429630334548'>
+<vm_version>
+<name>
+OpenJDK 64-Bit Server VM
+</name>
+<release>
+1.9.0-internal-debug-marcel_2015_04_17_10_57-b00
+</release>
+<info>
+OpenJDK 64-Bit Server VM (1.9.0-internal-debug-marcel_2015_04_17_10_57-b00) for linux-amd64 JRE (1.9.0-internal-marcel_2015_04_17_10_57-b00), built on Apr 21 2015 17:17:48 by &quot;marcel&quot; with gcc 4.9.2 20150304 (prerelease)
+</info>
+</vm_version>
+<vm_arguments>
+<args>
+-agentlib:hprof=cpu=times -XX:+UnlockDiagnosticVMOptions -XX:-UseOnStackReplacement -XX:+UnlockExperimentalVMOptions -Xbatch -XX:+PrintCompilation -XX:+TraceDeoptimization -XX:+DumpProfiles 
+</args>
+<command>
+LongNoBranches
+</command>
+<launcher>
+SUN_STANDARD
+</launcher>
+<properties>
+java.vm.specification.name=Java Virtual Machine Specification
+java.vm.version=1.9.0-internal-debug-marcel_2015_04_17_10_57-b00
+java.vm.name=OpenJDK 64-Bit Server VM
+java.vm.info=mixed mode, sharing
+sun.boot.library.path=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64
+java.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.home=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk
+java.class.path=.
+sun.boot.class.path=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.rmi:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.security.auth:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.jcmd:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.attach:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.transaction:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.security.jgss:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.hprof.agent:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.zipfs:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.jvmstat:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.sql.rowset:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.security.jgss:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.hotspot.agent:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.datatransfer:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.scripting:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.logging:/hom
+java.vm.specification.vendor=Oracle Corporation
+java.vm.specification.version=1.9
+java.vm.vendor=Oracle Corporation
+sun.java.command=LongNoBranches
+sun.java.launcher=SUN_STANDARD
+</properties>
+</vm_arguments>
+<tty>
+<writer thread='140538124314368'/>
+    589    1     n 0       java.lang.Thread::currentThread (native)   (static)
+<writer thread='140537498908416'/>
+    613    2    b  4       com.sun.demo.jvmti.hprof.Tracker::CallSite (43 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140537497855744'/>
+    626    3    b  4       com.sun.demo.jvmti.hprof.Tracker::ReturnSite (43 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140538124314368'/>
+    650    4     n 0       com.sun.demo.jvmti.hprof.Tracker::nativeCallSite (native)   (static)
+    651    5     n 0       com.sun.demo.jvmti.hprof.Tracker::nativeReturnSite (native)   (static)
+<writer thread='140537496803072'/>
+    658    6    b  3       java.lang.Object::&lt;init&gt; (1 bytes)
+    661    7    b  3       java.lang.System::getSecurityManager (20 bytes)
+<writer thread='140538124314368'/>
+<blob name='MethodHandlesAdapterBlob' size='182000'>
+<sect index='1' size='182000' free='177714'/>
+</blob>
+<writer thread='140537496803072'/>
+    689    8    b  3       java.lang.StringBuilder::append (22 bytes)
+    693    9    b  3       java.lang.String::getChars (78 bytes)
+<writer thread='140537498908416'/>
+    710   10    b  4       java.lang.String::charAt (45 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140537496803072'/>
+    749   11    b  3       java.lang.ref.Reference::get (19 bytes)
+<writer thread='140538124314368'/>
+    751   12     n 0       java.lang.System::arraycopy (native)   (static)
+<writer thread='140537496803072'/>
+    776   13    b  3       java.util.Arrays::copyOf (35 bytes)
+    797   14    b  3       java.lang.String::hashCode (69 bytes)
+    808   15    b  3       java.lang.AbstractStringBuilder::expandCapacity (66 bytes)
+    824   16    b  3       java.util.Arrays::copyOfRange (79 bytes)
+    855   17    b  3       java.lang.Math::min (27 bytes)
+    860   18    b  3       java.lang.String::&lt;init&gt; (103 bytes)
+    907   19    b  1       java.lang.Object::&lt;init&gt; (1 bytes)
+    909    6       3       java.lang.Object::&lt;init&gt; (1 bytes)   made not entrant
+    937   20    b  3       java.lang.String::length (22 bytes)
+    941   21    b  3       java.lang.AbstractStringBuilder::ensureCapacityInternal (30 bytes)
+<writer thread='140538124314368'/>
+   1051   22     n 0       sun.misc.Unsafe::compareAndSwapLong (native)   
+<writer thread='140537496803072'/>
+   1055   23    b  3       java.util.concurrent.atomic.AtomicLong::get (19 bytes)
+   1060   24    b  3       java.util.concurrent.atomic.AtomicLong::compareAndSet (29 bytes)
+   1066   25    b  3       java.util.Random::next (61 bytes)
+   1102   26    b  3       java.util.Random::nextDouble (40 bytes)
+<writer thread='140537497855744'/>
+   1393   27    b  4       java.util.Random::next (61 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+   1429   25       3       java.util.Random::next (61 bytes)   made not entrant
+<writer thread='140537498908416'/>
+   1739   28    b  4       java.util.Random::nextDouble (40 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+   1812   26       3       java.util.Random::nextDouble (40 bytes)   made not entrant
+<writer thread='140537496803072'/>
+   2573   29    b  3       java.lang.Number::&lt;init&gt; (17 bytes)
+<writer thread='140538124314368'/>
+   3949   30     n 0       java.lang.Object::getClass (native)   
+   4073   31     n 0       java.lang.System::nanoTime (native)   (static)
+<writer thread='140537496803072'/>
+   4236   32    b  3       java.util.concurrent.atomic.AtomicLong::&lt;init&gt; (24 bytes)
+   4269   33    b  3       java.util.Random::&lt;init&gt; (26 bytes)
+   4277   34    b  3       java.util.Random::initialScramble (24 bytes)
+   5811   35    b  3       java.util.Random::seedUniquifier (43 bytes)
+   5836   36    b  3       java.util.Random::&lt;init&gt; (67 bytes)
+<writer thread='140538124314368'/>
+&gt;&gt;&gt;&gt;&gt;&gt; SET COUNTERS FOR method1&gt;&gt;&gt;&gt;&gt;&gt; SET COUNTERS FOR method1&gt;&gt;&gt;&gt;&gt;&gt; SET COUNTERS FOR method1&gt;&gt;&gt;&gt;&gt;&gt; COMPILE method1 Complevel: 3, Hotcount: 128 
+<writer thread='140537496803072'/>
+  16346   37    b  3       LongNoBranches::method1 (6125 bytes)
+&gt;&gt;&gt;&gt;&gt;&gt; SET COUNTERS FOR method1  21243   38    b  3       LongNoBranches::method2 (6125 bytes)
+  26124   39    b  3       LongNoBranches::method3 (6125 bytes)
+  30973   40    b  3       LongNoBranches::method4 (6125 bytes)
+  35947   41    b  3       LongNoBranches::method5 (6127 bytes)
+  40775   42    b  3       LongNoBranches::method6 (6127 bytes)
+  45625   43    b  3       LongNoBranches::method7 (6127 bytes)
+  50476   44    b  3       LongNoBranches::method8 (6127 bytes)
+  55428   45    b  3       LongNoBranches::method9 (6127 bytes)
+  60299   46    b  3       LongNoBranches::method10 (6127 bytes)
+<writer thread='140538124314368'/>
+&gt;&gt;&gt;&gt;&gt;&gt; SET COUNTERS FOR method1&gt;&gt;&gt;&gt;&gt;&gt; SET COUNTERS FOR method1&gt;&gt;&gt;&gt;&gt;&gt; SET COUNTERS FOR method1&gt;&gt;&gt;&gt;&gt;&gt; SET COUNTERS FOR method1&gt;&gt;&gt;&gt;&gt;&gt; SET COUNTERS FOR method1&gt;&gt;&gt;&gt;&gt;&gt; COMPILE method1 Complevel: 4, Hotcount: 2580960 
+<writer thread='140537497855744'/>
+  65383   47 %  b  4       LongNoBranches::method1 @ 300 (6125 bytes)
+&gt;&gt;&gt;&gt;&gt;&gt; SET COUNTERS FOR method1# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140538124314368'/>
+&gt;&gt;&gt;&gt;&gt;&gt; SET COUNTERS FOR method1&gt;&gt;&gt;&gt;&gt;&gt; COMPILE method1 Complevel: 4, Hotcount: 130 
+<writer thread='140537498908416'/>
+  67491   48    b  4       LongNoBranches::method1 (6125 bytes)
+&gt;&gt;&gt;&gt;&gt;&gt; SET COUNTERS FOR method1# Compiler cached profile is saved as: cached_profiles.log
+  70171   37       3       LongNoBranches::method1 (6125 bytes)   made not entrant
+<writer thread='140538124314368'/>
+DEOPT PACKING thread 0x00007fd18c052800 Deoptimized frame (sp=0x00007fd194fa1390 unextended sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, real_fp=0x00007fd194fa1750, pc=0x00007fd17d5a9da8)
+     nmethod  70178   37       3       LongNoBranches::method1 (6125 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007fd194fa1390, unextended_sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, pc=0x00007fd17d5a9da8)
+LongNoBranches.method1(LongNoBranches.java:66) - goto @ bci 319 
+     Created vframeArray 0x00007fd18c25a8b0
+DEOPT UNPACKING thread 0x00007fd18c052800 vframeArray 0x00007fd18c25a8b0 mode 0
+     {method} {0x00007fd1905ceca0} &apos;method1&apos; &apos;(D)D&apos; in &apos;LongNoBranches&apos; - goto @ bci 319 sp = 0x00007fd194fa10a0
+<writer thread='140537497855744'/>
+  70194   49 %  b  4       LongNoBranches::method2 @ 300 (6125 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140537498908416'/>
+  72330   50    b  4       LongNoBranches::method2 (6125 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+  74855   38       3       LongNoBranches::method2 (6125 bytes)   made not entrant
+<writer thread='140538124314368'/>
+DEOPT PACKING thread 0x00007fd18c052800 Deoptimized frame (sp=0x00007fd194fa1390 unextended sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, real_fp=0x00007fd194fa1750, pc=0x00007fd17d5d32a8)
+     nmethod  74862   38       3       LongNoBranches::method2 (6125 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007fd194fa1390, unextended_sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, pc=0x00007fd17d5d32a8)
+LongNoBranches.method2(LongNoBranches.java:771) - goto @ bci 319 
+     Created vframeArray 0x00007fd18c4584a0
+DEOPT UNPACKING thread 0x00007fd18c052800 vframeArray 0x00007fd18c4584a0 mode 0
+     {method} {0x00007fd1905d0f60} &apos;method2&apos; &apos;(D)D&apos; in &apos;LongNoBranches&apos; - goto @ bci 319 sp = 0x00007fd194fa10a0
+<writer thread='140537497855744'/>
+  74875   51 %  b  4       LongNoBranches::method3 @ 300 (6125 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140537498908416'/>
+  77026   52    b  4       LongNoBranches::method3 (6125 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+  79530   39       3       LongNoBranches::method3 (6125 bytes)   made not entrant
+<writer thread='140538124314368'/>
+DEOPT PACKING thread 0x00007fd18c052800 Deoptimized frame (sp=0x00007fd194fa1390 unextended sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, real_fp=0x00007fd194fa1750, pc=0x00007fd17d5fc7a8)
+     nmethod  79538   39       3       LongNoBranches::method3 (6125 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007fd194fa1390, unextended_sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, pc=0x00007fd17d5fc7a8)
+LongNoBranches.method3(LongNoBranches.java:1476) - goto @ bci 319 
+     Created vframeArray 0x00007fd18c25a8b0
+DEOPT UNPACKING thread 0x00007fd18c052800 vframeArray 0x00007fd18c25a8b0 mode 0
+     {method} {0x00007fd1905d3220} &apos;method3&apos; &apos;(D)D&apos; in &apos;LongNoBranches&apos; - goto @ bci 319 sp = 0x00007fd194fa10a0
+<writer thread='140537497855744'/>
+  79571   53 %  b  4       LongNoBranches::method4 @ 300 (6125 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140537498908416'/>
+  81679   54    b  4       LongNoBranches::method4 (6125 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+  84254   40       3       LongNoBranches::method4 (6125 bytes)   made not entrant
+<writer thread='140538124314368'/>
+DEOPT PACKING thread 0x00007fd18c052800 Deoptimized frame (sp=0x00007fd194fa1390 unextended sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, real_fp=0x00007fd194fa1750, pc=0x00007fd17d625ca8)
+     nmethod  84261   40       3       LongNoBranches::method4 (6125 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007fd194fa1390, unextended_sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, pc=0x00007fd17d625ca8)
+LongNoBranches.method4(LongNoBranches.java:2181) - goto @ bci 319 
+     Created vframeArray 0x00007fd18c4584a0
+DEOPT UNPACKING thread 0x00007fd18c052800 vframeArray 0x00007fd18c4584a0 mode 0
+     {method} {0x00007fd1905d54e0} &apos;method4&apos; &apos;(D)D&apos; in &apos;LongNoBranches&apos; - goto @ bci 319 sp = 0x00007fd194fa10a0
+<writer thread='140537497855744'/>
+  84284   55 %  b  4       LongNoBranches::method5 @ 301 (6127 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140537498908416'/>
+  86390   56    b  4       LongNoBranches::method5 (6127 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+  88931   41       3       LongNoBranches::method5 (6127 bytes)   made not entrant
+<writer thread='140538124314368'/>
+DEOPT PACKING thread 0x00007fd18c052800 Deoptimized frame (sp=0x00007fd194fa1390 unextended sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, real_fp=0x00007fd194fa1750, pc=0x00007fd17d64f1a8)
+     nmethod  88939   41       3       LongNoBranches::method5 (6127 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007fd194fa1390, unextended_sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, pc=0x00007fd17d64f1a8)
+LongNoBranches.method5(LongNoBranches.java:2886) - goto @ bci 320 
+     Created vframeArray 0x00007fd18c25a8b0
+DEOPT UNPACKING thread 0x00007fd18c052800 vframeArray 0x00007fd18c25a8b0 mode 0
+     {method} {0x00007fd1905d77a8} &apos;method5&apos; &apos;(D)D&apos; in &apos;LongNoBranches&apos; - goto @ bci 320 sp = 0x00007fd194fa10a0
+<writer thread='140537497855744'/>
+  88955   57 %  b  4       LongNoBranches::method6 @ 301 (6127 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140537498908416'/>
+  91133   58    b  4       LongNoBranches::method6 (6127 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+  93708   42       3       LongNoBranches::method6 (6127 bytes)   made not entrant
+<writer thread='140538124314368'/>
+DEOPT PACKING thread 0x00007fd18c052800 Deoptimized frame (sp=0x00007fd194fa1390 unextended sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, real_fp=0x00007fd194fa1750, pc=0x00007fd17d6786a8)
+     nmethod  93716   42       3       LongNoBranches::method6 (6127 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007fd194fa1390, unextended_sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, pc=0x00007fd17d6786a8)
+LongNoBranches.method6(LongNoBranches.java:3591) - goto @ bci 320 
+     Created vframeArray 0x00007fd18c4584a0
+DEOPT UNPACKING thread 0x00007fd18c052800 vframeArray 0x00007fd18c4584a0 mode 0
+     {method} {0x00007fd1905d9a70} &apos;method6&apos; &apos;(D)D&apos; in &apos;LongNoBranches&apos; - goto @ bci 320 sp = 0x00007fd194fa10a0
+<writer thread='140537497855744'/>
+  93729   59 %  b  4       LongNoBranches::method7 @ 301 (6127 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140537498908416'/>
+  95872   60    b  4       LongNoBranches::method7 (6127 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+  98418   43       3       LongNoBranches::method7 (6127 bytes)   made not entrant
+<writer thread='140538124314368'/>
+DEOPT PACKING thread 0x00007fd18c052800 Deoptimized frame (sp=0x00007fd194fa1390 unextended sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, real_fp=0x00007fd194fa1750, pc=0x00007fd17d6a1ba8)
+     nmethod  98425   43       3       LongNoBranches::method7 (6127 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007fd194fa1390, unextended_sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, pc=0x00007fd17d6a1ba8)
+LongNoBranches.method7(LongNoBranches.java:4296) - goto @ bci 320 
+     Created vframeArray 0x00007fd18c25a8b0
+DEOPT UNPACKING thread 0x00007fd18c052800 vframeArray 0x00007fd18c25a8b0 mode 0
+     {method} {0x00007fd1905dbd38} &apos;method7&apos; &apos;(D)D&apos; in &apos;LongNoBranches&apos; - goto @ bci 320 sp = 0x00007fd194fa10a0
+<writer thread='140537497855744'/>
+  98439   61 %  b  4       LongNoBranches::method8 @ 301 (6127 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140537498908416'/>
+ 100550   62    b  4       LongNoBranches::method8 (6127 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+ 103078   44       3       LongNoBranches::method8 (6127 bytes)   made not entrant
+<writer thread='140538124314368'/>
+DEOPT PACKING thread 0x00007fd18c052800 Deoptimized frame (sp=0x00007fd194fa1390 unextended sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, real_fp=0x00007fd194fa1750, pc=0x00007fd17d6cb0a8)
+     nmethod 103085   44       3       LongNoBranches::method8 (6127 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007fd194fa1390, unextended_sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, pc=0x00007fd17d6cb0a8)
+LongNoBranches.method8(LongNoBranches.java:5001) - goto @ bci 320 
+     Created vframeArray 0x00007fd18c4584a0
+DEOPT UNPACKING thread 0x00007fd18c052800 vframeArray 0x00007fd18c4584a0 mode 0
+     {method} {0x00007fd1905deca8} &apos;method8&apos; &apos;(D)D&apos; in &apos;LongNoBranches&apos; - goto @ bci 320 sp = 0x00007fd194fa10a0
+<writer thread='140537497855744'/>
+ 103107   63 %  b  4       LongNoBranches::method9 @ 301 (6127 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140537498908416'/>
+ 105237   64    b  4       LongNoBranches::method9 (6127 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+ 107764   45       3       LongNoBranches::method9 (6127 bytes)   made not entrant
+<writer thread='140538124314368'/>
+DEOPT PACKING thread 0x00007fd18c052800 Deoptimized frame (sp=0x00007fd194fa1390 unextended sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, real_fp=0x00007fd194fa1750, pc=0x00007fd17d6f45a8)
+     nmethod 107771   45       3       LongNoBranches::method9 (6127 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007fd194fa1390, unextended_sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, pc=0x00007fd17d6f45a8)
+LongNoBranches.method9(LongNoBranches.java:5706) - goto @ bci 320 
+     Created vframeArray 0x00007fd18c25a8b0
+DEOPT UNPACKING thread 0x00007fd18c052800 vframeArray 0x00007fd18c25a8b0 mode 0
+     {method} {0x00007fd1905e0f70} &apos;method9&apos; &apos;(D)D&apos; in &apos;LongNoBranches&apos; - goto @ bci 320 sp = 0x00007fd194fa10a0
+<writer thread='140537497855744'/>
+ 107787   65 %  b  4       LongNoBranches::method10 @ 301 (6127 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='140537498908416'/>
+ 109940   66    b  4       LongNoBranches::method10 (6127 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+ 112508   46       3       LongNoBranches::method10 (6127 bytes)   made not entrant
+<writer thread='140538124314368'/>
+DEOPT PACKING thread 0x00007fd18c052800 Deoptimized frame (sp=0x00007fd194fa1390 unextended sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, real_fp=0x00007fd194fa1750, pc=0x00007fd17d71daa8)
+     nmethod 112515   46       3       LongNoBranches::method10 (6127 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007fd194fa1390, unextended_sp=0x00007fd194fa1390, fp=0x00007fd194fa17b8, pc=0x00007fd17d71daa8)
+LongNoBranches.method10(LongNoBranches.java:6411) - goto @ bci 320 
+     Created vframeArray 0x00007fd18c4584a0
+DEOPT UNPACKING thread 0x00007fd18c052800 vframeArray 0x00007fd18c4584a0 mode 0
+     {method} {0x00007fd1905e3238} &apos;method10&apos; &apos;(D)D&apos; in &apos;LongNoBranches&apos; - goto @ bci 320 sp = 0x00007fd194fa10a0
+<writer thread='140537496803072'/>
+ 131982   67    b  3       sun.misc.FDBigInteger::&lt;init&gt; (44 bytes)
+ 131987   68    b  3       sun.misc.FDBigInteger::trimLeadingZeros (71 bytes)
+ 131994   69    b  3       sun.misc.FDBigInteger::makeImmutable (22 bytes)
+ 131999   70    b  3       sun.misc.FDBigInteger::mult (68 bytes)
+ 132005   71    b  3       sun.misc.FDBigInteger::mult (80 bytes)
+<writer thread='140538124314368'/>
+C1 Runtime statistics:
+ _resolve_invoke_virtual_cnt:     0
+ _resolve_invoke_opt_virtual_cnt: 2019
+ _resolve_invoke_static_cnt:      333
+ _handle_wrong_method_cnt:        2
+ _ic_miss_cnt:                    0
+ _generic_arraycopy_cnt:          0
+ _generic_arraycopystub_cnt:      0
+ _byte_arraycopy_cnt:             0
+ _short_arraycopy_cnt:            0
+ _int_arraycopy_cnt:              0
+ _long_arraycopy_cnt:             0
+ _primitive_arraycopy_cnt:        0
+ _oop_arraycopy_cnt (C):          0
+ _oop_arraycopy_cnt (stub):       0
+ _arraycopy_slowcase_cnt:         0
+ _arraycopy_checkcast_cnt:        0
+ _arraycopy_checkcast_attempt_cnt:0
+ _new_type_array_slowcase_cnt:    0
+ _new_object_array_slowcase_cnt:  0
+ _new_instance_slowcase_cnt:      70
+ _new_multi_array_slowcase_cnt:   0
+ _monitorenter_slowcase_cnt:      0
+ _monitorexit_slowcase_cnt:       0
+ _patch_code_slowcase_cnt:        0
+ _throw_range_check_exception_count:            0:
+ _throw_index_exception_count:                  0:
+ _throw_div0_exception_count:                   0:
+ _throw_null_pointer_exception_count:           0:
+ _throw_class_cast_exception_count:             0:
+ _throw_incompatible_class_change_error_count:  0:
+ _throw_array_store_exception_count:            0:
+ _throw_count:                                  0:
+
+<statistics type='deoptimization'>
+Deoptimization traps recorded:
+    10 (100.0%) total
+                       constraint/none/nop: 10 (100.0%)
+</statistics>
+<statistics type='SharedRuntime'>
+    2 new instance requires GC
+    0 inline cache miss in compiled
+    2 wrong method
+  333 unresolved static call site
+    0 unresolved virtual call site
+ 2019 unresolved opt virtual call site
+    6 slow partial subtype
+   12 byte array copies
+   95 short array copies
+   12 int array copies
+   12 long array copies
+AdapterHandlerTable: empty 181 longest 3 total 143 average 1.276786
+AdapterHandlerTable: lookups 5616 buckets 5459 equals 5179 hits 5179 compact 5179
+</statistics>
+<statistics type='nmethod'>
+Statistics for 7 native nmethods:
+ N. total size  = 7216
+ N. relocation  = 616
+ N. main code   = 4416
+Statistics for 64 bytecoded nmethods:
+ total in heap  = 3635184
+ relocation     = 175296
+ constants      = 24704
+ main code      = 1221888
+ stub code      = 59480
+ oops           = 336
+ scopes data    = 1162040
+ scopes pcs     = 914960
+ dependencies   = 912
+ handler table  = 52584
+ nul chk table  = 304
+Debug Data Chunks: 72536, shared 15480+18212, non-SP&apos;s elided 24
+PcDesc Statistics:  5344 queries, 13.92 comparisons per query
+  caches=64 queries=5344/0, hits=0+11, tests=26195+48194, adds=5333
+</statistics>
+<statistics type='opto'>
+--- Compiler Statistics ---
+Methods seen: 315  Methods parsed: 315  Nodes created: 1343904
+Blocks parsed: 16719  Blocks seen: 17121
+2121 original NULL checks - 2101 elided (99%); optimizer leaves 40,
+0 made implicit ( 0%)
+CCP: 25  constants found: 0
+Total frameslots = 312, Max frameslots = 32
+Inserted 0 spill loads, 0 spill stores, 0 mem-mem moves and 0 copies.
+Total load cost=      0, store cost =      0, mem-mem cost =  0.00, copy cost =     0.
+Adjusted spill cost =       0.
+Conservatively coalesced 3050 copies, 0 pairs, 588 post alloc.
+Used cisc instruction  192,  remained in register 39121
+Average allocation trips 1.487805
+High Pressure Blocks = 0, Low Pressure Blocks = 0
+Nops added 0 bytes to total of 750017 bytes, for 0.00%
+Peephole: peephole rules applied: 0
+PhaseIdealLoop=194, sum _unique=5065965
+</statistics>
+<statistics type='intrinsic'>
+Compiler intrinsic usage:
+    10 ( 4.6%) _getClass (worked)
+    10 ( 4.6%) _nanoTime (worked)
+   184 (84.8%) _currentThread (worked)
+    13 ( 6.0%) _compareAndSwapLong (worked)
+   217 (100.0%) total (worked)
+</statistics>
+<writer thread='140537574192896'/>
+<destroy_vm stamp='132.093'/>
+<tty_done stamp='132.456'/>
+</tty>
+<hotspot_log_done stamp='132.456'/>
+</hotspot_log>

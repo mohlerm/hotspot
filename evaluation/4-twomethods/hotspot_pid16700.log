@@ -1,0 +1,265 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hotspot_log version='160 1' process='16700' time_ms='1430388891294'>
+<vm_version>
+<name>
+OpenJDK 64-Bit Server VM
+</name>
+<release>
+1.9.0-internal-debug-marcel_2015_04_17_10_57-b00
+</release>
+<info>
+OpenJDK 64-Bit Server VM (1.9.0-internal-debug-marcel_2015_04_17_10_57-b00) for linux-amd64 JRE (1.9.0-internal-marcel_2015_04_17_10_57-b00), built on Apr 30 2015 08:29:24 by &quot;marcel&quot; with gcc 4.9.2 20150304 (prerelease)
+</info>
+</vm_version>
+<vm_arguments>
+<args>
+-XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:-UseOnStackReplacement -XX:+UnlockExperimentalVMOptions -XX:CompileCommandFile=createCommands.txt -XX:+DumpProfiles -Xbatch -XX:+CIPrintRequests 
+</args>
+<command>
+TwoMethods
+</command>
+<launcher>
+SUN_STANDARD
+</launcher>
+<properties>
+java.vm.specification.name=Java Virtual Machine Specification
+java.vm.version=1.9.0-internal-debug-marcel_2015_04_17_10_57-b00
+java.vm.name=OpenJDK 64-Bit Server VM
+java.vm.info=mixed mode, sharing
+sun.boot.library.path=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64
+java.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.home=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk
+java.class.path=.
+sun.boot.class.path=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.rmi:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.security.auth:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.jcmd:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.attach:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.transaction:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.security.jgss:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.hprof.agent:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.zipfs:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.jvmstat:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.sql.rowset:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.security.jgss:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.hotspot.agent:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.datatransfer:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.scripting:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.logging:/hom
+java.vm.specification.vendor=Oracle Corporation
+java.vm.specification.version=1.9
+java.vm.vendor=Oracle Corporation
+sun.java.command=TwoMethods
+sun.java.launcher=SUN_STANDARD
+</properties>
+</vm_arguments>
+<tty>
+<writer thread='140391014409984'/>
+CompileCommand: option TwoMethods.method1 double CompileThresholdScaling = 0.010000
+CompileCommand: option TwoMethods.method2 double CompileThresholdScaling = 0.010000
+request:  java.lang.System::getSecurityManager comment: tiered count: 384 hot: yes
+<writer thread='140390257850112'/>
+    523    1    b  3       java.lang.System::getSecurityManager (4 bytes)
+<writer thread='140391014409984'/>
+<blob name='MethodHandlesAdapterBlob' size='182000'>
+<sect index='1' size='182000' free='177714'/>
+</blob>
+request:  java.lang.StringBuilder::append comment: tiered count: 256 hot: yes
+<writer thread='140390257850112'/>
+    539    2    b  3       java.lang.StringBuilder::append (8 bytes)
+<writer thread='140391014409984'/>
+request:  java.lang.String::getChars comment: tiered count: 256 hot: yes
+<writer thread='140390257850112'/>
+    542    3    b  3       java.lang.String::getChars (62 bytes)
+<writer thread='140391014409984'/>
+request:  java.lang.String::charAt comment: tiered count: 17280 hot: yes
+<writer thread='140390259955456'/>
+    554    4    b  4       java.lang.String::charAt (29 bytes)
+<writer thread='140391014409984'/>
+request:  java.lang.Object::&lt;init&gt; comment: tiered count: 2304 hot: yes
+<writer thread='140390257850112'/>
+    564    5    b  3       java.lang.Object::&lt;init&gt; (1 bytes)
+<writer thread='140391014409984'/>
+request:  java.lang.ref.Reference::get comment: tiered count: 896 hot: yes
+<writer thread='140390257850112'/>
+    574    6    b  1       java.lang.ref.Reference::get (5 bytes)
+<writer thread='140391014409984'/>
+    575    7     n 0       java.lang.System::arraycopy (native)   (static)
+request:  java.util.Arrays::copyOf comment: tiered count: 256 hot: yes
+<writer thread='140390257850112'/>
+    580    8    b  3       java.util.Arrays::copyOf (19 bytes)
+<writer thread='140391014409984'/>
+request:  java.lang.String::hashCode comment: tiered count: 640 hot: yes
+<writer thread='140390257850112'/>
+    589    9    b  3       java.lang.String::hashCode (53 bytes)
+<writer thread='140391014409984'/>
+request:  java.lang.AbstractStringBuilder::expandCapacity comment: tiered count: 256 hot: yes
+<writer thread='140390257850112'/>
+    594   10    b  3       java.lang.AbstractStringBuilder::expandCapacity (50 bytes)
+<writer thread='140391014409984'/>
+request:  java.util.Arrays::copyOfRange comment: tiered count: 640 hot: yes
+<writer thread='140390257850112'/>
+    608   11    b  3       java.util.Arrays::copyOfRange (63 bytes)
+<writer thread='140391014409984'/>
+request:  java.lang.Math::min comment: tiered count: 2048 hot: yes
+<writer thread='140390257850112'/>
+    632   12    b  3       java.lang.Math::min (11 bytes)
+<writer thread='140391014409984'/>
+request:  java.lang.String::&lt;init&gt; comment: tiered count: 640 hot: yes
+<writer thread='140390257850112'/>
+    636   13    b  3       java.lang.String::&lt;init&gt; (82 bytes)
+<writer thread='140391014409984'/>
+request:  java.lang.String::length comment: tiered count: 1280 hot: yes
+<writer thread='140390257850112'/>
+    682   14    b  3       java.lang.String::length (6 bytes)
+<writer thread='140391014409984'/>
+request:  java.lang.AbstractStringBuilder::ensureCapacityInternal comment: tiered count: 384 hot: yes
+<writer thread='140390257850112'/>
+    685   15    b  3       java.lang.AbstractStringBuilder::ensureCapacityInternal (16 bytes)
+<writer thread='140391014409984'/>
+request:  TwoMethods::method1 comment: tiered count: 2 hot: yes
+<writer thread='140390257850112'/>
+   1075   16    b  3       TwoMethods::method1 (157 bytes)
+<writer thread='140391014409984'/>
+request:  TwoMethods::method2 comment: tiered count: 2 hot: yes
+<writer thread='140390257850112'/>
+   1362   17    b  3       TwoMethods::method2 (156 bytes)
+<writer thread='140391014409984'/>
+request:  TwoMethods::method1 osr_bci: 49 comment: tiered count: 20000064 hot: yes
+<writer thread='140390258902784'/>
+   1621   18 %  b  4       TwoMethods::method1 @ 49 (157 bytes)
+<writer thread='140391014409984'/>
+request:  TwoMethods::method1 comment: tiered count: 3 hot: yes
+<writer thread='140390259955456'/>
+   1644   19    b  4       TwoMethods::method1 (157 bytes)
+   1664   16       3       TwoMethods::method1 (157 bytes)   made not entrant
+<writer thread='140391014409984'/>
+request:  TwoMethods::method2 osr_bci: 50 comment: tiered count: 20000064 hot: yes
+<writer thread='140390258902784'/>
+   1860   20 %  b  4       TwoMethods::method2 @ 50 (156 bytes)
+<writer thread='140391014409984'/>
+request:  TwoMethods::method2 comment: tiered count: 3 hot: yes
+<writer thread='140390259955456'/>
+   1868   21    b  4       TwoMethods::method2 (156 bytes)
+   1894   17       3       TwoMethods::method2 (156 bytes)   made not entrant
+<writer thread='140391014409984'/>
+   2099   19       4       TwoMethods::method1 (157 bytes)   made not entrant
+   2109   21       4       TwoMethods::method2 (156 bytes)   made not entrant
+request:  TwoMethods::method1 comment: tiered count: 4 hot: yes
+<writer thread='140390257850112'/>
+   2109   22    b  3       TwoMethods::method1 (157 bytes)
+<writer thread='140391014409984'/>
+request:  TwoMethods::method2 comment: tiered count: 4 hot: yes
+<writer thread='140390257850112'/>
+   2334   23    b  3       TwoMethods::method2 (156 bytes)
+<writer thread='140391014409984'/>
+request:  TwoMethods::method1 comment: tiered count: 5 hot: yes
+<writer thread='140390258902784'/>
+   2596   24    b  4       TwoMethods::method1 (157 bytes)
+   2643   22       3       TwoMethods::method1 (157 bytes)   made not entrant
+<writer thread='140391014409984'/>
+request:  TwoMethods::method2 comment: tiered count: 5 hot: yes
+<writer thread='140390259955456'/>
+   2843   25    b  4       TwoMethods::method2 (156 bytes)
+   2863   23       3       TwoMethods::method2 (156 bytes)   made not entrant
+<writer thread='140391014409984'/>
+request:  java.util.ArrayList::add comment: tiered count: 256 hot: yes
+<writer thread='140390257850112'/>
+   4861   26    b  3       java.util.ArrayList::add (29 bytes)
+<writer thread='140391014409984'/>
+request:  java.lang.Object::&lt;init&gt; comment: tiered count: 2560 hot: yes
+<writer thread='140390257850112'/>
+   4898   27    b  1       java.lang.Object::&lt;init&gt; (1 bytes)
+   4902    5       3       java.lang.Object::&lt;init&gt; (1 bytes)   made not entrant
+<writer thread='140391014409984'/>
+C1 Runtime statistics:
+ _resolve_invoke_virtual_cnt:     0
+ _resolve_invoke_opt_virtual_cnt: 4
+ _resolve_invoke_static_cnt:      1
+ _handle_wrong_method_cnt:        0
+ _ic_miss_cnt:                    0
+ _generic_arraycopy_cnt:          0
+ _generic_arraycopystub_cnt:      0
+ _byte_arraycopy_cnt:             0
+ _short_arraycopy_cnt:            0
+ _int_arraycopy_cnt:              0
+ _long_arraycopy_cnt:             0
+ _primitive_arraycopy_cnt:        0
+ _oop_arraycopy_cnt (C):          0
+ _oop_arraycopy_cnt (stub):       0
+ _arraycopy_slowcase_cnt:         0
+ _arraycopy_checkcast_cnt:        0
+ _arraycopy_checkcast_attempt_cnt:0
+ _new_type_array_slowcase_cnt:    0
+ _new_object_array_slowcase_cnt:  0
+ _new_instance_slowcase_cnt:      0
+ _new_multi_array_slowcase_cnt:   0
+ _monitorenter_slowcase_cnt:      0
+ _monitorexit_slowcase_cnt:       0
+ _patch_code_slowcase_cnt:        0
+ _throw_range_check_exception_count:            0:
+ _throw_index_exception_count:                  0:
+ _throw_div0_exception_count:                   0:
+ _throw_null_pointer_exception_count:           0:
+ _throw_class_cast_exception_count:             0:
+ _throw_incompatible_class_change_error_count:  0:
+ _throw_array_store_exception_count:            0:
+ _throw_count:                                  0:
+
+<statistics type='deoptimization'>
+Deoptimization traps recorded:
+     6 (100.0%) total
+                       constraint/none/nop: 4 (66.7%)
+         unstable_if/reinterpret/if_icmpge: 1 (16.7%)
+              unstable_if/reinterpret/ifle: 1 (16.7%)
+</statistics>
+<statistics type='SharedRuntime'>
+    0 inline cache miss in compiled
+    0 wrong method
+    1 unresolved static call site
+    0 unresolved virtual call site
+    4 unresolved opt virtual call site
+    6 slow partial subtype
+   12 byte array copies
+   88 short array copies
+   12 int array copies
+   12 long array copies
+AdapterHandlerTable: empty 190 longest 3 total 132 average 1.281553
+AdapterHandlerTable: lookups 5385 buckets 5196 equals 4959 hits 4959 compact 4959
+</statistics>
+<statistics type='nmethod'>
+Statistics for 1 native nmethods:
+ N. total size  = 1056
+ N. relocation  = 88
+ N. main code   = 656
+Statistics for 26 bytecoded nmethods:
+ total in heap  = 78600
+ relocation     = 5456
+ constants      = 320
+ main code      = 39776
+ stub code      = 5392
+ oops           = 88
+ scopes data    = 6232
+ scopes pcs     = 11696
+ dependencies   = 208
+ handler table  = 96
+ nul chk table  = 648
+Debug Data Chunks: 1310, shared 203+251, non-SP&apos;s elided 48
+PcDesc Statistics:  84 queries, 9.99 comparisons per query
+  caches=26 queries=84/0, hits=0+0, tests=334+505, adds=84
+</statistics>
+<statistics type='opto'>
+--- Compiler Statistics ---
+Methods seen: 25  Methods parsed: 25  Nodes created: 6144
+Blocks parsed: 67  Blocks seen: 80
+28 original NULL checks - 25 elided (89%); optimizer leaves 19,
+3 made implicit (15%)
+CCP: 7  constants found: 0
+Total frameslots = 124, Max frameslots = 32
+Inserted 0 spill loads, 0 spill stores, 0 mem-mem moves and 0 copies.
+Total load cost=      0, store cost =      0, mem-mem cost =  0.00, copy cost =     0.
+Adjusted spill cost =       0.
+Conservatively coalesced 46 copies, 0 pairs, 28 post alloc.
+Used cisc instruction  0,  remained in register 5
+Average allocation trips 1.130435
+High Pressure Blocks = 0, Low Pressure Blocks = 0
+Nops added 0 bytes to total of 4491 bytes, for 0.00%
+Peephole: peephole rules applied: 0
+PhaseIdealLoop=46, sum _unique=15177
+</statistics>
+<statistics type='intrinsic'>
+Compiler intrinsic usage:
+     6 (100.0%) _nanoTime (worked)
+     6 (100.0%) total (worked)
+</statistics>
+<writer thread='140390266038016'/>
+<destroy_vm stamp='4.906'/>
+<tty_done stamp='4.942'/>
+</tty>
+<hotspot_log_done stamp='4.942'/>
+</hotspot_log>

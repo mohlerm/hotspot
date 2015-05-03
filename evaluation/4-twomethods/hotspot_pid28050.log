@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hotspot_log version='160 1' process='28050' time_ms='1430294036254'>
+<vm_version>
+<name>
+OpenJDK 64-Bit Server VM
+</name>
+<release>
+1.9.0-internal-debug-marcel_2015_04_17_10_57-b00
+</release>
+<info>
+OpenJDK 64-Bit Server VM (1.9.0-internal-debug-marcel_2015_04_17_10_57-b00) for linux-amd64 JRE (1.9.0-internal-marcel_2015_04_17_10_57-b00), built on Apr 29 2015 09:53:17 by &quot;marcel&quot; with gcc 4.9.2 20150304 (prerelease)
+</info>
+</vm_version>
+<vm_arguments>
+<args>
+-agentlib:hprof=cpu=times -XX:+UnlockDiagnosticVMOptions -XX:-UseOnStackReplacement -XX:+UnlockExperimentalVMOptions -Xbatch -XX:+PrintCompilation -XX:+TraceDeoptimization -XX:+DumpProfiles -XX:CompileCommandFile=createCommands.txt 
+</args>
+<command>
+TwoMethods
+</command>
+<launcher>
+SUN_STANDARD
+</launcher>
+<properties>
+java.vm.specification.name=Java Virtual Machine Specification
+java.vm.version=1.9.0-internal-debug-marcel_2015_04_17_10_57-b00
+java.vm.name=OpenJDK 64-Bit Server VM
+java.vm.info=mixed mode, sharing
+sun.boot.library.path=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64
+java.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.home=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk
+java.class.path=.
+sun.boot.class.path=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.rmi:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.security.auth:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.jcmd:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.attach:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.transaction:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.security.jgss:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.hprof.agent:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.zipfs:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.jvmstat:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.sql.rowset:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.security.jgss:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.hotspot.agent:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.datatransfer:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.scripting:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.logging:/hom
+java.vm.specification.vendor=Oracle Corporation
+java.vm.specification.version=1.9
+java.vm.vendor=Oracle Corporation
+sun.java.command=TwoMethods
+sun.java.launcher=SUN_STANDARD
+</properties>
+</vm_arguments>
+<tty>
+<writer thread='139625914390272'/>
+CompileCommand: option TwoMethods.method1 double CompileThresholdScaling = 0.010000
+CompileCommand: option TwoMethods.method2 double CompileThresholdScaling = 0.010000
+CompileCommand: option TwoMethods.method1 bool DumpProfile = true
+CompileCommand: option TwoMethods.method2 bool DumpProfile = true
+    594    1     n 0       java.lang.Thread::currentThread (native)   (static)
+<writer thread='139624953628416'/>
+    619    2    b  4       com.sun.demo.jvmti.hprof.Tracker::CallSite (43 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='139624952575744'/>
+    625    3    b  4       com.sun.demo.jvmti.hprof.Tracker::ReturnSite (43 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='139625914390272'/>
+    646    4     n 0       com.sun.demo.jvmti.hprof.Tracker::nativeCallSite (native)   (static)
+    647    5     n 0       com.sun.demo.jvmti.hprof.Tracker::nativeReturnSite (native)   (static)
+<writer thread='139624951523072'/>
+    652    6    b  3       java.lang.Object::&lt;init&gt; (1 bytes)
+    654    7    b  3       java.lang.System::getSecurityManager (20 bytes)
+<writer thread='139625914390272'/>
+<blob name='MethodHandlesAdapterBlob' size='182000'>
+<sect index='1' size='182000' free='177714'/>
+</blob>
+<writer thread='139624951523072'/>
+    683    8    b  3       java.lang.StringBuilder::append (22 bytes)
+    687    9    b  3       java.lang.String::getChars (78 bytes)
+<writer thread='139624953628416'/>
+    707   10    b  4       java.lang.String::charAt (45 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='139624951523072'/>
+    748   11    b  3       java.lang.ref.Reference::get (19 bytes)
+<writer thread='139625914390272'/>
+    749   12     n 0       java.lang.System::arraycopy (native)   (static)
+<writer thread='139624951523072'/>
+    775   13    b  3       java.util.Arrays::copyOf (35 bytes)
+    795   14    b  3       java.lang.String::hashCode (69 bytes)
+    806   15    b  3       java.lang.AbstractStringBuilder::expandCapacity (66 bytes)
+    821   16    b  3       java.util.Arrays::copyOfRange (79 bytes)
+    852   17    b  3       java.lang.Math::min (27 bytes)
+    857   18    b  3       java.lang.String::&lt;init&gt; (103 bytes)
+    923   19    b  1       java.lang.Object::&lt;init&gt; (1 bytes)
+    924    6       3       java.lang.Object::&lt;init&gt; (1 bytes)   made not entrant
+    952   20    b  3       java.lang.String::length (22 bytes)
+    959   21    b  3       java.lang.AbstractStringBuilder::ensureCapacityInternal (30 bytes)
+   1019   22    b  3       java.lang.String::indexOf (110 bytes)
+   1414   23    b  3       TwoMethods::method1 (159 bytes)
+   1660   24    b  3       sun.misc.FDBigInteger::&lt;init&gt; (44 bytes)
+   1669   25    b  3       sun.misc.FDBigInteger::trimLeadingZeros (71 bytes)
+   1683   26    b  3       sun.misc.FDBigInteger::makeImmutable (22 bytes)
+   1693   27    b  3       sun.misc.FDBigInteger::mult (68 bytes)
+   1705   28    b  3       sun.misc.FDBigInteger::mult (80 bytes)
+   1926   29    b  3       java.lang.String::indexOf (23 bytes)
+   1941   30    b  3       TwoMethods::method2 (158 bytes)
+<writer thread='139624952575744'/>
+   2278   31 %  b  4       TwoMethods::method1 @ 50 (159 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='139624953628416'/>
+   2301   32    b  4       TwoMethods::method1 (159 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+   2337   23       3       TwoMethods::method1 (159 bytes)   made not entrant
+<writer thread='139625914390272'/>
+DEOPT PACKING thread 0x00007efd28052800 Deoptimized frame (sp=0x00007efd31074690 unextended sp=0x00007efd31074690, fp=0x00007efd31074860, real_fp=0x00007efd31074800, pc=0x00007efd1959baf7)
+     nmethod   2337   23       3       TwoMethods::method1 (159 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007efd31074690, unextended_sp=0x00007efd31074690, fp=0x00007efd31074860, pc=0x00007efd1959baf7)
+TwoMethods.method1(TwoMethods.java:28) - goto @ bci 66 
+     Created vframeArray 0x00007efd282919a0
+DEOPT UNPACKING thread 0x00007efd28052800 vframeArray 0x00007efd282919a0 mode 0
+     {method} {0x00007efd2c6a08f8} &apos;method1&apos; &apos;(D)D&apos; in &apos;TwoMethods&apos; - goto @ bci 66 sp = 0x00007efd31074778
+<writer thread='139624952575744'/>
+   2535   33 %  b  4       TwoMethods::method2 @ 51 (158 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+<writer thread='139624953628416'/>
+   2544   34    b  4       TwoMethods::method2 (158 bytes)
+# Compiler cached profile is saved as: cached_profiles.log
+   2585   30       3       TwoMethods::method2 (158 bytes)   made not entrant
+<writer thread='139625914390272'/>
+DEOPT PACKING thread 0x00007efd28052800 Deoptimized frame (sp=0x00007efd31074680 unextended sp=0x00007efd31074680, fp=0x00007efd31074860, real_fp=0x00007efd310747f0, pc=0x00007efd195a366f)
+     nmethod   2585   30       3       TwoMethods::method2 (158 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007efd31074680, unextended_sp=0x00007efd31074680, fp=0x00007efd31074860, pc=0x00007efd195a366f)
+TwoMethods.method2(TwoMethods.java:43) - goto @ bci 65 
+     Created vframeArray 0x00007efd28292d80
+DEOPT UNPACKING thread 0x00007efd28052800 vframeArray 0x00007efd28292d80 mode 0
+     {method} {0x00007efd2c6a0a60} &apos;method2&apos; &apos;(D)D&apos; in &apos;TwoMethods&apos; - goto @ bci 65 sp = 0x00007efd31074768
+<uncommon_trap thread='139625914390272' reason='unstable_if' action='reinterpret' compile_id='32' compiler='C2' level='4' stamp='2.762'>
+Uncommon trap occurred in TwoMethods::method1 (@0x00007efd20acade8) thread=139625914390272 reason=unstable_if action=reinterpret unloaded_class_index=-1
+<jvms bci='54' method='TwoMethods method1 (D)D' bytes='159' count='3' backedge_count='30000001' iicount='3'/>
+</uncommon_trap>
+   2761   32       4       TwoMethods::method1 (159 bytes)   made not entrant
+DEOPT PACKING thread 0x00007efd28052800 Compiled frame (sp=0x00007efd310747c0 unextended sp=0x00007efd310747c0, fp=0x4294eb1ad4700000, real_fp=0x00007efd31074800, pc=0x00007efd20acade8)
+     nmethod   2761   32       4       TwoMethods::method1 (159 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007efd310747c0, unextended_sp=0x00007efd310747c0, fp=0x4294eb1ad4700000, pc=0x00007efd20acade8)
+TwoMethods.method1(TwoMethods.java:28) - if_icmpge @ bci 54 
+     Created vframeArray 0x00007efd282919a0
+DEOPT UNPACKING thread 0x00007efd28052800 vframeArray 0x00007efd282919a0 mode 2
+     {method} {0x00007efd2c6a08f8} &apos;method1&apos; &apos;(D)D&apos; in &apos;TwoMethods&apos; - if_icmpge @ bci 54 sp = 0x00007efd31074768
+<uncommon_trap thread='139625914390272' reason='unstable_if' action='reinterpret' compile_id='34' compiler='C2' level='4' stamp='2.780'>
+Uncommon trap occurred in TwoMethods::method2 (@0x00007efd20acc360) thread=139625914390272 reason=unstable_if action=reinterpret unloaded_class_index=-1
+<jvms bci='53' method='TwoMethods method2 (D)D' bytes='158' count='3' backedge_count='30000001' iicount='3'/>
+</uncommon_trap>
+   2780   34       4       TwoMethods::method2 (158 bytes)   made not entrant
+DEOPT PACKING thread 0x00007efd28052800 Compiled frame (sp=0x00007efd310747b0 unextended sp=0x00007efd310747b0, fp=0x429402462f600000, real_fp=0x00007efd310747f0, pc=0x00007efd20acc360)
+     nmethod   2780   34       4       TwoMethods::method2 (158 bytes)
+
+     Virtual frames (innermost first):
+        0 - frame( sp=0x00007efd310747b0, unextended_sp=0x00007efd310747b0, fp=0x429402462f600000, pc=0x00007efd20acc360)
+TwoMethods.method2(TwoMethods.java:43) - ifle @ bci 53 
+     Created vframeArray 0x00007efd28292d80
+DEOPT UNPACKING thread 0x00007efd28052800 vframeArray 0x00007efd28292d80 mode 2
+     {method} {0x00007efd2c6a0a60} &apos;method2&apos; &apos;(D)D&apos; in &apos;TwoMethods&apos; - ifle @ bci 53 sp = 0x00007efd31074760
+<writer thread='139624951523072'/>
+   2785   35    b  3       TwoMethods::method1 (159 bytes)

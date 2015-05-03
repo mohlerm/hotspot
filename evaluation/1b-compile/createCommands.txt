@@ -1,0 +1,1 @@
+option DoesCompile.method1 DumpProfile

@@ -1,0 +1,9 @@
+../../hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -agentlib:hprof=cpu=times -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:+UseOnStackReplacement -XX:+UnlockExperimentalVMOptions -XX:+TraceDeoptimization -Xbatch NoCompile
+
+
+### use profiles
+../../hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -agentlib:hprof=cpu=times -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:+UseOnStackReplacement -XX:+UnlockExperimentalVMOptions -XX:+TraceDeoptimization -Xbatch -XX:+CacheProfiles -XX:CacheProfilesFile=cached_profiles.log -XX:CompileCommandFile=useCommands.txt NoCompile
+
+
+### create profiles
+../../hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -agentlib:hprof=cpu=times -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:+UseOnStackReplacement -XX:+UnlockExperimentalVMOptions -XX:+TraceDeoptimization -Xbatch -XX:CompileCommandFile=createCommands.txt NoCompile

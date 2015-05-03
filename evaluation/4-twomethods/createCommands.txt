@@ -1,0 +1,3 @@
+option TwoMethods.method1 double CompileThresholdScaling 0.01
+option TwoMethods.method2 double CompileThresholdScaling 0.01
+

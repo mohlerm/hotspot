@@ -1,0 +1,577 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00007fa69ae89a81, pid=28404, tid=140352944269056
+#
+# JRE version: OpenJDK Runtime Environment (9.0) (build 1.9.0-internal-debug-marcel_2015_04_17_10_57-b00)
+# Java VM: OpenJDK 64-Bit Server VM (1.9.0-internal-debug-marcel_2015_04_17_10_57-b00 mixed mode linux-amd64 compressed oops)
+# Problematic frame:
+# V  [libjvm.so+0x632a81]  ciCacheProfiles::find_methodRecord(Method*)+0x93
+#
+# Core dump written. Default location: Core dumps may be processed with "/usr/lib/systemd/systemd-coredump %p %u %g %s %t %e" (or dumping to /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/4-twomethods/core.28404)
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007fa694215000):  JavaThread "C1 CompilerThread2" daemon [_thread_in_vm, id=28417, stack(0x00007fa67752e000,0x00007fa67762f000)]
+
+siginfo: si_signo: 11 (SIGSEGV), si_code: 128 (SI_KERNEL), si_addr: 0x0000000000000000
+
+Registers:
+RAX=0xf1f1f1f1f1f1f1f1, RBX=0x00007fa654052580, RCX=0x000000000000ffff, RDX=0x0000000000000030
+RSP=0x00007fa67762d330, RBP=0x00007fa67762d370, RSI=0x00007fa650021f30, RDI=0x00007fa69429b770
+R8 =0x0000000000000000, R9 =0x0000000000000000, R10=0x694244462e637369, R11=0x00007fa69c1ec110
+R12=0x00007fa67762d490, R13=0x00007fa69cc5480f, R14=0x0000000000000000, R15=0x00007fa67762e700
+RIP=0x00007fa69ae89a81, EFLAGS=0x0000000000010202, CSGSFS=0x0000000000000033, ERR=0x0000000000000000
+  TRAPNO=0x000000000000000d
+
+Top of Stack: (sp=0x00007fa67762d330)
+0x00007fa67762d330:   00007fa694215000 00007fa684a7f4c8
+0x00007fa67762d340:   000000067762d370 00007fa650021f10
+0x00007fa67762d350:   00007fa650021f30 00007fa650021f40
+0x00007fa67762d360:   f1f1f1f1f1f1f1f1 f5aa10c53130a700
+0x00007fa67762d370:   00007fa67762d420 00007fa69ae894d4
+0x00007fa67762d380:   00007fa694215000 00007fa6540524a0
+0x00007fa67762d390:   000000047762d3e0 00007fa684a7f4c8
+0x00007fa67762d3a0:   00007fa67762d3f0 00007fa69b48739e
+0x00007fa67762d3b0:   00007fa67762d3f0 00007fa684a7f4c8
+0x00007fa67762d3c0:   00007fa69bf7bab0 00007fa69406dcb0
+0x00007fa67762d3d0:   00007fa650021ec0 00007fa650021f10
+0x00007fa67762d3e0:   00007fa6500222b8 00000000000003d8
+0x00007fa67762d3f0:   00007fa694215000 00007fa67762d7e0
+0x00007fa67762d400:   00007fa67762d830 f5aa10c53130a700
+0x00007fa67762d410:   00007fa684ab7ba0 00007fa654052580
+0x00007fa67762d420:   00007fa67762d4c0 00007fa69ae9e31e
+0x00007fa67762d430:   00000000000000b0 00007fa6540523d0
+0x00007fa67762d440:   00007fa67762d540 00007fa6540524a0
+0x00007fa67762d450:   00007fa67762d490 000001009acafbc2
+0x00007fa67762d460:   00007fa67762d820 00007fa654052550
+0x00007fa67762d470:   00007fa69bf7dfd0 00007fa684a7e528
+0x00007fa67762d480:   00007fa694215000 f5aa10c53130a700
+0x00007fa67762d490:   00007fa69bf7dfd0 00007fa684a7e528
+0x00007fa67762d4a0:   00007fa694215000 f5aa10c53130a700
+0x00007fa67762d4b0:   00007fa6540524a0 00007fa67762d540
+0x00007fa67762d4c0:   00007fa67762d570 00007fa69aeb49bf
+0x00007fa67762d4d0:   00007fa684a7f4c8 00007fa650021680
+0x00007fa67762d4e0:   00007f007762d520 00007fa694215000
+0x00007fa67762d4f0:   00007fa694215000 000000019acf96e7
+0x00007fa67762d500:   000000607762d530 00007fa6540522d0
+0x00007fa67762d510:   00007fa67762d820 00007fa6540523d0
+0x00007fa67762d520:   00007fa69bf7ba90 00007fa684a7f4c8 
+
+Instructions: (pc=0x00007fa69ae89a81)
+0x00007fa69ae89a61:   76 48 8b 05 1f f8 1a 01 8b 55 d4 48 63 d2 48 c1
+0x00007fa69ae89a71:   e2 03 48 01 d0 48 8b 00 48 89 45 f0 48 8b 45 f0
+0x00007fa69ae89a81:   48 8b 40 08 48 8b 55 d8 48 89 d6 48 89 c7 e8 0c
+0x00007fa69ae89a91:   8f c1 ff 85 c0 75 3c 48 8b 45 f0 48 8b 40 10 48 
+
+Register to memory mapping:
+
+RAX=0xf1f1f1f1f1f1f1f1 is an unknown value
+RBX=0x00007fa654052580 is an unknown value
+RCX=0x000000000000ffff is an unknown value
+RDX=0x0000000000000030 is an unknown value
+RSP=0x00007fa67762d330 is pointing into the stack for thread: 0x00007fa694215000
+RBP=0x00007fa67762d370 is pointing into the stack for thread: 0x00007fa694215000
+RSI=0x00007fa650021f30 is an unknown value
+RDI=0x00007fa69429b770 is an unknown value
+R8 =0x0000000000000000 is an unknown value
+R9 =0x0000000000000000 is an unknown value
+R10=0x694244462e637369 is an unknown value
+R11=0x00007fa69c1ec110: <offset 0x160110> in /usr/lib/libc.so.6 at 0x00007fa69c08c000
+R12=0x00007fa67762d490 is pointing into the stack for thread: 0x00007fa694215000
+R13=0x00007fa69cc5480f is pointing into the stack for thread: 0x00007fa694052800
+R14=0x0000000000000000 is an unknown value
+R15=0x00007fa67762e700 is pointing into the stack for thread: 0x00007fa694215000
+
+
+Stack: [0x00007fa67752e000,0x00007fa67762f000],  sp=0x00007fa67762d330,  free space=1020k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [libjvm.so+0x632a81]  ciCacheProfiles::find_methodRecord(Method*)+0x93
+V  [libjvm.so+0x6324d4]  ciCacheProfiles::initialize(ciMethod*)+0x94
+V  [libjvm.so+0x64731e]  ciMethod::ciMethod(methodHandle, ciInstanceKlass*)+0x612
+V  [libjvm.so+0x65d9bf]  ciObjectFactory::create_new_metadata(Metadata*)+0x32b
+V  [libjvm.so+0x65d256]  ciObjectFactory::get_metadata(Metadata*)+0x1e0
+V  [libjvm.so+0x633686]  ciEnv::get_metadata(Metadata*)+0x44
+V  [libjvm.so+0x63630a]  ciEnv::get_method_from_handle(Method*)+0x82
+V  [libjvm.so+0x70b4f7]  CompileBroker::invoke_compiler_on_method(CompileTask*)+0x42b
+V  [libjvm.so+0x70aa44]  CompileBroker::compiler_thread_loop()+0x30e
+V  [libjvm.so+0xe41e44]  compiler_thread_entry(JavaThread*, Thread*)+0x66
+V  [libjvm.so+0xe3cda0]  JavaThread::thread_main_inner()+0x136
+V  [libjvm.so+0xe3cc48]  JavaThread::run()+0x172
+V  [libjvm.so+0xcac636]  java_start(Thread*)+0x1ca
+C  [libpthread.so.0+0x7374]  start_thread+0xc4
+
+
+Current CompileTask:
+C1:   1723   28    b  3       sun.misc.FDBigInteger::<init> (44 bytes)
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x00007fa694249000 JavaThread "Service Thread" daemon [_thread_blocked, id=28421, stack(0x00007fa67732c000,0x00007fa67742d000)]
+  0x00007fa694217000 JavaThread "Sweeper thread" daemon [_thread_blocked, id=28418, stack(0x00007fa67742d000,0x00007fa67752e000)]
+=>0x00007fa694215000 JavaThread "C1 CompilerThread2" daemon [_thread_in_vm, id=28417, stack(0x00007fa67752e000,0x00007fa67762f000)]
+  0x00007fa694211800 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=28416, stack(0x00007fa67762f000,0x00007fa677730000)]
+  0x00007fa69420f000 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=28415, stack(0x00007fa677730000,0x00007fa677831000)]
+  0x00007fa694209000 JavaThread "HPROF gc_finish watcher" daemon [_thread_blocked, id=28414, stack(0x00007fa677831000,0x00007fa677932000)]
+  0x00007fa6941d5000 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=28413, stack(0x00007fa677932000,0x00007fa677a33000)]
+  0x00007fa69418d800 JavaThread "Finalizer" daemon [_thread_blocked, id=28412, stack(0x00007fa677bfc000,0x00007fa677cfd000)]
+  0x00007fa694186000 JavaThread "Reference Handler" daemon [_thread_blocked, id=28411, stack(0x00007fa677cfd000,0x00007fa677dfe000)]
+  0x00007fa694052800 JavaThread "main" [_thread_blocked, id=28405, stack(0x00007fa69cb55000,0x00007fa69cc56000)]
+
+Other Threads:
+  0x00007fa694174000 VMThread [stack: 0x00007fa677dfe000,0x00007fa677eff000] [id=28410]
+  0x00007fa69424a000 WatcherThread [stack: 0x00007fa67722b000,0x00007fa67732c000] [id=28422]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap:
+ PSYoungGen      total 36352K, used 2498K [0x00000000d7580000, 0x00000000d9e00000, 0x0000000100000000)
+  eden space 31232K, 8% used [0x00000000d7580000,0x00000000d77f0b70,0x00000000d9400000)
+  from space 5120K, 0% used [0x00000000d9900000,0x00000000d9900000,0x00000000d9e00000)
+  to   space 5120K, 0% used [0x00000000d9400000,0x00000000d9400000,0x00000000d9900000)
+ ParOldGen       total 83456K, used 0K [0x0000000086000000, 0x000000008b180000, 0x00000000d7580000)
+  object space 83456K, 0% used [0x0000000086000000,0x0000000086000000,0x000000008b180000)
+ Metaspace       used 3059K, capacity 4490K, committed 4864K, reserved 1056768K
+  class space    used 270K, capacity 386K, committed 512K, reserved 1048576K
+
+Card table byte_map: [0x00007fa6990df000,0x00007fa6994b0000] byte_map_base: 0x00007fa698caf000
+
+Marking Bits: (ParMarkBitMap*) 0x00007fa69c052800
+ Begin Bits: [0x00007fa67c300000, 0x00007fa67e180000)
+ End Bits:   [0x00007fa67e180000, 0x00007fa680000000)
+
+Polling page: 0x00007fa69cc8a000
+
+CodeHeap 'non-nmethods': size=5696Kb used=2264Kb max_used=2276Kb free=3431Kb
+ bounds [0x00007fa685000000, 0x00007fa685270000, 0x00007fa685590000]
+CodeHeap 'profiled nmethods': size=120032Kb used=39Kb max_used=39Kb free=119992Kb
+ bounds [0x00007fa685590000, 0x00007fa685800000, 0x00007fa68cac8000]
+CodeHeap 'non-profiled nmethods': size=120032Kb used=29Kb max_used=29Kb free=120002Kb
+ bounds [0x00007fa68cac8000, 0x00007fa68cd38000, 0x00007fa694000000]
+ total_blobs=539 nmethods=27 adapters=434
+ compilation: enabled
+
+Compilation events (10 events):
+Event: 0.950 Thread 0x00007fa694215000 nmethod 23 0x00007fa685599090 code [0x00007fa685599220, 0x00007fa6855994d0]
+Event: 1.019 Thread 0x00007fa694211800   24    b  4       sun.nio.cs.UTF_8$Encoder::encodeArrayLoop (538 bytes)
+Event: 1.090 Thread 0x00007fa694211800 nmethod 24 0x00007fa68caca290 code [0x00007fa68caca540, 0x00007fa68cacafe0]
+Event: 1.091 Thread 0x00007fa694215000   25    b  3       java.nio.ByteBuffer::array (51 bytes)
+Event: 1.100 Thread 0x00007fa694215000 nmethod 25 0x00007fa685599610 code [0x00007fa6855997e0, 0x00007fa685599be0]
+Event: 1.500 Thread 0x00007fa69420f000   26    b  4       TwoMethods::method1 (159 bytes)
+Event: 1.619 Thread 0x00007fa69420f000 nmethod 26 0x00007fa68cacc390 code [0x00007fa68cacc880, 0x00007fa68cacd7f0]
+Event: 1.626 Thread 0x00007fa694211800   27    b  4       sun.misc.FDBigInteger::trimLeadingZeros (71 bytes)
+Event: 1.650 Thread 0x00007fa694211800 nmethod 27 0x00007fa68cacf010 code [0x00007fa68cacf1a0, 0x00007fa68cacf398]
+Event: 1.693 Thread 0x00007fa694215000   28    b  3       sun.misc.FDBigInteger::<init> (44 bytes)
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Internal exceptions (10 events):
+Event: 1.333 Thread 0x00007fa694052800 Exception <a 'java/lang/NoSuchMethodError': valueOf> (0x00000000d765f328) thrown at [/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/src/share/vm/prims/jni.cpp, line 1359]
+Event: 1.334 Thread 0x00007fa694052800 Exception <a 'java/lang/NoSuchMethodError': method2> (0x00000000d765f578) thrown at [/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/src/share/vm/prims/jni.cpp, line 1359]
+Event: 1.620 Thread 0x00007fa694052800 Exception <a 'java/lang/NoSuchMethodError': getBinaryToASCIIBuffer> (0x00000000d765fdb0) thrown at [/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/src/share/vm/prims/jni.cpp, line 1359]
+Event: 1.620 Thread 0x00007fa694052800 Exception <a 'java/lang/NoSuchMethodError': access$100> (0x00000000d7660048) thrown at [/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/src/share/vm/prims/jni.cpp, line 1359]
+Event: 1.621 Thread 0x00007fa694052800 Exception <a 'java/lang/NoSuchMethodError': nextIndex> (0x00000000d7660258) thrown at [/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/src/share/vm/prims/jni.cpp, line 1359]
+Event: 1.621 Thread 0x00007fa694052800 Exception <a 'java/lang/NoSuchMethodError': access$000> (0x00000000d7660448) thrown at [/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/src/share/vm/prims/jni.cpp, line 1359]
+Event: 1.621 Thread 0x00007fa694052800 Exception <a 'java/lang/NoSuchMethodError': access$100> (0x00000000d7660638) thrown at [/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/src/share/vm/prims/jni.cpp, line 1359]
+Event: 1.622 Thread 0x00007fa694052800 Exception <a 'java/lang/NoSuchMethodError': numberOfTrailingZeros> (0x00000000d7660840) thrown at [/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/src/share/vm/prims/jni.cpp, line 1359]
+Event: 1.624 Thread 0x00007fa694052800 Exception <a 'java/lang/NoSuchMethodError': <clinit>> (0x00000000d7660a50) thrown at [/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/src/share/vm/prims/jni.cpp, line 1359]
+Event: 1.653 Thread 0x00007fa694052800 Exception <a 'java/lang/NoSuchMethodError': mult> (0x00000000d7661830) thrown at [/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/src/share/vm/prims/jni.cpp, line 1359]
+
+Events (10 events):
+Event: 1.112 loading class sun/misc/FloatingDecimal$BinaryToASCIIConverter done
+Event: 1.112 loading class sun/misc/FloatingDecimal$ExceptionalBinaryToASCIIBuffer done
+Event: 1.115 loading class sun/misc/FloatingDecimal$BinaryToASCIIBuffer
+Event: 1.117 loading class sun/misc/FloatingDecimal$BinaryToASCIIBuffer done
+Event: 1.119 loading class sun/misc/FloatingDecimal$1
+Event: 1.120 loading class sun/misc/FloatingDecimal$1 done
+Event: 1.122 loading class sun/misc/FloatingDecimal$PreparedASCIIToBinaryBuffer
+Event: 1.122 loading class sun/misc/FloatingDecimal$ASCIIToBinaryConverter
+Event: 1.122 loading class sun/misc/FloatingDecimal$ASCIIToBinaryConverter done
+Event: 1.123 loading class sun/misc/FloatingDecimal$PreparedASCIIToBinaryBuffer done
+
+
+Dynamic libraries:
+00400000-00401000 r-xp 00000000 08:04 10224690                           /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/java
+00600000-00601000 r--p 00000000 08:04 10224690                           /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/java
+00601000-00602000 rw-p 00001000 08:04 10224690                           /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/java
+02550000-02571000 rw-p 00000000 00:00 0                                  [heap]
+86000000-8b180000 rw-p 00000000 00:00 0 
+8b180000-d7580000 ---p 00000000 00:00 0 
+d7580000-d9e00000 rw-p 00000000 00:00 0 
+d9e00000-100000000 ---p 00000000 00:00 0 
+100000000-100080000 rw-p 00000000 00:00 0 
+100080000-140000000 ---p 00000000 00:00 0 
+7fa640000000-7fa640021000 rw-p 00000000 00:00 0 
+7fa640021000-7fa644000000 ---p 00000000 00:00 0 
+7fa644000000-7fa644021000 rw-p 00000000 00:00 0 
+7fa644021000-7fa648000000 ---p 00000000 00:00 0 
+7fa648000000-7fa64803e000 rw-p 00000000 00:00 0 
+7fa64803e000-7fa64c000000 ---p 00000000 00:00 0 
+7fa64c000000-7fa64c021000 rw-p 00000000 00:00 0 
+7fa64c021000-7fa650000000 ---p 00000000 00:00 0 
+7fa650000000-7fa650241000 rw-p 00000000 00:00 0 
+7fa650241000-7fa654000000 ---p 00000000 00:00 0 
+7fa654000000-7fa6541f5000 rw-p 00000000 00:00 0 
+7fa6541f5000-7fa658000000 ---p 00000000 00:00 0 
+7fa658000000-7fa658021000 rw-p 00000000 00:00 0 
+7fa658021000-7fa65c000000 ---p 00000000 00:00 0 
+7fa65c000000-7fa65c021000 rw-p 00000000 00:00 0 
+7fa65c021000-7fa660000000 ---p 00000000 00:00 0 
+7fa660000000-7fa660021000 rw-p 00000000 00:00 0 
+7fa660021000-7fa664000000 ---p 00000000 00:00 0 
+7fa664000000-7fa664021000 rw-p 00000000 00:00 0 
+7fa664021000-7fa668000000 ---p 00000000 00:00 0 
+7fa668000000-7fa668021000 rw-p 00000000 00:00 0 
+7fa668021000-7fa66c000000 ---p 00000000 00:00 0 
+7fa66c000000-7fa66c021000 rw-p 00000000 00:00 0 
+7fa66c021000-7fa670000000 ---p 00000000 00:00 0 
+7fa670000000-7fa670021000 rw-p 00000000 00:00 0 
+7fa670021000-7fa674000000 ---p 00000000 00:00 0 
+7fa676b40000-7fa67722b000 rw-p 00000000 00:00 0 
+7fa67722b000-7fa67722c000 ---p 00000000 00:00 0 
+7fa67722c000-7fa67732c000 rw-p 00000000 00:00 0                          [stack:28422]
+7fa67732c000-7fa67732f000 ---p 00000000 00:00 0 
+7fa67732f000-7fa67742d000 rw-p 00000000 00:00 0                          [stack:28421]
+7fa67742d000-7fa677430000 ---p 00000000 00:00 0 
+7fa677430000-7fa67752e000 rw-p 00000000 00:00 0                          [stack:28418]
+7fa67752e000-7fa677531000 ---p 00000000 00:00 0 
+7fa677531000-7fa67762f000 rw-p 00000000 00:00 0                          [stack:28417]
+7fa67762f000-7fa677632000 ---p 00000000 00:00 0 
+7fa677632000-7fa677730000 rw-p 00000000 00:00 0                          [stack:28416]
+7fa677730000-7fa677733000 ---p 00000000 00:00 0 
+7fa677733000-7fa677831000 rw-p 00000000 00:00 0                          [stack:28415]
+7fa677831000-7fa677834000 ---p 00000000 00:00 0 
+7fa677834000-7fa677932000 rw-p 00000000 00:00 0                          [stack:28414]
+7fa677932000-7fa677935000 ---p 00000000 00:00 0 
+7fa677935000-7fa677a33000 rw-p 00000000 00:00 0                          [stack:28413]
+7fa677a33000-7fa677bfc000 r--p 00000000 08:02 610476                     /usr/lib/locale/locale-archive
+7fa677bfc000-7fa677bff000 ---p 00000000 00:00 0 
+7fa677bff000-7fa677cfd000 rw-p 00000000 00:00 0                          [stack:28412]
+7fa677cfd000-7fa677d00000 ---p 00000000 00:00 0 
+7fa677d00000-7fa677dfe000 rw-p 00000000 00:00 0                          [stack:28411]
+7fa677dfe000-7fa677dff000 ---p 00000000 00:00 0 
+7fa677dff000-7fa678000000 rw-p 00000000 00:00 0                          [stack:28410]
+7fa678000000-7fa678021000 rw-p 00000000 00:00 0 
+7fa678021000-7fa67c000000 ---p 00000000 00:00 0 
+7fa67c0fe000-7fa680000000 rw-p 00000000 00:00 0 
+7fa680000000-7fa680021000 rw-p 00000000 00:00 0 
+7fa680021000-7fa684000000 ---p 00000000 00:00 0 
+7fa684034000-7fa684c40000 rw-p 00000000 00:00 0 
+7fa684c40000-7fa685000000 ---p 00000000 00:00 0 
+7fa685000000-7fa685270000 rwxp 00000000 00:00 0 
+7fa685270000-7fa685590000 ---p 00000000 00:00 0 
+7fa685590000-7fa685800000 rwxp 00000000 00:00 0 
+7fa685800000-7fa68cac8000 ---p 00000000 00:00 0 
+7fa68cac8000-7fa68cd38000 rwxp 00000000 00:00 0 
+7fa68cd38000-7fa694000000 ---p 00000000 00:00 0 
+7fa694000000-7fa6942ee000 rw-p 00000000 00:00 0 
+7fa6942ee000-7fa698000000 ---p 00000000 00:00 0 
+7fa698014000-7fa698a50000 rw-p 00000000 00:00 0 
+7fa698a50000-7fa698a51000 ---p 00000000 00:00 0 
+7fa698a51000-7fa698b51000 rw-p 00000000 00:00 0                          [stack:28409]
+7fa698b51000-7fa698b52000 ---p 00000000 00:00 0 
+7fa698b52000-7fa698c52000 rw-p 00000000 00:00 0                          [stack:28408]
+7fa698c52000-7fa698c53000 ---p 00000000 00:00 0 
+7fa698c53000-7fa698d53000 rw-p 00000000 00:00 0                          [stack:28407]
+7fa698d53000-7fa698d54000 ---p 00000000 00:00 0 
+7fa698d54000-7fa698e7d000 rw-p 00000000 00:00 0                          [stack:28406]
+7fa698e7d000-7fa6990df000 ---p 00000000 00:00 0 
+7fa6990df000-7fa699108000 rw-p 00000000 00:00 0 
+7fa699108000-7fa699369000 ---p 00000000 00:00 0 
+7fa699369000-7fa69937e000 rw-p 00000000 00:00 0 
+7fa69937e000-7fa6994af000 ---p 00000000 00:00 0 
+7fa6994af000-7fa6994b5000 rw-p 00000000 00:00 0 
+7fa6994b5000-7fa69959b000 ---p 00000000 00:00 0 
+7fa69959b000-7fa6995a0000 rw-p 00000000 00:00 0 
+7fa6995a0000-7fa699686000 ---p 00000000 00:00 0 
+7fa699686000-7fa6996aa000 r-xp 00000000 08:04 9191020                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libzip.so
+7fa6996aa000-7fa6998aa000 ---p 00024000 08:04 9191020                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libzip.so
+7fa6998aa000-7fa6998ab000 r--p 00024000 08:04 9191020                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libzip.so
+7fa6998ab000-7fa6998ac000 rw-p 00025000 08:04 9191020                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libzip.so
+7fa6998ac000-7fa6998b7000 r-xp 00000000 08:02 527524                     /usr/lib/libnss_files-2.21.so
+7fa6998b7000-7fa699ab7000 ---p 0000b000 08:02 527524                     /usr/lib/libnss_files-2.21.so
+7fa699ab7000-7fa699ab8000 r--p 0000b000 08:02 527524                     /usr/lib/libnss_files-2.21.so
+7fa699ab8000-7fa699ab9000 rw-p 0000c000 08:02 527524                     /usr/lib/libnss_files-2.21.so
+7fa699ab9000-7fa699ac2000 r-xp 00000000 08:04 9191169                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libjava_crw_demo.so
+7fa699ac2000-7fa699cc1000 ---p 00009000 08:04 9191169                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libjava_crw_demo.so
+7fa699cc1000-7fa699cc2000 r--p 00008000 08:04 9191169                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libjava_crw_demo.so
+7fa699cc2000-7fa699cc3000 rw-p 00009000 08:04 9191169                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libjava_crw_demo.so
+7fa699cc3000-7fa699cfe000 r-xp 00000000 08:04 9191168                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libhprof.so
+7fa699cfe000-7fa699efd000 ---p 0003b000 08:04 9191168                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libhprof.so
+7fa699efd000-7fa699efe000 r--p 0003a000 08:04 9191168                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libhprof.so
+7fa699efe000-7fa699eff000 rw-p 0003b000 08:04 9191168                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libhprof.so
+7fa699eff000-7fa699f32000 r-xp 00000000 08:04 9191006                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libjava.so
+7fa699f32000-7fa69a132000 ---p 00033000 08:04 9191006                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libjava.so
+7fa69a132000-7fa69a133000 r--p 00033000 08:04 9191006                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libjava.so
+7fa69a133000-7fa69a134000 rw-p 00034000 08:04 9191006                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libjava.so
+7fa69a134000-7fa69a135000 rw-p 00000000 00:00 0 
+7fa69a135000-7fa69a147000 r-xp 00000000 08:04 9190998                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libverify.so
+7fa69a147000-7fa69a346000 ---p 00012000 08:04 9190998                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libverify.so
+7fa69a346000-7fa69a349000 r--p 00011000 08:04 9190998                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libverify.so
+7fa69a349000-7fa69a34a000 rw-p 00014000 08:04 9190998                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/libverify.so
+7fa69a34a000-7fa69a351000 r-xp 00000000 08:02 527704                     /usr/lib/librt-2.21.so
+7fa69a351000-7fa69a550000 ---p 00007000 08:02 527704                     /usr/lib/librt-2.21.so
+7fa69a550000-7fa69a551000 r--p 00006000 08:02 527704                     /usr/lib/librt-2.21.so
+7fa69a551000-7fa69a552000 rw-p 00007000 08:02 527704                     /usr/lib/librt-2.21.so
+7fa69a552000-7fa69a655000 r-xp 00000000 08:02 527745                     /usr/lib/libm-2.21.so
+7fa69a655000-7fa69a855000 ---p 00103000 08:02 527745                     /usr/lib/libm-2.21.so
+7fa69a855000-7fa69a856000 r--p 00103000 08:02 527745                     /usr/lib/libm-2.21.so
+7fa69a856000-7fa69a857000 rw-p 00104000 08:02 527745                     /usr/lib/libm-2.21.so
+7fa69a857000-7fa69bd01000 r-xp 00000000 08:04 9579866                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/server/libjvm.so
+7fa69bd01000-7fa69bf00000 ---p 014aa000 08:04 9579866                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/server/libjvm.so
+7fa69bf00000-7fa69bfc9000 r--p 014a9000 08:04 9579866                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/server/libjvm.so
+7fa69bfc9000-7fa69bff4000 rw-p 01572000 08:04 9579866                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/server/libjvm.so
+7fa69bff4000-7fa69c08c000 rw-p 00000000 00:00 0 
+7fa69c08c000-7fa69c225000 r-xp 00000000 08:02 527635                     /usr/lib/libc-2.21.so
+7fa69c225000-7fa69c425000 ---p 00199000 08:02 527635                     /usr/lib/libc-2.21.so
+7fa69c425000-7fa69c429000 r--p 00199000 08:02 527635                     /usr/lib/libc-2.21.so
+7fa69c429000-7fa69c42b000 rw-p 0019d000 08:02 527635                     /usr/lib/libc-2.21.so
+7fa69c42b000-7fa69c42f000 rw-p 00000000 00:00 0 
+7fa69c42f000-7fa69c431000 r-xp 00000000 08:02 527718                     /usr/lib/libdl-2.21.so
+7fa69c431000-7fa69c631000 ---p 00002000 08:02 527718                     /usr/lib/libdl-2.21.so
+7fa69c631000-7fa69c632000 r--p 00002000 08:02 527718                     /usr/lib/libdl-2.21.so
+7fa69c632000-7fa69c633000 rw-p 00003000 08:02 527718                     /usr/lib/libdl-2.21.so
+7fa69c633000-7fa69c64d000 r-xp 00000000 08:04 9702441                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/jli/libjli.so
+7fa69c64d000-7fa69c84c000 ---p 0001a000 08:04 9702441                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/jli/libjli.so
+7fa69c84c000-7fa69c84d000 r--p 00019000 08:04 9702441                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/jli/libjli.so
+7fa69c84d000-7fa69c84e000 rw-p 0001a000 08:04 9702441                    /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64/jli/libjli.so
+7fa69c84e000-7fa69c866000 r-xp 00000000 08:02 527702                     /usr/lib/libpthread-2.21.so
+7fa69c866000-7fa69ca65000 ---p 00018000 08:02 527702                     /usr/lib/libpthread-2.21.so
+7fa69ca65000-7fa69ca66000 r--p 00017000 08:02 527702                     /usr/lib/libpthread-2.21.so
+7fa69ca66000-7fa69ca67000 rw-p 00018000 08:02 527702                     /usr/lib/libpthread-2.21.so
+7fa69ca67000-7fa69ca6b000 rw-p 00000000 00:00 0 
+7fa69ca6b000-7fa69ca8d000 r-xp 00000000 08:02 527741                     /usr/lib/ld-2.21.so
+7fa69ca94000-7fa69cb2d000 rw-p 00000000 00:00 0 
+7fa69cb2d000-7fa69cb34000 ---p 00000000 00:00 0 
+7fa69cb34000-7fa69cb55000 rw-p 00000000 00:00 0 
+7fa69cb55000-7fa69cb58000 ---p 00000000 00:00 0 
+7fa69cb58000-7fa69cc5a000 rw-p 00000000 00:00 0                          [stack:28405]
+7fa69cc5f000-7fa69cc67000 rw-s 00000000 00:21 156916                     /tmp/hsperfdata_marcel/28404
+7fa69cc85000-7fa69cc8a000 rw-p 00000000 00:00 0 
+7fa69cc8a000-7fa69cc8b000 r--p 00000000 00:00 0 
+7fa69cc8b000-7fa69cc8c000 rw-p 00000000 00:00 0 
+7fa69cc8c000-7fa69cc8d000 r--p 00021000 08:02 527741                     /usr/lib/ld-2.21.so
+7fa69cc8d000-7fa69cc8e000 rw-p 00022000 08:02 527741                     /usr/lib/ld-2.21.so
+7fa69cc8e000-7fa69cc8f000 rw-p 00000000 00:00 0 
+7ffce574c000-7ffce576d000 rw-p 00000000 00:00 0                          [stack]
+7ffce57d2000-7ffce57d4000 r--p 00000000 00:00 0                          [vvar]
+7ffce57d4000-7ffce57d6000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+
+VM Arguments:
+jvm_args: -agentlib:hprof=cpu=times -XX:+UnlockDiagnosticVMOptions -XX:-UseOnStackReplacement -XX:+UnlockExperimentalVMOptions -Xbatch -XX:+PrintCompilation -XX:+TraceDeoptimization -XX:+CacheProfiles -XX:CacheProfilesFile=cached_profiles.log 
+java_command: TwoMethods
+java_class_path (initial): .
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
+SHELL=/bin/bash
+DISPLAY=:0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0xeab16c], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGBUS: [libjvm.so+0xeab16c], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGFPE: [libjvm.so+0xeab16c], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGPIPE: [libjvm.so+0xcb48b2], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGXFSZ: [libjvm.so+0xcb48b2], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGILL: [libjvm.so+0xeab16c], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGUSR1: SIG_DFL, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+SIGUSR2: [libjvm.so+0xcb4165], sa_mask[0]=00000000000000000000000000000000, sa_flags=SA_RESTART|SA_SIGINFO
+SIGHUP: [libjvm.so+0xcb0244], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGINT: [libjvm.so+0xcb0244], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGTERM: [libjvm.so+0xcb0244], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGQUIT: [libjvm.so+0xcb0244], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+
+
+---------------  S Y S T E M  ---------------
+
+OS:LSB_VERSION=1.4
+DISTRIB_ID=Arch
+DISTRIB_RELEASE=rolling
+DISTRIB_DESCRIPTION="Arch Linux"
+
+uname:Linux miraculix 3.19.3-3-ARCH #1 SMP PREEMPT Wed Apr 8 14:10:00 CEST 2015 x86_64
+libc:glibc 2.21 NPTL 2.21 
+rlimit: STACK 8192k, CORE 0k, NPROC 30930, NOFILE 4096, AS infinity
+load average:0.40 0.37 0.41
+
+/proc/meminfo:
+MemTotal:        7995240 kB
+MemFree:         2011800 kB
+MemAvailable:    5608460 kB
+Buffers:          271948 kB
+Cached:          3589976 kB
+SwapCached:            0 kB
+Active:          4247296 kB
+Inactive:        1413948 kB
+Active(anon):    1805712 kB
+Inactive(anon):   211020 kB
+Active(file):    2441584 kB
+Inactive(file):  1202928 kB
+Unevictable:          56 kB
+Mlocked:              56 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+Dirty:               472 kB
+Writeback:             0 kB
+AnonPages:       1799568 kB
+Mapped:           413420 kB
+Shmem:            217424 kB
+Slab:             236196 kB
+SReclaimable:     205564 kB
+SUnreclaim:        30632 kB
+KernelStack:        7072 kB
+PageTables:        21100 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     3997620 kB
+Committed_AS:    4020648 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:      373492 kB
+VmallocChunk:   34359295644 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:    696320 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:       91424 kB
+DirectMap2M:     8112128 kB
+
+
+CPU:total 4 (2 cores per cpu, 2 threads per core) family 6 model 58 stepping 9, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, aes, clmul, erms, ht, tsc, tscinvbit, tscinv
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 58
+model name	: Intel(R) Core(TM) i7-3667U CPU @ 2.00GHz
+stepping	: 9
+microcode	: 0x19
+cpu MHz		: 1537.207
+cache size	: 4096 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 2
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm ida arat epb pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase smep erms xsaveopt
+bugs		:
+bogomips	: 4990.25
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 58
+model name	: Intel(R) Core(TM) i7-3667U CPU @ 2.00GHz
+stepping	: 9
+microcode	: 0x19
+cpu MHz		: 3185.253
+cache size	: 4096 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 2
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm ida arat epb pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase smep erms xsaveopt
+bugs		:
+bogomips	: 4990.25
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 2
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 58
+model name	: Intel(R) Core(TM) i7-3667U CPU @ 2.00GHz
+stepping	: 9
+microcode	: 0x19
+cpu MHz		: 1719.531
+cache size	: 4096 KB
+physical id	: 0
+siblings	: 4
+core id		: 1
+cpu cores	: 2
+apicid		: 2
+initial apicid	: 2
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm ida arat epb pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase smep erms xsaveopt
+bugs		:
+bogomips	: 4990.25
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 3
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 58
+model name	: Intel(R) Core(TM) i7-3667U CPU @ 2.00GHz
+stepping	: 9
+microcode	: 0x19
+cpu MHz		: 1717.285
+cache size	: 4096 KB
+physical id	: 0
+siblings	: 4
+core id		: 1
+cpu cores	: 2
+apicid		: 3
+initial apicid	: 3
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm ida arat epb pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase smep erms xsaveopt
+bugs		:
+bogomips	: 4990.25
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+
+
+Memory: 4k page, physical 7995240k(2011800k free), swap 0k(0k free)
+
+vm_info: OpenJDK 64-Bit Server VM (1.9.0-internal-debug-marcel_2015_04_17_10_57-b00) for linux-amd64 JRE (1.9.0-internal-marcel_2015_04_17_10_57-b00), built on Apr 29 2015 09:53:17 by "marcel" with gcc 4.9.2 20150304 (prerelease)
+
+time: Wed Apr 29 09:59:18 2015
+elapsed time: 1 seconds (0d 0h 0m 1s)
+
+END.

@@ -1,0 +1,719 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hotspot_log version='160 1' process='25724' time_ms='1430293938394'>
+<vm_version>
+<name>
+OpenJDK 64-Bit Server VM
+</name>
+<release>
+1.9.0-internal-debug-marcel_2015_04_17_10_57-b00
+</release>
+<info>
+OpenJDK 64-Bit Server VM (1.9.0-internal-debug-marcel_2015_04_17_10_57-b00) for linux-amd64 JRE (1.9.0-internal-marcel_2015_04_17_10_57-b00), built on Apr 29 2015 09:51:54 by &quot;marcel&quot; with gcc 4.9.2 20150304 (prerelease)
+</info>
+</vm_version>
+<vm_arguments>
+<args>
+-XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:+UseOnStackReplacement -XX:+UnlockExperimentalVMOptions -XX:+CacheProfiles -XX:CacheProfilesFile=cached_profiles.log -XX:+TraceDeoptimization -Xbatch -XX:+CIPrintRequests 
+</args>
+<command>
+TwoMethods
+</command>
+<launcher>
+SUN_STANDARD
+</launcher>
+<properties>
+java.vm.specification.name=Java Virtual Machine Specification
+java.vm.version=1.9.0-internal-debug-marcel_2015_04_17_10_57-b00
+java.vm.name=OpenJDK 64-Bit Server VM
+java.vm.info=mixed mode, sharing
+sun.boot.library.path=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/lib/amd64
+java.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.home=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk
+java.class.path=.
+sun.boot.class.path=/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.rmi:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.security.auth:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.jcmd:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.attach:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.transaction:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.security.jgss:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.hprof.agent:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.zipfs:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.jvmstat:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.sql.rowset:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.security.jgss:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/jdk.hotspot.agent:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.datatransfer:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.scripting:/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/modules/java.logging:/hom
+java.vm.specification.vendor=Oracle Corporation
+java.vm.specification.version=1.9
+java.vm.vendor=Oracle Corporation
+sun.java.command=TwoMethods
+sun.java.launcher=SUN_STANDARD
+</properties>
+</vm_arguments>
+<tty>
+<writer thread='140495983732480'/>
+request:  java.lang.String::indexOf comment: tiered count: 337 hot: yes
+<writer thread='140495429826304'/>
+    463    1    b  3       java.lang.String::indexOf (70 bytes)
+<writer thread='140495983732480'/>
+request:  java.lang.StringBuilder::append comment: tiered count: 256 hot: yes
+<writer thread='140495429826304'/>
+    476    2    b  3       java.lang.StringBuilder::append (8 bytes)
+<writer thread='140495983732480'/>
+request:  java.lang.String::getChars comment: tiered count: 256 hot: yes
+<writer thread='140495429826304'/>
+    480    3    b  3       java.lang.String::getChars (62 bytes)
+<writer thread='140495983732480'/>
+request:  java.lang.String::hashCode comment: tiered count: 604 hot: yes
+<writer thread='140495429826304'/>
+    490    4    b  3       java.lang.String::hashCode (53 bytes)
+<writer thread='140495983732480'/>
+request:  java.lang.String::charAt comment: tiered count: 17280 hot: yes
+<writer thread='140495563953920'/>
+    497    5    b  4       java.lang.String::charAt (29 bytes)
+<writer thread='140495983732480'/>
+request:  java.lang.String::equals comment: tiered count: 806 hot: yes
+<writer thread='140495429826304'/>
+    505    6    b  3       java.lang.String::equals (81 bytes)
+<writer thread='140495983732480'/>
+request:  java.lang.Object::&lt;init&gt; comment: tiered count: 2304 hot: yes
+<writer thread='140495429826304'/>
+    514    7    b  3       java.lang.Object::&lt;init&gt; (1 bytes)
+<writer thread='140495983732480'/>
+request:  java.lang.String::lastIndexOf comment: tiered count: 328 hot: yes
+<writer thread='140495429826304'/>
+    516    8    b  3       java.lang.String::lastIndexOf (52 bytes)
+<writer thread='140495983732480'/>
+request:  java.lang.System::getSecurityManager comment: tiered count: 384 hot: yes
+<writer thread='140495429826304'/>
+    524    9    b  3       java.lang.System::getSecurityManager (4 bytes)
+<writer thread='140495983732480'/>
+request:  java.lang.ref.Reference::get comment: tiered count: 896 hot: yes
+<writer thread='140495429826304'/>
+    526   10    b  1       java.lang.ref.Reference::get (5 bytes)
+<writer thread='140495983732480'/>
+request:  sun.nio.cs.UTF_8$Encoder::encode comment: tiered count: 330 hot: yes
+<writer thread='140495429826304'/>
+    527   11    b  3       sun.nio.cs.UTF_8$Encoder::encode (359 bytes)
+<writer thread='140495983732480'/>
+    566   12     n 0       java.lang.System::arraycopy (native)   (static)
+request:  java.io.UnixFileSystem::normalize comment: tiered count: 177 hot: yes
+<writer thread='140495429826304'/>
+    569   13    b  3       java.io.UnixFileSystem::normalize (75 bytes)
+<writer thread='140495983732480'/>
+request:  java.util.Arrays::copyOf comment: tiered count: 256 hot: yes
+<writer thread='140495429826304'/>
+    583   14    b  3       java.util.Arrays::copyOf (19 bytes)
+<writer thread='140495983732480'/>
+request:  java.util.Arrays::copyOfRange comment: tiered count: 640 hot: yes
+<writer thread='140495429826304'/>
+    593   15    b  3       java.util.Arrays::copyOfRange (63 bytes)
+<writer thread='140495983732480'/>
+request:  java.lang.AbstractStringBuilder::expandCapacity comment: tiered count: 256 hot: yes
+<writer thread='140495429826304'/>
+    611   16    b  3       java.lang.AbstractStringBuilder::expandCapacity (50 bytes)
+<writer thread='140495983732480'/>
+request:  java.lang.String::&lt;init&gt; comment: tiered count: 640 hot: yes
+<writer thread='140495429826304'/>
+    620   17    b  3       java.lang.String::&lt;init&gt; (82 bytes)
+<writer thread='140495983732480'/>
+request:  java.lang.String::length comment: tiered count: 1280 hot: yes
+<writer thread='140495429826304'/>
+    660   18    b  3       java.lang.String::length (6 bytes)
+<writer thread='140495983732480'/>
+request:  sun.nio.cs.UTF_8$Decoder::decode comment: tiered count: 117 hot: yes
+<writer thread='140495429826304'/>
+    662   19    b  3       sun.nio.cs.UTF_8$Decoder::decode (779 bytes)
+<writer thread='140495983732480'/>
+request:  java.lang.AbstractStringBuilder::ensureCapacityInternal comment: tiered count: 384 hot: yes
+<writer thread='140495429826304'/>
+   1211   20    b  3       java.lang.AbstractStringBuilder::ensureCapacityInternal (16 bytes)
+<writer thread='140495983732480'/>
+<blob name='MethodHandlesAdapterBlob' size='182000'>
+<sect index='1' size='182000' free='177714'/>
+</blob>
+request:  java.lang.String::indexOf comment: tiered count: 384 hot: yes
+<writer thread='140495429826304'/>
+   1275   21    b  3       java.lang.String::indexOf (7 bytes)
+<writer thread='140495983732480'/>
+request:  java.lang.Object::&lt;init&gt; comment: tiered count: 2560 hot: yes
+<writer thread='140495429826304'/>
+   1279   22    b  1       java.lang.Object::&lt;init&gt; (1 bytes)
+   1280    7       3       java.lang.Object::&lt;init&gt; (1 bytes)   made not entrant
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 1 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   1297   23    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 424 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   1378   23       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   1379   24    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 432 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   1445   24       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   1445   25    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 440 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   1522   25       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   1522   26    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 448 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   1585   26       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   1586   27    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 456 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   1665   27       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   1665   28    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 464 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   1702   28       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   1702   29    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 472 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   1784   29       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   1784   30    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 480 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   1836   30       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   1837   31    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 488 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   1894   31       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   1894   32    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 496 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   1977   32       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   1978   33    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 504 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2062   33       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   2062   34    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 512 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2145   34       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   2145   35    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 520 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2210   35       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   2211   36    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 528 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2277   36       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   2277   37    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 536 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2310   37       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   2310   38    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 544 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2389   38       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   2390   39    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 552 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2454   39       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   2455   40    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 560 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2505   40       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   2505   41    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 568 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2544   41       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   2545   42    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 576 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2613   42       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   2613   43    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 584 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2647   43       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   2647   44    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 592 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2681   44       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   2681   45    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 600 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2715   45       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   2715   46    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 608 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2788   46       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   2788   47    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 616 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2834   47       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   2834   48    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 624 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2867   48       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   2867   49    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 632 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2917   49       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   2917   50    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 640 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   2950   50       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   2950   51    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 648 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3033   51       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   3034   52    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 656 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3080   52       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   3081   53    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 664 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3115   53       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   3115   54    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 672 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3148   54       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   3148   55    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 680 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3200   55       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   3200   56    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 688 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3235   56       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   3235   57    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 696 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3280   57       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   3280   58    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 704 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3327   58       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   3327   59    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 712 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3377   59       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   3377   60    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 720 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3433   60       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   3433   61    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 728 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3498   61       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   3498   62    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 736 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3579   62       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   3580   63    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 744 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3619   63       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   3619   64    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 752 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3696   64       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   3696   65    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 760 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3736   65       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   3736   66    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 768 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3776   66       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   3777   67    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 776 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3822   67       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   3822   68    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 784 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3861   68       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   3861   69    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 792 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3906   69       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   3907   70    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 800 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3942   70       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   3942   71    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 808 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   3977   71       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   3978   72    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 816 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4013   72       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   4014   73    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 824 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4051   73       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   4051   74    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 832 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4083   74       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   4084   75    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 840 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4119   75       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   4120   76    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 848 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4165   76       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   4165   77    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 856 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4215   77       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   4216   78    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 864 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4258   78       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   4258   79    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 872 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4298   79       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   4298   80    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 880 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4348   80       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   4349   81    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 888 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4401   81       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   4401   82    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 896 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4435   82       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   4435   83    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 904 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4481   83       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   4481   84    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 912 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4531   84       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   4531   85    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 920 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4565   85       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   4565   86    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 928 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4629   86       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   4629   87    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 936 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4699   87       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   4699   88    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 944 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4761   88       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   4762   89    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 952 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4825   89       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   4825   90    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 960 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4884   90       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   4884   91    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 968 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4922   91       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   4923   92    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 976 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   4996   92       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   4997   93    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 984 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   5034   93       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   5035   94    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 992 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   5087   94       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   5087   95    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 1000 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   5126   95       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   5126   96    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 1008 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   5177   96       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   5178   97    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 1016 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   5224   97       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   5224   98    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 1024 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   5285   98       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   5285   99    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 1032 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   5341   99       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   5341  100    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 1040 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   5374  100       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   5374  101    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 1048 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   5445  101       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   5446  102    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 1056 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   5486  102       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495562901248'/>
+   5486  103    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495983732480'/>
+&gt;&gt;&gt;&gt;&gt;&gt; USE PROFILE Complevel: 4, Hotcount: 1064 static jdouble TwoMethods.method1(jdouble) TwoMethods::method1&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   5518  103       4       TwoMethods::method1 (145 bytes)   made not entrant
+request:  TwoMethods::method1 comment: replay count: 0
+<writer thread='140495563953920'/>
+   5518  104    b  4       TwoMethods::method1 (145 bytes)
+<writer thread='140495357466368'/>
+C1 Runtime statistics:
+ _resolve_invoke_virtual_cnt:     0
+ _resolve_invoke_opt_virtual_cnt: 4
+ _resolve_invoke_static_cnt:      1
+ _handle_wrong_method_cnt:        0
+ _ic_miss_cnt:                    0
+ _generic_arraycopy_cnt:          0
+ _generic_arraycopystub_cnt:      0
+ _byte_arraycopy_cnt:             0
+ _short_arraycopy_cnt:            0
+ _int_arraycopy_cnt:              0
+ _long_arraycopy_cnt:             0
+ _primitive_arraycopy_cnt:        0
+ _oop_arraycopy_cnt (C):          0
+ _oop_arraycopy_cnt (stub):       0
+ _arraycopy_slowcase_cnt:         0
+ _arraycopy_checkcast_cnt:        0
+ _arraycopy_checkcast_attempt_cnt:0
+ _new_type_array_slowcase_cnt:    0
+ _new_object_array_slowcase_cnt:  0
+ _new_instance_slowcase_cnt:      0
+ _new_multi_array_slowcase_cnt:   0
+ _monitorenter_slowcase_cnt:      0
+ _monitorexit_slowcase_cnt:       0
+ _patch_code_slowcase_cnt:        0
+ _throw_range_check_exception_count:            0:
+ _throw_index_exception_count:                  0:
+ _throw_div0_exception_count:                   0:
+ _throw_null_pointer_exception_count:           0:
+ _throw_class_cast_exception_count:             0:
+ _throw_incompatible_class_change_error_count:  0:
+ _throw_array_store_exception_count:            0:
+ _throw_count:                                  0:
+
+<statistics type='SharedRuntime'>
+    0 inline cache miss in compiled
+    0 wrong method
+    1 unresolved static call site
+    0 unresolved virtual call site
+    4 unresolved opt virtual call site
+    7 slow partial subtype
+   12 byte array copies
+  106 short array copies
+   12 int array copies
+   12 long array copies
+AdapterHandlerTable: empty 187 longest 3 total 136 average 1.283019
+AdapterHandlerTable: lookups 5536 buckets 5376 equals 5106 hits 5106 compact 5106
+</statistics>
+<statistics type='nmethod'>
+Statistics for 1 native nmethods:
+ N. total size  = 1056
+ N. relocation  = 88
+ N. main code   = 656
+Statistics for 102 bytecoded nmethods:
+ total in heap  = 434832
+ relocation     = 28408
+ constants      = 2592
+ main code      = 189728
+ stub code      = 14992
+ oops           = 656
+ scopes data    = 53728
+ scopes pcs     = 83648
+ dependencies   = 816
+ handler table  = 21480
+ nul chk table  = 568
+Debug Data Chunks: 11067, shared 1762+2057, non-SP&apos;s elided 11
+PcDesc Statistics:  529 queries, 9.24 comparisons per query
+  caches=102 queries=529/0, hits=0+1, tests=1847+3043, adds=528
+</statistics>
+<statistics type='opto'>
+--- Compiler Statistics ---
+Methods seen: 985  Methods parsed: 985  Nodes created: 156175
+Blocks parsed: 1315  Blocks seen: 1316
+2054 original NULL checks - 1725 elided (83%); optimizer leaves 99,
+1 made implicit ( 1%)
+CCP: 83  constants found: 0
+Total frameslots = 1048, Max frameslots = 32
+Inserted 0 spill loads, 0 spill stores, 0 mem-mem moves and 0 copies.
+Total load cost=      0, store cost =      0, mem-mem cost =  0.00, copy cost =     0.
+Adjusted spill cost =       0.
+Conservatively coalesced 1760 copies, 0 pairs, 1946 post alloc.
+Used cisc instruction  81,  remained in register 82
+Average allocation trips 1.836735
+High Pressure Blocks = 0, Low Pressure Blocks = 0
+Nops added 0 bytes to total of 136207 bytes, for 0.00%
+Peephole: peephole rules applied: 0
+PhaseIdealLoop=658, sum _unique=515596
+</statistics>
+<statistics type='intrinsic'>
+Compiler intrinsic usage:
+   164 (100.0%) _nanoTime (worked)
+   164 (100.0%) total (worked)
+</statistics>
+<tty_done stamp='5.561'/>
+</tty>
+<hotspot_log_done stamp='5.561'/>
+</hotspot_log>

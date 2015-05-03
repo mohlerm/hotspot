@@ -1,0 +1,113 @@
+WITH XBATCH
+
+------------ RESULTS --------------
+------------ RUNS: 5 --------------
+-----------------------------------
+>>>      %%% BASELINE %%%	<<<
+>>>     %%% method1 %%%	<<<
+>>> Total time:        33790.2 ms
+>>> Total percentage:  54.07 %
+>>> Invocation count:  100.0
+>>> Time per method:   182.7 ms
+>>>     %%% method2 %%%	<<<
+>>> Total time:        33790.2 ms
+>>> Total percentage:  44.61 %
+>>> Invocation count:  100.0
+>>> Time per method:   150.74 ms
+-----------------------------------
+-----------------------------------
+>>>      %%% CREATE %%%	<<<
+>>>     %%% method1 %%%	<<<
+>>> Total time:        4554.2 ms
+>>> Total percentage:  44.2 %
+>>> Invocation count:  100.0
+>>> Time per method:   20.13 ms
+>>>     %%% method2 %%%	<<<
+>>> Total time:        4554.2 ms
+>>> Total percentage:  41.43 %
+>>> Invocation count:  100.0
+>>> Time per method:   18.87 ms
+-----------------------------------
+-----------------------------------
+>>>      %%% USE %%%	<<<
+>>>     %%% method1 %%%	<<<
+>>> Total time:        3340.2 ms
+>>> Total percentage:  40.41 %
+>>> Invocation count:  100.0
+>>> Time per method:   13.5 ms
+>>>     %%% method2 %%%	<<<
+>>> Total time:        3340.2 ms
+>>> Total percentage:  39.22 %
+>>> Invocation count:  100.0
+>>> Time per method:   13.1 ms
+-----------------------------------
+Execution successful
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+WITHOUT XBATCH
+------------ RESULTS --------------
+------------ RUNS: 5 --------------
+-----------------------------------
+>>>      %%% BASELINE %%%	<<<
+>>>     %%% method1 %%%	<<<
+>>> Total time:        33358.8 ms
+>>> Total percentage:  54.3 %
+>>> Invocation count:  100.0
+>>> Time per method:   181.14 ms
+>>>     %%% method2 %%%	<<<
+>>> Total time:        33358.8 ms
+>>> Total percentage:  44.94 %
+>>> Invocation count:  100.0
+>>> Time per method:   149.91 ms
+-----------------------------------
+-----------------------------------
+>>>      %%% CREATE %%%	<<<
+>>>     %%% method1 %%%	<<<
+>>> Total time:        3559.6 ms
+>>> Total percentage:  48.69 %
+>>> Invocation count:  100.0
+>>> Time per method:   17.33 ms
+>>>     %%% method2 %%%	<<<
+>>> Total time:        3559.6 ms
+>>> Total percentage:  43.88 %
+>>> Invocation count:  100.0
+>>> Time per method:   15.62 ms
+-----------------------------------
+-----------------------------------
+>>>      %%% USE %%%	<<<
+>>>     %%% method1 %%%	<<<
+>>> Total time:        2878.8 ms
+>>> Total percentage:  46.28 %
+>>> Invocation count:  100.0
+>>> Time per method:   13.32 ms
+>>>     %%% method2 %%%	<<<
+>>> Total time:        2878.8 ms
+>>> Total percentage:  43.75 %
+>>> Invocation count:  100.0
+>>> Time per method:   12.59 ms
+-----------------------------------
+Execution successful
+

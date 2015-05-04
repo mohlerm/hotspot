@@ -260,7 +260,7 @@ class ciCacheProfiles : AllStatic {
   static ciKlass* _iklass;
   static Method*  _imethod;
 
-  static int replay_impl(TRAPS, Method* method);
+  static int replay_impl(TRAPS, Method* method, int osr_bci);
 
   static CompileRecord**    _compile_records;
   static MethodRecord** _method_records;
@@ -312,7 +312,7 @@ class ciCacheProfiles : AllStatic {
   static void process(TRAPS);
   static void process_command(TRAPS);
 
-  static void replay_method(TRAPS, Method* method);
+  static void replay_method(TRAPS, Method* method, int osr_bci);
   static void process_compile(TRAPS);
   static void process_ciMethod(TRAPS);
   static void process_ciMethodData(TRAPS);
@@ -353,7 +353,7 @@ class ciCacheProfiles : AllStatic {
   static void initialize(TRAPS);
   //static bool _initialized = false;
   // Replay specified compilation and exit VM.
-  static void replay(TRAPS, Method* method);
+  static void replay(TRAPS, Method* method, int osr_bci);
   // Load inlining decisions from file and use them
   // during compilation of specified method.
 //  static void* load_inline_data(ciMethod* method, int entry_bci, int comp_level);

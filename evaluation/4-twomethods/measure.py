@@ -7,11 +7,11 @@ JAVAPATH = '../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java'
 JAVACPATH = '../../../build/linux-x86_64-normal-server-fastdebug/jdk/bin/javac'
 #JAVAARGS_USE = ['-agentlib:hprof=cpu=times','-XX:+UnlockDiagnosticVMOptions', '-XX:+PrintCompilation', '-XX:-UseOnStackReplacement', '-XX:+UnlockExperimentalVMOptions', '-XX:+TraceDeoptimization', '-Xbatch', '-XX:+CacheProfiles', '-XX:CacheProfilesFile=cached_profiles.log', '-XX:CompileCommandFile=useCommands.txt']
 
-JAVAARGS = ['-agentlib:hprof=cpu=times','-XX:+UnlockDiagnosticVMOptions', '-XX:-UseOnStackReplacement', '-XX:+UnlockExperimentalVMOptions']
+JAVAARGS = ['-agentlib:hprof=cpu=times','-XX:+UnlockDiagnosticVMOptions', '-XX:+UseOnStackReplacement', '-XX:+UnlockExperimentalVMOptions']
 JAVAARGS_VERBOSE = ['-XX:+PrintCompilation', '-XX:+TraceDeoptimization']
 JAVAARGS_DEBUG = ['-XX:+PrintCacheProfiles']
 JAVAARGS_USE = ['-XX:+CacheProfiles']
-JAVAARGS_CREATE = ['-XX:+DumpProfiles', '-XX:CompileCommandFile=createCommands.txt']
+JAVAARGS_CREATE = ['-XX:+DumpProfiles']#, '-XX:CompileCommandFile=createCommands.txt']
 #JAVAARGS_CREATE = ['-XX:CompileCommandFile=createCommands.txt']
 
 NROFRUNS = 1

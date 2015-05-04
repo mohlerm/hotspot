@@ -255,6 +255,7 @@ public:
 class CompileBroker: AllStatic {
  friend class Threads;
   friend class CompileTaskWrapper;
+  friend class ciCacheProfiles;
 
  public:
   enum {

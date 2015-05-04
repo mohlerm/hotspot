@@ -441,7 +441,7 @@ void ciCacheProfiles::process_command(TRAPS) {
   }
 }
 
-void ciCacheProfiles::replay_method(TRAPS, Method* method) {
+void ciCacheProfiles::replay_method(TRAPS, Method* method, int osr_bci) {
     ResourceMark rm;
     CompileRecord* rec = find_compileRecord(method);
     if(rec!=NULL) {
@@ -498,13 +498,16 @@ void ciCacheProfiles::replay_method(TRAPS, Method* method) {
         }
       }
       // Make sure the existence of a prior compile doesn't stop this one
-      nmethod* nm = (rec->_entry_bci != InvocationEntryBci) ? method->lookup_osr_nmethod_for(rec->_entry_bci, rec->_comp_level, true) : method->code();
+      nmethod* nm = (rec->_entry_bci != InvocationEntryBci) ? method->lookup_osr_nmethod_for(osr_bci, rec->_comp_level, true) : method->code();
       if (nm != NULL) {
         nm->make_not_entrant();
       }
       //cache_state = this;
-      CompileBroker::compile_method(method, rec->_entry_bci, rec->_comp_level,
+//      CompileBroker::compile_method_base(method, rec->_entry_bci, rec->_comp_level,
+//                                    methodHandle(), 0, "replay", THREAD);
+      CompileBroker::compile_method_base(method, osr_bci, rec->_comp_level,
                                     methodHandle(), 0, "replay", THREAD);
+
       //cache_state = NULL;
       //reset();
     }
@@ -667,8 +670,8 @@ void ciCacheProfiles::process_JvmtiExport(TRAPS) {
 
 
 
-void ciCacheProfiles::replay(TRAPS, Method* method) {
-  int exit_code = replay_impl(THREAD, method);
+void ciCacheProfiles::replay(TRAPS, Method* method, int osr_bci) {
+  int exit_code = replay_impl(THREAD, method, osr_bci);
 
 //  Threads::destroy_vm();
 //
@@ -683,7 +686,8 @@ void ciCacheProfiles::initialize(TRAPS) {
     //ResourceMark rm;
     //int exit_code = 0;
     if (FLAG_IS_DEFAULT(CacheProfilesFile)) {
-      tty->print_cr("ERROR: no compiler cache profiles file specified (use -XX:CacheProfilesFile=cached_profiles.txt).");
+      tty->print_cr("NOTE: no explicit compiler cache profiles file specified, uses -XX:CacheProfilesFile=cached_profiles.txt.");
+      CacheProfilesFile = "cached_profiles.log";
       //exit_code = 1;
     }
 
@@ -743,7 +747,7 @@ void ciCacheProfiles::is_initialized(bool flag) {
 
 
 
-int ciCacheProfiles::replay_impl(TRAPS, Method* method) {
+int ciCacheProfiles::replay_impl(TRAPS, Method* method, int osr_bci) {
   HandleMark hm;
   //ResourceMark rm;
   // Make sure we don't run with background compilation -> marcel: enable that
@@ -766,7 +770,7 @@ int ciCacheProfiles::replay_impl(TRAPS, Method* method) {
   //CacheReplay rp(CacheProfilesFile, THREAD);
   int exit_code = 0;
   if (can_replay()) {
-    replay_method(THREAD, method);
+    replay_method(THREAD, method, osr_bci);
   } else {
     exit_code = 1;
     return exit_code;

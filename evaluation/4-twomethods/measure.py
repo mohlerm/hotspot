@@ -4,7 +4,7 @@ from subprocess import call, check_call, check_output, CalledProcessError
 
 # useful flags: -Xint (only interpreter), -Xcomp (compile everything)
 JAVAPATH = '../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java'
-JAVACPATH = '../../../build/linux-x86_64-normal-server-fastdebug/jdk/bin/javac'
+JAVACPATH = '../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/javac'
 #JAVAARGS_USE = ['-agentlib:hprof=cpu=times','-XX:+UnlockDiagnosticVMOptions', '-XX:+PrintCompilation', '-XX:-UseOnStackReplacement', '-XX:+UnlockExperimentalVMOptions', '-XX:+TraceDeoptimization', '-Xbatch', '-XX:+CacheProfiles', '-XX:CacheProfilesFile=cached_profiles.log', '-XX:CompileCommandFile=useCommands.txt']
 
 JAVAARGS = ['-agentlib:hprof=cpu=times','-XX:+UnlockDiagnosticVMOptions', '-XX:+UseOnStackReplacement', '-XX:+UnlockExperimentalVMOptions']
@@ -16,7 +16,7 @@ JAVAARGS_CREATE = ['-XX:+DumpProfiles']#, '-XX:CompileCommandFile=createCommands
 
 NROFRUNS = 1
 VERBOSE = True
-DEBUG = True
+DEBUG = False
 RUN_BASELINE = True
 RUN_CREATE = True  
 RUN_USE = True

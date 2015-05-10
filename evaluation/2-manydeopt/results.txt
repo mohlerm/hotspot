@@ -1,0 +1,30 @@
+------------ RESULTS --------------
+--------- RUNS: 10 each------------
+-----------------------------------
+>>>      %%% BASELINE %%%	<<<
+>>>     %%% method1 %%%	<<<
+>>> Total time:        51824.1 ms
+>>> Total percentage:  99.4 %
+>>> Invocation count:  100.0
+>>> Time per method:   515.11 ms
+>>> Deopt. count:      106
+-----------------------------------
+-----------------------------------
+>>>      %%% CREATE %%%	<<<
+>>>     %%% method1 %%%	<<<
+>>> Total time:        50472.1 ms
+>>> Total percentage:  99.39 %
+>>> Invocation count:  100.0
+>>> Time per method:   501.62 ms
+>>> Deopt. count:      106
+-----------------------------------
+-----------------------------------
+>>>      %%% USE %%%	<<<
+>>>     %%% method1 %%%	<<<
+>>> Total time:        17947.4 ms
+>>> Total percentage:  98.21 %
+>>> Invocation count:  100.0
+>>> Time per method:   176.27 ms
+>>> Deopt. count:      0
+-----------------------------------
+Execution successful

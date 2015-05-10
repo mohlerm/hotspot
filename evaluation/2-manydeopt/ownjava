@@ -1,0 +1,29 @@
+#!/bin/bash
+CLASS=$2
+if [ "$1" = "run" ] 
+then
+  ../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -cp . $CLASS
+elif [ "$1" = "jmc" ] 
+then
+  ../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+FlightRecorder -cp . $CLASS
+elif [ "$1" = "log" ] 
+then
+  ../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+LogCompilation -cp . $CLASS
+elif [ "$1" = "option" ] 
+then
+  ../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:CompileCommand=option,Main.inc,double,CompileThresholdScaling,0.01 -cp . $CLASS
+elif [ "$1" = "debug" ]
+then
+ gdb --args ../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -Xbatch -Xcomp -XX:+PrintCompilation -XX:CompileCommand=option,Main.inc,double,CompileThresholdScaling,0.01 -cp . $CLASS
+elif [ "$1" = "file" ]
+then
+  ../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:CompileCommandFile=compileCommandFile -cp . $CLASS
+elif [ "$1" = "perf" ]
+then
+  perf stat -B ../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:CompileCommandFile=compileCommandFile -cp . $CLASS
+elif [ "$1" = "show" ]
+then
+  java -jar ../../../hotspot/src/share/tools/LogCompilation/logc.jar $2
+else
+  ../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/javac $CLASS.java
+fi

@@ -8,7 +8,6 @@ CPP_SRCS += \
 ../src/share/vm/ci/ciArray.cpp \
 ../src/share/vm/ci/ciArrayKlass.cpp \
 ../src/share/vm/ci/ciBaseObject.cpp \
-../src/share/vm/ci/ciCacheProfiles.cpp \
 ../src/share/vm/ci/ciCallSite.cpp \
 ../src/share/vm/ci/ciConstant.cpp \
 ../src/share/vm/ci/ciConstantPoolCache.cpp \
@@ -45,7 +44,6 @@ OBJS += \
 ./src/share/vm/ci/ciArray.o \
 ./src/share/vm/ci/ciArrayKlass.o \
 ./src/share/vm/ci/ciBaseObject.o \
-./src/share/vm/ci/ciCacheProfiles.o \
 ./src/share/vm/ci/ciCallSite.o \
 ./src/share/vm/ci/ciConstant.o \
 ./src/share/vm/ci/ciConstantPoolCache.o \
@@ -82,7 +80,6 @@ CPP_DEPS += \
 ./src/share/vm/ci/ciArray.d \
 ./src/share/vm/ci/ciArrayKlass.d \
 ./src/share/vm/ci/ciBaseObject.d \
-./src/share/vm/ci/ciCacheProfiles.d \
 ./src/share/vm/ci/ciCallSite.d \
 ./src/share/vm/ci/ciConstant.d \
 ./src/share/vm/ci/ciConstantPoolCache.d \

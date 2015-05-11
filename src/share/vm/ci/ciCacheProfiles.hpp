@@ -242,7 +242,7 @@ public:
 class ciCacheProfiles : AllStatic {
   CI_PACKAGE_ACCESS
 
-//#ifndef PRODUCT
+#ifndef PRODUCT
  private:
   static FILE*   _stream;
   static Thread* _thread;
@@ -380,7 +380,7 @@ class ciCacheProfiles : AllStatic {
 
   //static void reset();
 
-//#endif
+#endif
 };
 
 #endif // SHARE_VM_CI_CICACHEPROFILES_HPP

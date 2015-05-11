@@ -53,5 +53,4 @@ src/os/linux/vm \
 src/os/aix/vm \
 src/cpu/x86/vm \
 src/cpu/ppc/vm \
-.metadata/.plugins/org.eclipse.cdt.make.core \
 

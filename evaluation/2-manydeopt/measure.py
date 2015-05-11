@@ -14,7 +14,7 @@ JAVAARGS_USE = ['-XX:+CacheProfiles']
 JAVAARGS_CREATE = ['-XX:+DumpProfiles']#, '-XX:CompileCommandFile=createCommands.txt']
 #JAVAARGS_CREATE = ['-XX:CompileCommandFile=createCommands.txt']
 
-NROFRUNS = 1
+NROFRUNS = 10
 VERBOSE = True
 DEBUG = False
 RUN_BASELINE = True

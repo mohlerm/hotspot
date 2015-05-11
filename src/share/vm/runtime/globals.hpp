@@ -3400,6 +3400,9 @@ class CommandLineFlags {
 		                                                                        \
   experimental(bool, PrintCacheProfiles, false,                             \
            "Prints cache profiling information")                            \
+                                                                            \
+  experimental(bool, PrintDeoptimizationCount, false,                       \
+           "Prints count of deoptimizations after each deopt")              \
 		                                                                        \
   product(ccstr, InlineDataFile, NULL,                                      \
           "File containing inlining replay information"                     \

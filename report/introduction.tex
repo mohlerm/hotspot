@@ -1,0 +1,30 @@
+(Language) Virtual Machines like the Java Virtual Machine (JVM) are used as the execution
+environment of choice for many modern programming languages. The VMs interpret a suitable
+intermediate language (e.g., Java Byte Code for the JVM) and provide the runtime system
+for application programs and usually include a garbage collector, a thread scheduler, interfaces
+to the host operating system. As interpretation of intermediate code is time-consuming, VMs
+include usually a Just-in-Time (JIT) compiler that translates frequently-executed functions or
+methods to “native” code (e.g., x86 instructions).
+The JIT compiler executes in parallel to a program’s interpretation by the VM, and as a re-
+sult, compilation speed is a critical issue in the design of a JIT compiler. Unfortunately, it is
+difficult to design a compiler such that the compiler produces good (or excellent) code while
+limiting the resource demands of this compiler (the compiler requires storage and cycles – and
+even on a multi-core processor, compilation may slow down the execution of the application
+program). Consequently, most VMs adopt a multi-tier compilation system. The first tier is the
+interpretation of a method. If this method is “hot”, the Tier-1 compiler translates this method
+into a native code. The Tier-1 compiler implements only a small set of the know optimization
+techniques and as result, it had good compilation speed but the generated code is far from the
+output of an optimizing compiler. Such a compiler is usually the Tier-2 compiler, which takes a
+longer amount of time and produces optimized native code. To determine which methods should
+be compiled by the Tier-1 (or Tier-2) compiler, the VM profiles the execution of all application
+programs to identify “hot” methods.
+In current VMs, at program startup, all methods are interpreted by the VM (execution at Tier-
+0). The interpreter performs profiling, and if a method is determined to be “hot”, this method is
+then compiled by the Tier-1 compiler (fast compilation, few optimizations). Methods compiled
+to Tier 1 are then profiled further (and more extensively). Based on that profiling information,
+some methods are eventually compiled at Tier 2 (slow compilation, many optimizations).
+One of the drawbacks of this setup is that for all programs, all methods start in Tier 0, with
+interpretation and profiling by the VM. However, for many programs the set of “hot” methods
+does not change from one execution to another and there is no reason to gather again and again
+the profiling information. Cached profiles would allow the VM to compile some methods right
+away.

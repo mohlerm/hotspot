@@ -56,6 +56,7 @@
 PRAGMA_FORMAT_MUTE_WARNINGS_FOR_GCC
 
 bool DeoptimizationMarker::_is_active = false;
+static int deopts = 0;
 
 Deoptimization::UnrollBlock::UnrollBlock(int  size_of_deoptimized_frame,
                                          int  caller_adjustment,
@@ -1014,6 +1015,11 @@ vframeArray* Deoptimization::create_vframeArray(JavaThread* thread, frame fr, Re
     }
   }
 #endif
+  if (PrintDeoptimizationCount) {
+    ttyLocker ttyl;
+    deopts++;
+    tty->print(">>> DEOPT COUNTER: %d <<<", deopts);
+  }
 
   // Register map for next frame (used for stack crawl).  We capture
   // the state of the deopt'ing frame's caller.  Thus if we need to

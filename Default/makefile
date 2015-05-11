@@ -38,6 +38,7 @@ RM := rm
 -include src/os/aix/vm/subdir.mk
 -include src/cpu/x86/vm/subdir.mk
 -include src/cpu/ppc/vm/subdir.mk
+-include .metadata/.plugins/org.eclipse.cdt.make.core/subdir.mk
 -include subdir.mk
 -include objects.mk
 

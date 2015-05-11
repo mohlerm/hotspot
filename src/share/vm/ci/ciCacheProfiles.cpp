@@ -36,7 +36,7 @@
 #include "utilities/copy.hpp"
 #include "utilities/macros.hpp"
 
-#ifndef PRODUCT
+//#ifndef PRODUCT
 
 // ciCacheProfiles
 
@@ -413,10 +413,11 @@ void ciCacheProfiles::process_command(TRAPS) {
     _iklass  = NULL;
     // and continue as usual
 
+    // TODO: parameterize init length
     _method_records_pos = 0;
-    _method_records_length = 2;
+    _method_records_length = 8;
     _method_data_records_pos = 0;
-    _method_data_records_length = 2;
+    _method_data_records_length = 8;
     // TODO replace initial sizes with command line params
     _method_records = NEW_C_HEAP_ARRAY(MethodRecord*, _method_records_length, mtCompiler);
     _method_data_records = NEW_C_HEAP_ARRAY(MethodDataRecord*, _method_data_records_length, mtCompiler );
@@ -750,10 +751,11 @@ void ciCacheProfiles::is_initialized(bool flag) {
 int ciCacheProfiles::replay_impl(TRAPS, Method* method, int osr_bci) {
   HandleMark hm;
   //ResourceMark rm;
+  // TODO take a look at this again, not everything is possible in production
   // Make sure we don't run with background compilation -> marcel: enable that
   //BackgroundCompilation = true;
   // set ReplaySuppressInitializers to don't to something special
-  ReplaySuppressInitializers = 2;
+  //ReplaySuppressInitializers = 2;
 //  if (ReplaySuppressInitializers > 2) {
 //    // ReplaySuppressInitializers > 2 means that we want to allow
 //    // normal VM bootstrap but once we get into the replay itself
@@ -1106,4 +1108,4 @@ CompileRecord* ciCacheProfiles::find_compileRecord(char* klass_name, char* metho
 //  _method_data_records->clear();
 //  _compile_records->clear();
 //}
-#endif // PRODUCT
+//#endif // PRODUCT

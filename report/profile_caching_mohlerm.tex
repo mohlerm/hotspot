@@ -23,23 +23,53 @@
 \usepackage[plainpages=false,pdfpagelabels]{hyperref}    % enable hyperlinks in pdf/ps Docs
 \usepackage{listings}                           % to embed source code
 
+
+% UTF8
+\usepackage[utf8x]{inputenc} 
+
 % -------------------------------------------------------------------------------------------------
 % Select type of thesis
 % -------------------------------------------------------------------------------------------------
-\renewcommand{\thesistype}{Semester}
+\renewcommand{\thesistype}{Bachelor}
 %\renewcommand{\thesistype}{Diploma}
 %\renewcommand{\thesistype}{Master}
 
 % -------------------------------------------------------------------------------------------------
 % Set names
 % -------------------------------------------------------------------------------------------------
-\renewcommand{\thesisauthor}{Peter Muster}
-\renewcommand{\thesisadvisor}{Hugh Watts}
+\renewcommand{\thesisauthor}{Marcel Mohler}
+\renewcommand{\thesisadvisor}{Zoltán Majó \\ Tobias Hartmann}
+
+%OWN STUFF###############################################################
+\usepackage[english]{babel}
+
+% colors
+%\definecolor{orange}{rgb}{1,0.5,0}
+
+% Disable single lines at the start of a paragraph (Schusterjungen)
+
+\clubpenalty = 10000
+
+% Disable single lines at the end of a paragraph (Hurenkinder)
+
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
+ 
+% allows for colored, easy-to-find todos
+
+%\newcommand{\todo}[1]{\textsf{\textbf{\textcolor{orange}{[[TODO: #1]]}}}}
+
+
+%##########################################################################
+
 
 % -------------------------------------------------------------------------------------------------
 % Beginning of the main document body
 % -------------------------------------------------------------------------------------------------
 \begin{document}
+
+% include all bibtex even if not cited
+\nocite{*}
 
 % -------------------------------------------------------------------------------------------------
 % Front matter with title page, table of contents, and abstracts 
@@ -47,15 +77,16 @@
 \frontmatter
 
 % Title page: set title and date 
-\thesistitlepage{Thesis Title}{August 2007}
+\thesistitlepage{Profile Caching for the\\Java Virtual Machine
+}{August 2015}
 
 % Abstract must not be longer than one page per language. English and
 % German abstracts are mandatory.
-\chapter*{Abstract}
-Short summary of thesis.
+\chapter*{Introduction}
+\input{introduction.tex}
 
-\chapter*{Zusammenfassung}
-Kurzfassung der Arbeit.
+%\chapter*{Zusammenfassung}
+%Kurzfassung der Arbeit.
 
 % Table of contents
 \tableofcontents

@@ -117,6 +117,8 @@ public:
   MethodDataRecord** _method_data_records;
   int _method_records_pos;
   int _method_data_records_pos;
+  int _method_records_length;
+  int _method_data_records_length;
 
   char* _klass_name;
   char* _method_name;
@@ -206,6 +208,8 @@ int ciCacheProfiles::_method_data_records_length = 0;
 int ciCacheProfiles::_compile_records_pos = 0;
 int ciCacheProfiles::_compile_records_length = 0;
 
+bool ciCacheProfiles::_had_loading_error = false;
+bool ciCacheProfiles::CacheIgnoreInitErrors = true;
 bool ciCacheProfiles::_initialized = false;
 
 bool ciCacheProfiles::had_error() {
@@ -517,8 +521,19 @@ void ciCacheProfiles::process(TRAPS) {
     c = get_line(c);
     process_command(THREAD);
     if (had_error()) {
+      // flag this compile record to not use it
+      _had_loading_error = true;
+
+      // also free currently used datastructure
+//      for(int i = 0;i<_method_records_pos;i++) {
+//        FREE_C_HEAP_OBJ(_method_records[i]);
+//      }
+//      for(int i = 0;i<_method_data_records_pos;i++) {
+//        FREE_C_HEAP_OBJ(_method_data_records[i]);
+//      }
+
       tty->print_cr("Error while parsing line %d: %s\n", line_no, _error_message);
-      if (ReplayIgnoreInitErrors) {
+      if (CacheIgnoreInitErrors) {
         CLEAR_PENDING_EXCEPTION;
         _error_message = NULL;
       } else {
@@ -542,24 +557,35 @@ void ciCacheProfiles::process_command(TRAPS) {
     // and continue as usual
 
     // TODO: parameterize init length
+    _had_loading_error = false;
     _method_records_pos = 0;
     _method_records_length = 8;
     _method_data_records_pos = 0;
     _method_data_records_length = 8;
     _method_records = NEW_C_HEAP_ARRAY(MethodRecord*, _method_records_length, mtCompiler);
     _method_data_records = NEW_C_HEAP_ARRAY(MethodDataRecord*, _method_data_records_length, mtCompiler );
-  } else if (strcmp("compile", cmd) == 0) {
-    process_compile(CHECK);
-  } else if (strcmp("ciMethod", cmd) == 0) {
-    process_ciMethod(CHECK);
-  } else if (strcmp("ciMethodData", cmd) == 0) {
-    process_ciMethodData(CHECK);
 #if INCLUDE_JVMTI
   } else if (strcmp("JvmtiExport", cmd) == 0) {
     process_JvmtiExport(CHECK);
 #endif // INCLUDE_JVMTI
+  } else if (!_had_loading_error) {
+    if (strcmp("compile", cmd) == 0) {
+      process_compile(CHECK);
+    } else if (strcmp("ciMethod", cmd) == 0) {
+      process_ciMethod(CHECK);
+    } else if (strcmp("ciMethodData", cmd) == 0) {
+      process_ciMethodData(CHECK);
+    } else if (strcmp("staticfield", cmd) == 0) {
+  //    process_staticfield(CHECK);
+    } else if (strcmp("ciInstanceKlass", cmd) == 0) {
+  //    process_ciInstanceKlass(CHECK);
+    } else if (strcmp("instanceKlass", cmd) == 0) {
+  //    process_instanceKlass(CHECK);
+    } else {
+      report_error("unknown command");
+    }
   } else {
-    report_error("unknown command");
+    // ignore command
   }
 }
 
@@ -569,10 +595,11 @@ void ciCacheProfiles::replay_method(TRAPS, Method* method, int osr_bci) {
     if(rec!=NULL) {
       _method_data_records = rec->_method_data_records;
       _method_records = rec->_method_records;
-     // _method_data_records_length = rec->_method_data_records_length;
-     // _method_records_length = rec->_method_data_records_length;
+
        _method_data_records_pos = rec->_method_data_records_pos;
        _method_records_pos = rec->_method_data_records_pos;
+       _method_data_records_length = rec->_method_data_records_length;
+       _method_records_length = rec->_method_data_records_length;
 
       _iklass = rec->_iklass;
       _imethod = rec->_imethod;
@@ -587,7 +614,7 @@ void ciCacheProfiles::replay_method(TRAPS, Method* method, int osr_bci) {
         oop throwable = PENDING_EXCEPTION;
         java_lang_Throwable::print(throwable, tty);
         tty->cr();
-        if (ReplayIgnoreInitErrors) {
+        if (CacheIgnoreInitErrors) {
           CLEAR_PENDING_EXCEPTION;
           ((InstanceKlass*)k)->set_init_state(InstanceKlass::fully_initialized);
         } else {
@@ -721,6 +748,222 @@ void ciCacheProfiles::process_ciMethodData(TRAPS) {
   }
 }
 
+//// instanceKlass <name>
+////
+//// Loads and initializes the klass 'name'.  This can be used to
+//// create particular class loading environments
+//void ciCacheProfiles::process_instanceKlass(TRAPS) {
+//  // just load the referenced class
+//  ResourceMark rm;
+//  Klass* k = parse_klass(CHECK);
+//}
+//
+//// ciInstanceKlass <name> <is_linked> <is_initialized> <length> tag # # # ...
+////
+//// Load the klass 'name' and link or initialize it.  Verify that the
+//// constant pool is the same length as 'length' and make sure the
+//// constant pool tags are in the same state.
+//void ciCacheProfiles::process_ciInstanceKlass(TRAPS) {
+//  ResourceMark rm;
+//  InstanceKlass* k = (InstanceKlass *)parse_klass(CHECK);
+//  int is_linked = parse_int("is_linked");
+//  int is_initialized = parse_int("is_initialized");
+//  int length = parse_int("length");
+//  if (is_initialized) {
+//    k->initialize(THREAD);
+//    if (HAS_PENDING_EXCEPTION) {
+//      oop throwable = PENDING_EXCEPTION;
+//      java_lang_Throwable::print(throwable, tty);
+//      tty->cr();
+//      if (CacheIgnoreInitErrors) {
+//        CLEAR_PENDING_EXCEPTION;
+//        k->set_init_state(InstanceKlass::fully_initialized);
+//      } else {
+//        return;
+//      }
+//    }
+//  } else if (is_linked) {
+//    k->link_class(CHECK);
+//  }
+//  ConstantPool* cp = k->constants();
+//  if (length != cp->length()) {
+//    report_error("constant pool length mismatch: wrong class files?");
+//    return;
+//  }
+//
+//  int parsed_two_word = 0;
+//  for (int i = 1; i < length; i++) {
+//    int tag = parse_int("tag");
+//    if (had_error()) {
+//      return;
+//    }
+//    switch (cp->tag_at(i).value()) {
+//      case JVM_CONSTANT_UnresolvedClass: {
+//        if (tag == JVM_CONSTANT_Class) {
+//          tty->print_cr("Resolving klass %s at %d", cp->klass_name_at(i)->as_utf8(), i);
+//          Klass* k = cp->klass_at(i, CHECK);
+//        }
+//        break;
+//      }
+//      case JVM_CONSTANT_Long:
+//      case JVM_CONSTANT_Double:
+//        parsed_two_word = i + 1;
+//
+//      case JVM_CONSTANT_ClassIndex:
+//      case JVM_CONSTANT_StringIndex:
+//      case JVM_CONSTANT_String:
+//      case JVM_CONSTANT_UnresolvedClassInError:
+//      case JVM_CONSTANT_Fieldref:
+//      case JVM_CONSTANT_Methodref:
+//      case JVM_CONSTANT_InterfaceMethodref:
+//      case JVM_CONSTANT_NameAndType:
+//      case JVM_CONSTANT_Utf8:
+//      case JVM_CONSTANT_Integer:
+//      case JVM_CONSTANT_Float:
+//      case JVM_CONSTANT_MethodHandle:
+//      case JVM_CONSTANT_MethodType:
+//      case JVM_CONSTANT_InvokeDynamic:
+//        if (tag != cp->tag_at(i).value()) {
+//          report_error("tag mismatch: wrong class files?");
+//          return;
+//        }
+//        break;
+//
+//      case JVM_CONSTANT_Class:
+//        if (tag == JVM_CONSTANT_Class) {
+//        } else if (tag == JVM_CONSTANT_UnresolvedClass) {
+//          tty->print_cr("Warning: entry was unresolved in the replay data");
+//        } else {
+//          report_error("Unexpected tag");
+//          return;
+//        }
+//        break;
+//
+//      case 0:
+//        if (parsed_two_word == i) continue;
+//
+//      default:
+//        fatal(err_msg_res("Unexpected tag: %d", cp->tag_at(i).value()));
+//        break;
+//    }
+//
+//  }
+//}
+//
+//// Initialize a class and fill in the value for a static field.
+//// This is useful when the compile was dependent on the value of
+//// static fields but it's impossible to properly rerun the static
+//// initiailizer.
+//void ciCacheProfiles::process_staticfield(TRAPS) {
+//  ResourceMark rm;
+//  InstanceKlass* k = (InstanceKlass *)parse_klass(CHECK);
+//
+//  if (ReplaySuppressInitializers == 0 ||
+//      ReplaySuppressInitializers == 2 && k->class_loader() == NULL) {
+//    return;
+//  }
+//
+//  assert(k->is_initialized(), "must be");
+//
+//  const char* field_name = parse_escaped_string();;
+//  const char* field_signature = parse_string();
+//  fieldDescriptor fd;
+//  Symbol* name = SymbolTable::lookup(field_name, (int)strlen(field_name), CHECK);
+//  Symbol* sig = SymbolTable::lookup(field_signature, (int)strlen(field_signature), CHECK);
+//  if (!k->find_local_field(name, sig, &fd) ||
+//      !fd.is_static() ||
+//      fd.has_initial_value()) {
+//    report_error(field_name);
+//    return;
+//  }
+//
+//  oop java_mirror = k->java_mirror();
+//  if (field_signature[0] == '[') {
+//    int length = parse_int("array length");
+//    oop value = NULL;
+//
+//    if (field_signature[1] == '[') {
+//      // multi dimensional array
+//      ArrayKlass* kelem = (ArrayKlass *)parse_klass(CHECK);
+//      int rank = 0;
+//      while (field_signature[rank] == '[') {
+//        rank++;
+//      }
+//      int* dims = NEW_RESOURCE_ARRAY(int, rank);
+//      dims[0] = length;
+//      for (int i = 1; i < rank; i++) {
+//        dims[i] = 1; // These aren't relevant to the compiler
+//      }
+//      value = kelem->multi_allocate(rank, dims, CHECK);
+//    } else {
+//      if (strcmp(field_signature, "[B") == 0) {
+//        value = oopFactory::new_byteArray(length, CHECK);
+//      } else if (strcmp(field_signature, "[Z") == 0) {
+//        value = oopFactory::new_boolArray(length, CHECK);
+//      } else if (strcmp(field_signature, "[C") == 0) {
+//        value = oopFactory::new_charArray(length, CHECK);
+//      } else if (strcmp(field_signature, "[S") == 0) {
+//        value = oopFactory::new_shortArray(length, CHECK);
+//      } else if (strcmp(field_signature, "[F") == 0) {
+//        value = oopFactory::new_singleArray(length, CHECK);
+//      } else if (strcmp(field_signature, "[D") == 0) {
+//        value = oopFactory::new_doubleArray(length, CHECK);
+//      } else if (strcmp(field_signature, "[I") == 0) {
+//        value = oopFactory::new_intArray(length, CHECK);
+//      } else if (strcmp(field_signature, "[J") == 0) {
+//        value = oopFactory::new_longArray(length, CHECK);
+//      } else if (field_signature[0] == '[' && field_signature[1] == 'L') {
+//        KlassHandle kelem = resolve_klass(field_signature + 1, CHECK);
+//        value = oopFactory::new_objArray(kelem(), length, CHECK);
+//      } else {
+//        report_error("unhandled array staticfield");
+//      }
+//    }
+//    java_mirror->obj_field_put(fd.offset(), value);
+//  } else {
+//    const char* string_value = parse_escaped_string();
+//    if (strcmp(field_signature, "I") == 0) {
+//      int value = atoi(string_value);
+//      java_mirror->int_field_put(fd.offset(), value);
+//    } else if (strcmp(field_signature, "B") == 0) {
+//      int value = atoi(string_value);
+//      java_mirror->byte_field_put(fd.offset(), value);
+//    } else if (strcmp(field_signature, "C") == 0) {
+//      int value = atoi(string_value);
+//      java_mirror->char_field_put(fd.offset(), value);
+//    } else if (strcmp(field_signature, "S") == 0) {
+//      int value = atoi(string_value);
+//      java_mirror->short_field_put(fd.offset(), value);
+//    } else if (strcmp(field_signature, "Z") == 0) {
+//      int value = atol(string_value);
+//      java_mirror->bool_field_put(fd.offset(), value);
+//    } else if (strcmp(field_signature, "J") == 0) {
+//      jlong value;
+//      if (sscanf(string_value, JLONG_FORMAT, &value) != 1) {
+//        fprintf(stderr, "Error parsing long: %s\n", string_value);
+//        return;
+//      }
+//      java_mirror->long_field_put(fd.offset(), value);
+//    } else if (strcmp(field_signature, "F") == 0) {
+//      float value = atof(string_value);
+//      java_mirror->float_field_put(fd.offset(), value);
+//    } else if (strcmp(field_signature, "D") == 0) {
+//      double value = atof(string_value);
+//      java_mirror->double_field_put(fd.offset(), value);
+//    } else if (strcmp(field_signature, "Ljava/lang/String;") == 0) {
+//      Handle value = java_lang_String::create_from_str(string_value, CHECK);
+//      java_mirror->obj_field_put(fd.offset(), value());
+//    } else if (field_signature[0] == 'L') {
+//      Symbol* klass_name = SymbolTable::lookup(field_signature, (int)strlen(field_signature), CHECK);
+//      KlassHandle kelem = resolve_klass(field_signature, CHECK);
+//      oop value = ((InstanceKlass*)kelem())->allocate_instance(CHECK);
+//      java_mirror->obj_field_put(fd.offset(), value);
+//    } else {
+//      report_error("unhandled staticfield");
+//    }
+//  }
+//}
+
 
 #if INCLUDE_JVMTI
 void ciCacheProfiles::process_JvmtiExport(TRAPS) {
@@ -749,7 +992,6 @@ void ciCacheProfiles::replay(TRAPS, Method* method, int osr_bci) {
 void ciCacheProfiles::initialize(TRAPS) {
   if (!is_initialized()) {
     HandleMark hm;
-
     //int exit_code = 0;
     if (FLAG_IS_DEFAULT(CacheProfilesFile)) {
       tty->print_cr("NOTE: no explicit compiler cache profiles file specified, uses -XX:CacheProfilesFile=cached_profiles.txt.");
@@ -1056,7 +1298,7 @@ MethodDataRecord* ciCacheProfiles::find_methodDataRecord(Method* method) {
 // Create and initialize a record for a ciCompile
 CompileRecord* ciCacheProfiles::new_compileRecord(char* klass_name, char* method_name, char* signature) {
   CompileRecord* rec = find_compileRecord(klass_name, method_name, signature);
-  // if we don't have a record yet, increase array
+  // if we don't have a record yet, save to compile record array
   if(rec == NULL) {
     rec = NEW_C_HEAP_OBJ(CompileRecord, mtCompiler);
     rec->setupCompileRecord(klass_name, method_name, signature);
@@ -1077,17 +1319,28 @@ CompileRecord* ciCacheProfiles::new_compileRecord(char* klass_name, char* method
       _compile_records_pos++;
     }
   } else {
-    rec->setupCompileRecord(klass_name, method_name, signature);
+    // we already have a record, so we should free the old datastructure
+    rec->_iklass = NULL;
+    rec->_imethod = NULL;
+//    for(int i = 0;i<rec->_method_records_pos;i++) {
+//      FREE_C_HEAP_OBJ(rec->_method_records[i]);
+//    }
+//    for(int i = 0;i<rec->_method_data_records_pos;i++) {
+//      FREE_C_HEAP_OBJ(rec->_method_data_records[i]);
+//    }
+    //rec->setupCompileRecord(klass_name, method_name, signature);
   }
-  // save temporary datastructures to the CompileRecord
+  // save temporary datastructures to the found or newly created CompileRecord
   rec->_iklass = _iklass;
   rec->_imethod = _imethod;
   rec->_method_records = _method_records;
   rec->_method_data_records = _method_data_records;
-  //rec->_method_records_length = _method_records_length;
-  //rec->_method_data_records_length = _method_data_records_length;
+
+  // overwrite length and pos with new values
   rec->_method_records_pos = _method_records_pos;
   rec->_method_data_records_pos = _method_data_records_pos;
+  rec->_method_records_length = _method_records_length;
+  rec->_method_data_records_length = _method_data_records_length;
   return rec;
 }
 

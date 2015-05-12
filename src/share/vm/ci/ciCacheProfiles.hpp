@@ -135,6 +135,8 @@ class ciCacheProfiles : AllStatic {
   static int _method_data_records_length;
   static int _compile_records_length;
 
+  static bool _had_loading_error;
+  static bool CacheIgnoreInitErrors;
   static bool _initialized;
 
   static bool had_error();
@@ -178,6 +180,9 @@ class ciCacheProfiles : AllStatic {
   static void process_compile(TRAPS);
   static void process_ciMethod(TRAPS);
   static void process_ciMethodData(TRAPS);
+//  static void process_instanceKlass(TRAPS);
+//  static void process_ciInstanceKlass(TRAPS);
+//  static void process_staticfield(TRAPS);
   static void process_JvmtiExport(TRAPS);
 
   // Create and initialize a record for a ciMethod

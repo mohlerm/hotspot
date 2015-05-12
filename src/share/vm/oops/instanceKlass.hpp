@@ -111,6 +111,7 @@ class InstanceKlass: public Klass {
   friend class ClassFileParser;
   friend class CompileReplay;
   friend class ciCacheProfiles;
+  friend class ciCacheProfilesBroker;
 
  protected:
   // Constructor

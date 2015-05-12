@@ -32,7 +32,7 @@
 #include "ci/ciStreams.hpp"
 #include "ci/ciSymbol.hpp"
 #include "ci/ciReplay.hpp"
-#include "ci/ciCacheProfiles.hpp"
+#include "ci/ciCacheProfilesBroker.hpp"
 #include "ci/ciUtilities.hpp"
 #include "classfile/systemDictionary.hpp"
 #include "compiler/abstractCompiler.hpp"
@@ -153,7 +153,7 @@ ciMethod::ciMethod(methodHandle h_m, ciInstanceKlass* holder) :
     ciReplay::initialize(this);
   }
   if (CacheProfiles) {
-    ciCacheProfiles::initialize(this);
+    ciCacheProfilesBroker::initialize(this);
   }
 #endif
 }

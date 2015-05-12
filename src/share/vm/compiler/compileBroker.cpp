@@ -25,6 +25,7 @@
 #include "precompiled.hpp"
 #include "classfile/systemDictionary.hpp"
 #include "ci/ciCacheProfiles.hpp"
+#include "ci/ciCacheProfilesBroker.hpp"
 #include "classfile/vmSymbols.hpp"
 #include "code/codeCache.hpp"
 #include "compiler/compileBroker.hpp"
@@ -1411,7 +1412,7 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
             tty->print(" <<<<<<<");
             tty->cr();
           }
-          ciCacheProfiles::replay(THREAD,method(),osr_bci);
+          ciCacheProfilesBroker::replay(THREAD,method(),osr_bci);
           //return NULL;
         }
       }

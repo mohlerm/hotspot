@@ -370,7 +370,7 @@ public:
 class ciMethodData : public ciMetadata {
   CI_PACKAGE_ACCESS
   friend class ciReplay;
-  friend class ciCacheProfiles;
+  friend class ciCacheProfilesBroker;
 
 private:
   // Size in bytes

@@ -96,13 +96,149 @@
 // is performed during normal java program execution.
 //
 // class to represent the cached compilations
-class MethodRecord;
-class MethodDataRecord;
-class InlineRecord;
-class CompileRecord;
+
+class MethodRecord : public CHeapObj<mtCompiler> {
+public:
+  char* _klass_name;
+  char* _method_name;
+  char* _signature;
+
+  int _instructions_size;
+  int _interpreter_invocation_count;
+  int _interpreter_throwout_count;
+  int _invocation_counter;
+  int _backedge_counter;
+  void setupMethodRecord(char* k_name, char* m_name, char* sig) {
+    _klass_name = NEW_C_HEAP_ARRAY(char, strlen(k_name), mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, strlen(m_name), mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, strlen(sig), mtCompiler);;
+    strcpy(_klass_name,k_name);
+    strcpy(_method_name,m_name);
+    strcpy(_signature,sig);
+  }
+};
+
+class MethodDataRecord : public CHeapObj<mtCompiler> {
+public:
+  char* _klass_name;
+  char* _method_name;
+  char* _signature;
+
+  int _state;
+  int _current_mileage;
+
+  intptr_t* _data;
+  char*     _orig_data;
+  Klass**   _classes;
+  Method**  _methods;
+  int*      _classes_offsets;
+  int*      _methods_offsets;
+  int       _data_length;
+  int       _orig_data_length;
+  int       _classes_length;
+  int       _methods_length;
+  void setupMethodDataRecord(char* k_name, char* m_name, char* sig) {
+    _klass_name = NEW_C_HEAP_ARRAY(char, strlen(k_name), mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, strlen(m_name), mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, strlen(sig), mtCompiler);;
+    strcpy(_klass_name,k_name);
+    strcpy(_method_name,m_name);
+    strcpy(_signature,sig);
+  }
+};
+
+class InlineRecord : public CHeapObj<mtCompiler> {
+public:
+  char* _klass_name;
+  char* _method_name;
+  char* _signature;
+
+  int _inline_depth;
+  int _inline_bci;
+  void setupInlineRecord(char* k_name, char* m_name, char* sig) {
+    _klass_name = NEW_C_HEAP_ARRAY(char, strlen(k_name), mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, strlen(m_name), mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, strlen(sig), mtCompiler);;
+    strcpy(_klass_name,k_name);
+    strcpy(_method_name,m_name);
+    strcpy(_signature,sig);
+  }
+};
+
+class CompileRecord : public CHeapObj<mtCompiler> {
+public:
+
+  // "compile" data
+  ciKlass* _iklass;
+  Method*  _imethod;
+
+  MethodRecord**     _method_records;
+  MethodDataRecord** _method_data_records;
+  int _method_records_pos;
+  int _method_data_records_pos;
+  int _method_records_length;
+  int _method_data_records_length;
+
+  char* _klass_name;
+  char* _method_name;
+  char* _signature;
+  int   _entry_bci;
+  int   _comp_level;
+  GrowableArray<InlineRecord*>* _inline_records;
+
+  void setupCompileRecord(char* k_name, char* m_name, char* sig) {
+    _klass_name = NEW_C_HEAP_ARRAY(char, strlen(k_name), mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, strlen(m_name), mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, strlen(sig), mtCompiler);;
+    strcpy(_klass_name,k_name);
+    strcpy(_method_name,m_name);
+    strcpy(_signature,sig);
+    _inline_records = NULL;
+  }
+ //  Create and initialize a record for a ciInlineRecord
+ InlineRecord* new_inlineRecord(Method* method, int bci, int depth) {
+  InlineRecord* rec = NEW_RESOURCE_OBJ(InlineRecord);
+  rec->_klass_name = method->method_holder()->name()->as_utf8();
+  rec->_method_name = method->name()->as_utf8();
+  rec->_signature = method->signature()->as_utf8();
+  rec->_inline_bci = bci;
+  rec->_inline_depth = depth;
+  _inline_records->append(rec);
+  return rec;
+  }
+
+  // Lookup inlining data for a ciMethod
+ InlineRecord* find_inlineRecord(Method* method, int bci, int depth) {
+  if (_inline_records != NULL) {
+    return find_inlineRecord(_inline_records, method, bci, depth);
+  }
+  return NULL;
+ }
+
+ InlineRecord* find_inlineRecord(GrowableArray<InlineRecord*>* records,
+  Method* method, int bci, int depth) {
+  if (records != NULL) {
+    const char* klass_name = method->method_holder()->name()->as_utf8();
+    const char* method_name = method->name()->as_utf8();
+    const char* signature = method->signature()->as_utf8();
+    for (int i = 0; i < records->length(); i++) {
+      InlineRecord* rec = records->at(i);
+      if ((rec->_inline_bci == bci) &&
+        (rec->_inline_depth == depth) &&
+        (strcmp(rec->_klass_name, klass_name) == 0) &&
+        (strcmp(rec->_method_name, method_name) == 0) &&
+        (strcmp(rec->_signature, signature) == 0)) {
+        return rec;
+      }
+    }
+  }
+  return NULL;
+ }
+};
 
 class ciCacheProfiles : AllStatic {
   CI_PACKAGE_ACCESS
+  friend class ciCacheProfilesBroker;
 
 //#ifndef PRODUCT
  private:
@@ -167,8 +303,7 @@ class ciCacheProfiles : AllStatic {
   // Parse the standard tuple of <klass> <name> <signature>
   static Method* parse_method(TRAPS);
   static int get_line(int c);
-  // validation of comp_level
-  static bool is_valid_comp_level(int comp_level);
+
   static void unescape_string(char* value);
 
   static const char* error_message();
@@ -176,7 +311,6 @@ class ciCacheProfiles : AllStatic {
   static void process(TRAPS);
   static void process_command(TRAPS);
 
-  static void replay_method(TRAPS, Method* method, int osr_bci);
   static void process_compile(TRAPS);
   static void process_ciMethod(TRAPS);
   static void process_ciMethodData(TRAPS);
@@ -187,13 +321,9 @@ class ciCacheProfiles : AllStatic {
 
   // Create and initialize a record for a ciMethod
   static MethodRecord* new_methodRecord(char* klass_name, char* method_name, char* signature);
-  // Lookup data for a ciMethod
-  static MethodRecord* find_methodRecord(Method* method);
 
   // Create and initialize a record for a ciMethodData
   static MethodDataRecord* new_methodDataRecord(char* klass_name, char* method_name, char* signature);
-  // Lookup data for a ciMethodData
-  static MethodDataRecord* find_methodDataRecord(Method* method);
 
   // Create and initialize a record for a ciCompile
   static CompileRecord* new_compileRecord(char* klass_name, char* method_name, char* signature);
@@ -218,33 +348,14 @@ class ciCacheProfiles : AllStatic {
  public:
   // parse cached profiles to set flag in methods
   static void initialize(TRAPS);
-  //static bool _initialized = false;
-  // Replay specified compilation and exit VM.
-  static void replay(TRAPS, Method* method, int osr_bci);
-  // Load inlining decisions from file and use them
-  // during compilation of specified method.
-//  static void* load_inline_data(ciMethod* method, int entry_bci, int comp_level);
+//  static bool is_loaded(Method* method);
+//  static bool is_loaded(Klass* klass);
 
-  // These are used by the CI to fill in the cached data from the
-  // replay file when replaying compiles.
-  static void initialize(ciMethodData* method);
-  static void initialize(ciMethod* method);
-
-  static bool is_loaded(Method* method);
-  static bool is_loaded(Klass* klass);
-
-//  static bool should_not_inline(ciMethod* method);
-//  static bool should_inline(void* data, ciMethod* method, int bci, int inline_depth);
-//  static bool should_not_inline(void* data, ciMethod* method, int bci, int inline_depth);
-
-//  class  CacheReplay;
-//  static CacheReplay* cache_state;
   static int is_cached(Method* method);
   static int is_cached(methodHandle method);
 
   static bool is_initialized();
   static void is_initialized(bool flag);
-
   //static void reset();
 
 //#endif

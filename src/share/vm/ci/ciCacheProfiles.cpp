@@ -38,6 +38,27 @@
 
 //#ifndef PRODUCT
 
+class MethodRecord : public CHeapObj<mtCompiler> {
+public:
+  char* _klass_name;
+  char* _method_name;
+  char* _signature;
+
+  int _instructions_size;
+  int _interpreter_invocation_count;
+  int _interpreter_throwout_count;
+  int _invocation_counter;
+  int _backedge_counter;
+  void setupMethodRecord(char* k_name, char* m_name, char* sig) {
+    _klass_name = NEW_C_HEAP_ARRAY(char, strlen(k_name), mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, strlen(m_name), mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, strlen(sig), mtCompiler);;
+    strcpy(_klass_name,k_name);
+    strcpy(_method_name,m_name);
+    strcpy(_signature,sig);
+  }
+};
+
 class MethodDataRecord : public CHeapObj<mtCompiler> {
 public:
   char* _klass_name;
@@ -57,37 +78,16 @@ public:
   int       _orig_data_length;
   int       _classes_length;
   int       _methods_length;
-  void setupMethodDataRecord(char* k_name, char* m_name, char* s) {
-    // TODO do not hardcode length
-    _klass_name = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
-    _method_name = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
-    _signature = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
+  void setupMethodDataRecord(char* k_name, char* m_name, char* sig) {
+    _klass_name = NEW_C_HEAP_ARRAY(char, strlen(k_name), mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, strlen(m_name), mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, strlen(sig), mtCompiler);;
     strcpy(_klass_name,k_name);
     strcpy(_method_name,m_name);
-    strcpy(_signature,s);
+    strcpy(_signature,sig);
   }
 };
 
-class MethodRecord : public CHeapObj<mtCompiler> {
-public:
-  char* _klass_name;
-  char* _method_name;
-  char* _signature;
-
-  int _instructions_size;
-  int _interpreter_invocation_count;
-  int _interpreter_throwout_count;
-  int _invocation_counter;
-  int _backedge_counter;
-  void setupMethodRecord(char* k_name, char* m_name, char* s) {
-    _klass_name = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
-    _method_name = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
-    _signature = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
-    strcpy(_klass_name,k_name);
-    strcpy(_method_name,m_name);
-    strcpy(_signature,s);
-  }
-};
 class InlineRecord : public CHeapObj<mtCompiler> {
 public:
   char* _klass_name;
@@ -96,13 +96,13 @@ public:
 
   int _inline_depth;
   int _inline_bci;
-  void setupInlineRecord(char* k_name, char* m_name, char* s) {
-    _klass_name = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
-    _method_name = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
-    _signature = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
+  void setupInlineRecord(char* k_name, char* m_name, char* sig) {
+    _klass_name = NEW_C_HEAP_ARRAY(char, strlen(k_name), mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, strlen(m_name), mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, strlen(sig), mtCompiler);;
     strcpy(_klass_name,k_name);
     strcpy(_method_name,m_name);
-    strcpy(_signature,s);
+    strcpy(_signature,sig);
   }
 };
 
@@ -125,13 +125,13 @@ public:
   int   _comp_level;
   GrowableArray<InlineRecord*>* _inline_records;
 
-  void setupCompileRecord(char* k_name, char* m_name, char* s) {
-    _klass_name = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
-    _method_name = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
-    _signature = NEW_C_HEAP_ARRAY(char, 128, mtCompiler);;
+  void setupCompileRecord(char* k_name, char* m_name, char* sig) {
+    _klass_name = NEW_C_HEAP_ARRAY(char, strlen(k_name), mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, strlen(m_name), mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, strlen(sig), mtCompiler);;
     strcpy(_klass_name,k_name);
     strcpy(_method_name,m_name);
-    strcpy(_signature,s);
+    strcpy(_signature,sig);
     _inline_records = NULL;
   }
  //  Create and initialize a record for a ciInlineRecord

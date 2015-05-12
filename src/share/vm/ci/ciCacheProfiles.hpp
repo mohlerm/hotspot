@@ -96,8 +96,8 @@
 // is performed during normal java program execution.
 //
 // class to represent the cached compilations
-class MethodDataRecord;
 class MethodRecord;
+class MethodDataRecord;
 class InlineRecord;
 class CompileRecord;
 

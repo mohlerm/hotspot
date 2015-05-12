@@ -69,8 +69,6 @@ public:
   static void initialize(ciMethodData* method);
   static void initialize(ciMethod* method);
 
-
 };
-
 
 #endif // SHARE_VM_CI_CICACHEPROFILES_HPP

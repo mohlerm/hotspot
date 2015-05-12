@@ -69,7 +69,6 @@ void ciCacheProfilesBroker::replay(TRAPS, Method* method, int osr_bci) {
   int exit_code = replay_impl(THREAD, method, osr_bci);
 }
 
-
 int ciCacheProfilesBroker::replay_impl(TRAPS, Method* method, int osr_bci) {
   HandleMark hm;
 

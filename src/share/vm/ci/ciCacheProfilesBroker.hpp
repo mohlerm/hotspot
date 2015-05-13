@@ -30,8 +30,8 @@
 
 class ciCacheProfilesBroker : public AllStatic {
   CI_PACKAGE_ACCESS
+  friend class ciCacheProfiles;
 private:
-  static FILE*   _stream;
   static Thread* _thread;
   static const char* _error_message;
 

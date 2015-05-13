@@ -37,7 +37,6 @@
 #include "utilities/macros.hpp"
 
 
-FILE*   ciCacheProfilesBroker::_stream = NULL;
 Thread* ciCacheProfilesBroker::_thread = NULL;
 
 const char* ciCacheProfilesBroker::_error_message;
@@ -59,7 +58,7 @@ bool ciCacheProfilesBroker::had_error() {
 }
 
 bool ciCacheProfilesBroker::can_replay() {
-  return !(_stream == NULL || had_error());
+  return !(had_error());
 }
 const char* ciCacheProfilesBroker::error_message() {
   return _error_message;

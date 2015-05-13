@@ -152,10 +152,10 @@ ciMethod::ciMethod(methodHandle h_m, ciInstanceKlass* holder) :
   if (ReplayCompiles) {
     ciReplay::initialize(this);
   }
+#endif
   if (CacheProfiles) {
     ciCacheProfilesBroker::initialize(this);
   }
-#endif
 }
 
 

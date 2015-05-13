@@ -39,7 +39,7 @@
 
 Thread* ciCacheProfilesBroker::_thread = NULL;
 
-const char* ciCacheProfilesBroker::_error_message;
+const char* ciCacheProfilesBroker::_error_message = NULL;
 
 // "compile" data
 ciKlass* ciCacheProfilesBroker::_iklass = NULL;
@@ -58,13 +58,14 @@ bool ciCacheProfilesBroker::had_error() {
 }
 
 bool ciCacheProfilesBroker::can_replay() {
-  return !(had_error());
+  return !(!ciCacheProfiles::is_initialized() || had_error());
 }
 const char* ciCacheProfilesBroker::error_message() {
   return _error_message;
 }
 
 void ciCacheProfilesBroker::replay(TRAPS, Method* method, int osr_bci) {
+  _thread = THREAD;
   int exit_code = replay_impl(THREAD, method, osr_bci);
 }
 

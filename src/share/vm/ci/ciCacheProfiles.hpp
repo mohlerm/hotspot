@@ -109,9 +109,9 @@ public:
   int _invocation_counter;
   int _backedge_counter;
   void setupMethodRecord(char* k_name, char* m_name, char* sig) {
-    _klass_name = NEW_C_HEAP_ARRAY(char, strlen(k_name), mtCompiler);;
-    _method_name = NEW_C_HEAP_ARRAY(char, strlen(m_name), mtCompiler);;
-    _signature = NEW_C_HEAP_ARRAY(char, strlen(sig), mtCompiler);;
+    _klass_name = NEW_C_HEAP_ARRAY(char, (unsigned)strlen(k_name)+1, mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, (unsigned)strlen(m_name)+1, mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, (unsigned)strlen(sig)+1, mtCompiler);;
     strcpy(_klass_name,k_name);
     strcpy(_method_name,m_name);
     strcpy(_signature,sig);
@@ -138,9 +138,9 @@ public:
   int       _classes_length;
   int       _methods_length;
   void setupMethodDataRecord(char* k_name, char* m_name, char* sig) {
-    _klass_name = NEW_C_HEAP_ARRAY(char, strlen(k_name), mtCompiler);;
-    _method_name = NEW_C_HEAP_ARRAY(char, strlen(m_name), mtCompiler);;
-    _signature = NEW_C_HEAP_ARRAY(char, strlen(sig), mtCompiler);;
+    _klass_name = NEW_C_HEAP_ARRAY(char, (unsigned)strlen(k_name)+1, mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, (unsigned)strlen(m_name)+1, mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, (unsigned)strlen(sig)+1, mtCompiler);;
     strcpy(_klass_name,k_name);
     strcpy(_method_name,m_name);
     strcpy(_signature,sig);
@@ -156,9 +156,9 @@ public:
   int _inline_depth;
   int _inline_bci;
   void setupInlineRecord(char* k_name, char* m_name, char* sig) {
-    _klass_name = NEW_C_HEAP_ARRAY(char, strlen(k_name), mtCompiler);;
-    _method_name = NEW_C_HEAP_ARRAY(char, strlen(m_name), mtCompiler);;
-    _signature = NEW_C_HEAP_ARRAY(char, strlen(sig), mtCompiler);;
+    _klass_name = NEW_C_HEAP_ARRAY(char, (unsigned)strlen(k_name)+1, mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, (unsigned)strlen(m_name)+1, mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, (unsigned)strlen(sig)+1, mtCompiler);;
     strcpy(_klass_name,k_name);
     strcpy(_method_name,m_name);
     strcpy(_signature,sig);
@@ -187,9 +187,9 @@ public:
   GrowableArray<InlineRecord*>* _inline_records;
 
   void setupCompileRecord(char* k_name, char* m_name, char* sig) {
-    _klass_name = NEW_C_HEAP_ARRAY(char, strlen(k_name), mtCompiler);;
-    _method_name = NEW_C_HEAP_ARRAY(char, strlen(m_name), mtCompiler);;
-    _signature = NEW_C_HEAP_ARRAY(char, strlen(sig), mtCompiler);;
+    _klass_name = NEW_C_HEAP_ARRAY(char, (unsigned)strlen(k_name)+1, mtCompiler);;
+    _method_name = NEW_C_HEAP_ARRAY(char, (unsigned)strlen(m_name)+1, mtCompiler);;
+    _signature = NEW_C_HEAP_ARRAY(char, (unsigned)strlen(sig)+1, mtCompiler);;
     strcpy(_klass_name,k_name);
     strcpy(_method_name,m_name);
     strcpy(_signature,sig);

@@ -1140,7 +1140,7 @@ void MethodData::init() {
   double scale = 1.0;
 
   if(!FLAG_IS_DEFAULT(CacheProfiles) && ciCacheProfiles::is_initialized()) {
-    if(ciCacheProfiles::is_cached(_method)) {
+    if(CacheProfilesMode==0 && ciCacheProfiles::is_cached(_method)) {
       scale = 0.01;
     }
   }

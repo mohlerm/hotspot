@@ -3394,6 +3394,14 @@ class CommandLineFlags {
   experimental(bool, CacheProfiles, false,                                  \
 		       "Use profiling information")                                     \
 		  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	    \
+  experimental(intx, CacheProfilesMode, 0,                                  \
+          "Mode in which CacheProfiling is operating: "                     \
+          "0 - lower threshold and compile to C2 directly; "                \
+          "1 - do not lower thresholds and"                                 \
+          "     compile to highest profile directly; "                      \
+          "2 - skip C1 profiling phase and"                                 \
+          "     keep everything else as standard; ")                        \
+                                                                            \
   experimental(ccstr, CacheProfilesFile, NULL,                              \
 		       "File containing cached profiles"                                \
 		       "[default: ./profiles_pid%p.log] (%p replaced with pid)")        \

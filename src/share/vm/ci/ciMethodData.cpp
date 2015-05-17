@@ -26,7 +26,7 @@
 #include "ci/ciMetadata.hpp"
 #include "ci/ciMethodData.hpp"
 #include "ci/ciReplay.hpp"
-#include "ci/ciCacheProfiles.hpp"
+#include "ci/ciCacheProfilesBroker.hpp"
 #include "ci/ciUtilities.hpp"
 #include "memory/allocation.inline.hpp"
 #include "memory/resourceArea.hpp"
@@ -182,10 +182,10 @@ void ciMethodData::load_data() {
   if (ReplayCompiles) {
     ciReplay::initialize(this);
   }
-  if (CacheProfiles) {
-	  ciCacheProfiles::initialize(this);
-  }
 #endif
+  if (CacheProfiles) {
+    ciCacheProfilesBroker::initialize(this);
+  }
 }
 
 void ciReceiverTypeData::translate_receiver_data_from(const ProfileData* data) {

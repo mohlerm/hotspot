@@ -53,7 +53,7 @@ class ciMethod : public ciMetadata {
   friend class ciBytecodeStream;
   friend class ciMethodHandle;
   friend class ciReplay;
-  friend class ciCacheProfiles;
+  friend class ciCacheProfilesBroker;
   friend class InlineTree;
 
  private:

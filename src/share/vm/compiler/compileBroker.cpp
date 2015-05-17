@@ -25,6 +25,7 @@
 #include "precompiled.hpp"
 #include "classfile/systemDictionary.hpp"
 #include "ci/ciCacheProfiles.hpp"
+#include "ci/ciCacheProfilesBroker.hpp"
 #include "classfile/vmSymbols.hpp"
 #include "code/codeCache.hpp"
 #include "compiler/compileBroker.hpp"
@@ -1405,14 +1406,28 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
       if(ciCacheProfiles::is_initialized()) {
         int cached_comp_level = ciCacheProfiles::is_cached(method());
         if(cached_comp_level > 0) {
-          if(PrintCacheProfiles) {
-            tty->print(">>>>>> USE PROFILE Complevel: %d, Hotcount: %d, OSR_BCI: %d :: ",cached_comp_level, hot_count,osr_bci);
-            method->print_name(tty);
-            tty->print(" <<<<<<<");
-            tty->cr();
+          if(CacheProfilesMode==2) {
+            if(cached_comp_level == 4 && (comp_level == 2 || comp_level == 3)) {
+              // if we're in cacheprofilemode 2 set compilelevel to 2 always
+              if(PrintCacheProfiles) {
+                tty->print(">>>>>> FORCE COMPLEVEL 1, Hotcount: %d, OSR_BCI: %d :: ", hot_count,osr_bci);
+                method->print_name(tty);
+                tty->print(" <<<<<<<");
+                tty->cr();
+              }
+              compile_method_base(method, osr_bci, 1, hot_method, hot_count, comment, THREAD);
+              return osr_bci  == InvocationEntryBci ? method->code() : method->lookup_osr_nmethod_for(osr_bci, comp_level, false);
+            }
+          } else {
+            if(PrintCacheProfiles) {
+              tty->print(">>>>>> USE PROFILE Complevel: %d, Hotcount: %d, OSR_BCI: %d :: ",cached_comp_level, hot_count,osr_bci);
+              method->print_name(tty);
+              tty->print(" <<<<<<<");
+              tty->cr();
+            }
+            ciCacheProfilesBroker::replay(THREAD,method(),osr_bci);
+            return osr_bci  == InvocationEntryBci ? method->code() : method->lookup_osr_nmethod_for(osr_bci, comp_level, false);
           }
-          ciCacheProfiles::replay(THREAD,method(),osr_bci);
-          //return NULL;
         }
       }
     }

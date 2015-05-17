@@ -49,7 +49,7 @@ void MethodCounters::clear_counters() {
 bool MethodCounters::scale_if_cached(methodHandle mh, double& scale) {
    //marcel: check if method is cached and lower threshold automatically
     if(!FLAG_IS_DEFAULT(CacheProfiles) && ciCacheProfiles::is_initialized()) {
-      if(ciCacheProfiles::is_cached(mh)) {
+      if(CacheProfilesMode==0 && ciCacheProfiles::is_cached(mh)) {
         scale = 0.01;
         return true;
       }

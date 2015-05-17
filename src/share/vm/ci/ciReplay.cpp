@@ -24,7 +24,6 @@
 #include "precompiled.hpp"
 #include "ci/ciMethodData.hpp"
 #include "ci/ciReplay.hpp"
-#include "ci/ciCacheProfiles.hpp"
 #include "ci/ciSymbol.hpp"
 #include "ci/ciKlass.hpp"
 #include "ci/ciUtilities.hpp"

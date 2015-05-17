@@ -4320,18 +4320,3 @@ bool Compile::randomized_select(int count) {
   assert(count > 0, "only positive");
   return (os::random() & RANDOMIZED_DOMAIN_MASK) < (RANDOMIZED_DOMAIN / count);
 }
-velope calculation shows that for the list of n candidates
-// the equal probability for the candidate to persist as "best" can be
-// achieved by replacing it with "next" k-th candidate with the probability
-// of 1/k. It can be easily shown that by the end of the run, the
-// probability for any candidate is converged to 1/n, thus giving the
-// uniform distribution among all the candidates.
-//
-// We don't care about the domain size as long as (RANDOMIZED_DOMAIN / count) is large.
-#define RANDOMIZED_DOMAIN_POW 29
-#define RANDOMIZED_DOMAIN (1 << RANDOMIZED_DOMAIN_POW)
-#define RANDOMIZED_DOMAIN_MASK ((1 << (RANDOMIZED_DOMAIN_POW + 1)) - 1)
-bool Compile::randomized_select(int count) {
-  assert(count > 0, "only positive");
-  return (os::random() & RANDOMIZED_DOMAIN_MASK) < (RANDOMIZED_DOMAIN / count);
-}

@@ -365,8 +365,9 @@ void ciCacheProfiles::process(TRAPS) {
 //      for(int i = 0;i<_method_data_records_pos;i++) {
 //        FREE_C_HEAP_OBJ(_method_data_records[i]);
 //      }
-
-      tty->print_cr("Error while parsing line %d: %s\n", line_no, _error_message);
+      if(PrintCacheProfiles) {
+        tty->print_cr("Error while parsing line %d: %s\n", line_no, _error_message);
+      }
       if (CacheIgnoreInitErrors) {
         CLEAR_PENDING_EXCEPTION;
         _error_message = NULL;

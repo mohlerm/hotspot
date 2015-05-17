@@ -883,9 +883,9 @@ Compile::Compile( ciEnv* ci_env, C2Compiler* compiler, ciMethod* target, int osr
     memcpy( subbuff, klassmethod, length );
     subbuff[length] = '\0';
     if(strcmp(subbuff,"jdk/nashorn/internal/scripts/Script$Recompilation")==0 || strcmp(subbuff,"java/lang/invoke/LambdaForm$MH")==0 || strcmp(subbuff,"java/lang/invoke/LambdaForm$BMH")==0 || strcmp(subbuff,"java/lang/invoke/LambdaForm$DMH")==0 || strcmp(subbuff,"jdk/nashorn/internal/runtime/ScriptObject")==0) {
-      tty->print("###Avoided: %s\n",method()->holder()->name()->as_utf8());
+      //tty->print("###Avoided: %s\n",method()->holder()->name()->as_utf8());
     } else {
-      tty->print("###Dump: %s\n",method()->holder()->name()->as_utf8());
+      //tty->print("###Dump: %s\n",method()->holder()->name()->as_utf8());
       env()->dump_cache_profiles(_compile_id, method()->name()->as_utf8());
     }
   }

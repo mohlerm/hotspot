@@ -621,6 +621,9 @@ void CompileQueue::add(CompileTask* task) {
   if (CIPrintCompileQueue) {
     print_tty();
   }
+  if (PrintCompileQueueSize) {
+    tty->print_cr("Size of %s: %d", name(),_size);
+  }
 
   if (LogCompilation && xtty != NULL) {
     task->log_task_queued();

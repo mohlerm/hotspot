@@ -3411,6 +3411,9 @@ class CommandLineFlags {
                                                                             \
   experimental(bool, PrintDeoptimizationCount, false,                       \
            "Prints count of deoptimizations after each deopt")              \
+                                                                            \
+  experimental(bool, PrintCompileQueueSize, false,                          \
+           "Prints size of compile queue after each add")                   \
 		                                                                        \
   product(ccstr, InlineDataFile, NULL,                                      \
           "File containing inlining replay information"                     \

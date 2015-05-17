@@ -1,0 +1,127 @@
+% -------------------------------------------------------------------------------------------------
+%
+%  Skeleton for semester and master thesis reports at the Laboratory for Software Technology.
+%  Based on the skeleton provided by the Institute of Robotics and Intelligent Systems.
+%
+% -------------------------------------------------------------------------------------------------
+%
+% USAGE:      compile with PDFLaTeX
+%
+% HISTORY:    - written by Sascha A. Stoeter <stoeter@iris.ethz.ch>, www.stoeter.com, 02.06.2004
+%             - modified by Martin Probst, 18.08.2004
+%             - extended and adapted for use at LST by Oliver Trachsel, 2007-08-21
+% -------------------------------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{book}
+\usepackage{lstreport}
+
+% -------------------------------------------------------------------------------------------------
+% Add needed packages. Some generally useful packages are listed for
+% your convenience.
+% -------------------------------------------------------------------------------------------------
+\usepackage{subfigure}                          % enable the use of subfigures
+\usepackage[thickspace,thinqspace]{SIunits}     %
+\usepackage{listings}                           % to embed source code
+
+% Include pdf documents
+\usepackage{pdfpages}
+
+% Use UTF8
+\usepackage[utf8x]{inputenc} 
+
+% Space after \texttrademark
+\usepackage{xspace}
+\let\OldTexttrademark\texttrademark
+\renewcommand{\texttrademark}{\OldTexttrademark\xspace}%
+
+% Use links in the table of contents
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+	citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+% -------------------------------------------------------------------------------------------------
+% Select type of thesis
+% -------------------------------------------------------------------------------------------------
+\renewcommand{\thesistype}{Bachelor}
+%\renewcommand{\thesistype}{Diploma}
+%\renewcommand{\thesistype}{Master}
+
+%OWN STUFF###############################################################
+\usepackage[english]{babel}
+
+% colors
+\definecolor{orange}{rgb}{1,0.5,0}
+
+% Disable single lines at the start of a paragraph (Schusterjungen)
+
+\clubpenalty = 10000
+
+% Disable single lines at the end of a paragraph (Hurenkinder)
+
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
+ 
+% allows for colored, easy-to-find todos
+
+\newcommand{\todo}[1]{\textsf{\textbf{\textcolor{orange}{[[TODO: #1]]}}}}
+%##########################################################################
+
+% -------------------------------------------------------------------------------------------------
+% Set names
+% -------------------------------------------------------------------------------------------------
+\renewcommand{\thesisauthor}{Marcel Mohler}
+\renewcommand{\thesisadvisor}{Prof. Thomas Gross}
+
+% -------------------------------------------------------------------------------------------------
+% Beginning of the main document body
+% -------------------------------------------------------------------------------------------------
+\begin{document}
+
+% include all Bib-items even if they're not cited in the text
+\nocite{*}
+
+% -------------------------------------------------------------------------------------------------
+% Front matter with title page, table of contents, and abstracts 
+% -------------------------------------------------------------------------------------------------
+\frontmatter
+
+% Title page: set title and date 
+\thesistitlepage{Profile Caching for the\\Java Virtual Machine
+}{August 2015}
+
+% Declaration of originality
+%\includepdf{figures/confirmation_plagiarism_en.pdf}
+
+% Abstract must not be longer than one page per language. English and
+% German abstracts are mandatory.
+\chapter*{Introduction}
+\input{introduction.tex}
+
+\chapter{Acknowledgments}
+\input{acknowledgments.tex}
+
+
+% Table of contents
+\tableofcontents
+
+% -------------------------------------------------------------------------------------------------
+% Main document body
+% -------------------------------------------------------------------------------------------------
+\mainmatter
+\chapter{Motivation}
+\label{s:Motivation}
+\section{Motivation}
+\label{s:motivation}
+
+
+% -------------------------------------------------------------------------------------------------
+% Bibliography
+% -------------------------------------------------------------------------------------------------
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{bibliography}
+
+\end{document}

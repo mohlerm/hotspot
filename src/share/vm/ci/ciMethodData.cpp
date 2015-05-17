@@ -182,10 +182,10 @@ void ciMethodData::load_data() {
   if (ReplayCompiles) {
     ciReplay::initialize(this);
   }
-#endif
   if (CacheProfiles) {
-    ciCacheProfiles::initialize(this);
+	  ciCacheProfiles::initialize(this);
   }
+#endif
 }
 
 void ciReceiverTypeData::translate_receiver_data_from(const ProfileData* data) {

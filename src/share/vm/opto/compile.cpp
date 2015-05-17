@@ -872,7 +872,8 @@ Compile::Compile( ciEnv* ci_env, C2Compiler* compiler, ciMethod* target, int osr
     env()->dump_inline_data(_compile_id);
   }
   // Dump profile to allow profile caching
-  if (DumpProfiles || method()->has_option("DumpProfile")) {
+  if ((DumpProfiles || method()->has_option("DumpProfile")) && (!method()->has_option("IgnoreDumpProfile"))) {
+// marcel:
     const char* klassmethod = method()->holder()->name()->as_utf8();
     int length = strlen(klassmethod);
     if(length > 49) {
@@ -881,10 +882,10 @@ Compile::Compile( ciEnv* ci_env, C2Compiler* compiler, ciMethod* target, int osr
     char* subbuff = NEW_RESOURCE_ARRAY(char,length+1);
     memcpy( subbuff, klassmethod, length );
     subbuff[length] = '\0';
-    if(strcmp(subbuff,"jdk/nashorn/internal/scripts/Script$Recompilation")==0 || strcmp(subbuff,"java/lang/invoke/LambdaForm$MH")==0 || strcmp(subbuff,"jdk/nashorn/internal/runtime/ScriptObject")==0) {
+    if(strcmp(subbuff,"jdk/nashorn/internal/scripts/Script$Recompilation")==0 || strcmp(subbuff,"java/lang/invoke/LambdaForm$MH")==0 || strcmp(subbuff,"java/lang/invoke/LambdaForm$BMH")==0 || strcmp(subbuff,"java/lang/invoke/LambdaForm$DMH")==0 || strcmp(subbuff,"jdk/nashorn/internal/runtime/ScriptObject")==0) {
       tty->print("###Avoided: %s\n",method()->holder()->name()->as_utf8());
     } else {
-      //tty->print("###Dump: %s\n",method()->holder()->name()->as_utf8());
+      tty->print("###Dump: %s\n",method()->holder()->name()->as_utf8());
       env()->dump_cache_profiles(_compile_id, method()->name()->as_utf8());
     }
   }
@@ -4305,6 +4306,21 @@ void Compile::remove_speculative_types(PhaseIterGVN &igvn) {
 // candidates.
 //
 // Quick back-envelope calculation shows that for the list of n candidates
+// the equal probability for the candidate to persist as "best" can be
+// achieved by replacing it with "next" k-th candidate with the probability
+// of 1/k. It can be easily shown that by the end of the run, the
+// probability for any candidate is converged to 1/n, thus giving the
+// uniform distribution among all the candidates.
+//
+// We don't care about the domain size as long as (RANDOMIZED_DOMAIN / count) is large.
+#define RANDOMIZED_DOMAIN_POW 29
+#define RANDOMIZED_DOMAIN (1 << RANDOMIZED_DOMAIN_POW)
+#define RANDOMIZED_DOMAIN_MASK ((1 << (RANDOMIZED_DOMAIN_POW + 1)) - 1)
+bool Compile::randomized_select(int count) {
+  assert(count > 0, "only positive");
+  return (os::random() & RANDOMIZED_DOMAIN_MASK) < (RANDOMIZED_DOMAIN / count);
+}
+velope calculation shows that for the list of n candidates
 // the equal probability for the candidate to persist as "best" can be
 // achieved by replacing it with "next" k-th candidate with the probability
 // of 1/k. It can be easily shown that by the end of the run, the

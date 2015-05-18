@@ -1410,29 +1410,33 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
         int cached_comp_level = ciCacheProfiles::is_cached(method());
         if(cached_comp_level > 0) {
           if(CacheProfilesMode==2) {
-            if(cached_comp_level == 4 && (comp_level == 2 || comp_level == 3)) {
+            if(cached_comp_level == 4 && comp_level == 3) {
               // if we're in cacheprofilemode 2 set compilelevel to 2 always
               if(PrintCacheProfiles) {
-                tty->print(">>>>>> FORCE COMPLEVEL 1, Hotcount: %d, OSR_BCI: %d :: ", hot_count,osr_bci);
+                tty->print(">>>>>> FORCE COMPLEVEL 2, Hotcount: %d, OSR_BCI: %d :: ", hot_count,osr_bci);
                 method->print_name(tty);
-                tty->print(" <<<<<<<");
-                tty->cr();
+                tty->print_cr(" <<<<<<<");
               }
-              compile_method_base(method, osr_bci, 1, hot_method, hot_count, comment, THREAD);
-              return osr_bci  == InvocationEntryBci ? method->code() : method->lookup_osr_nmethod_for(osr_bci, comp_level, false);
+              compile_method_base(method, osr_bci, 2, hot_method, hot_count, comment, THREAD);
+              return osr_bci  == InvocationEntryBci ? method->code() : method->lookup_osr_nmethod_for(osr_bci, 2, false);
             }
-          } else {
-            if(PrintCacheProfiles) {
-              tty->print(">>>>>> USE PROFILE Complevel: %d, Hotcount: %d, OSR_BCI: %d :: ",cached_comp_level, hot_count,osr_bci);
-              method->print_name(tty);
-              tty->print(" <<<<<<<");
-              tty->cr();
-            }
-            ciCacheProfilesBroker::replay(THREAD,method(),osr_bci);
-            return osr_bci  == InvocationEntryBci ? method->code() : method->lookup_osr_nmethod_for(osr_bci, comp_level, false);
           }
+          if(PrintCacheProfiles) {
+            tty->print(">>>>>> USE PROFILE FOR LVL: %d, Complevel: %d, Hotcount: %d, OSR_BCI: %d :: ",cached_comp_level, comp_level, hot_count,osr_bci);
+            method->print_name(tty);
+            tty->print_cr(" <<<<<<<");
+          }
+          ciCacheProfilesBroker::replay(THREAD,method(),osr_bci);
+          return osr_bci  == InvocationEntryBci ? method->code() : method->lookup_osr_nmethod_for(osr_bci, comp_level, false);
+
         }
       }
+    }
+
+    if(PrintCacheProfiles) {
+      tty->print(">>>>>> WITHOUT PROFILE Complevel: %d, Hotcount: %d, OSR_BCI: %d :: ",comp_level, hot_count,osr_bci);
+      method->print_name(tty);
+      tty->print_cr(" <<<<<<<");
     }
     compile_method_base(method, osr_bci, comp_level, hot_method, hot_count, comment, THREAD);
   }

@@ -2,6 +2,27 @@
 import re, sys, os, time
 from subprocess import call, check_call, check_output, CalledProcessError
 
+#--------------------
+# CONFIGURATION
+#-------------------
+# Select benchmarks to run
+RUN_BASELINE = True
+RUN_CREATE = True
+RUN_USE = True
+# Nr of runs each
+NROFRUNS = 1
+# Use slowdebug instead of relase mode
+DEBUG = False
+# Choose cacheProfiles mode
+CACHE_MODE = 0
+# Enable debug output (only works in debug mode)
+VERBOSE = False
+# Print CacheProfiles output
+PRINT = False
+# Print number of deoptimizations
+DEOPT = True
+#-------------------
+
 # useful flags: -Xint (only interpreter), -Xcomp (compile everything)
 JAVAPATH = '../../../build/linux-x86_64-normal-server-release/jdk/bin/java'
 JAVACPATH = '../../../build/linux-x86_64-normal-server-release/jdk/bin/javac'
@@ -13,20 +34,9 @@ JAVAARGS = ['-agentlib:hprof=cpu=times','-XX:+UnlockDiagnosticVMOptions', '-XX:+
 JAVAARGS_VERBOSE = ['-XX:+PrintCompilation', '-XX:+TraceDeoptimization']
 JAVAARGS_PRINT = ['-XX:+PrintCacheProfiles']
 JAVAARGS_DEOPT = ['-XX:+PrintDeoptimizationCount']
-JAVAARGS_USE = ['-XX:+CacheProfiles','-XX:CacheProfilesMode=0']
+JAVAARGS_USE = ['-XX:+CacheProfiles','-XX:CacheProfilesMode='+str(CACHE_MODE)]
 JAVAARGS_CREATE = ['-XX:+DumpProfiles']#, '-XX:CompileCommandFile=createCommands.txt']
 #JAVAARGS_CREATE = ['-XX:CompileCommandFile=createCommands.txt']
-
-NROFRUNS = 1
-VERBOSE = False
-PRINT = False
-DEBUG = False
-DEOPT = True
-RUN_BASELINE = True
-RUN_CREATE = True
-RUN_USE = True
-
-
 
 class EvalResult:
     def __init__(self,methodNames):

@@ -18,8 +18,8 @@ JAVAARGS_CREATE = ['-XX:+DumpProfiles']#, '-XX:CompileCommandFile=createCommands
 #JAVAARGS_CREATE = ['-XX:CompileCommandFile=createCommands.txt']
 
 NROFRUNS = 1
-VERBOSE = True
-PRINT = True
+VERBOSE = False
+PRINT = False
 DEBUG = False
 DEOPT = True
 RUN_BASELINE = True
@@ -56,13 +56,15 @@ def runHotspot(javaargs, className, methodNames):
     res = EvalResult(methodNames)
 
     if(DEBUG):
-        hotspotCall = [JAVAPATH]
-    else:
         hotspotCall = [JAVAPATH_DEBUG]
+        if(VERBOSE):
+            hotspotCall.extend(JAVAARGS_VERBOSE)
+    else:
+        hotspotCall = [JAVAPATH]
+        if(VERBOSE):
+            print("Can not use VERBOSE flag in release mode...ignoring")
     hotspotCall.extend(JAVAARGS)
 
-    if(VERBOSE):
-        hotspotCall.extend(JAVAARGS_VERBOSE)
     if(PRINT):
         hotspotCall.extend(JAVAARGS_PRINT)
     if(DEOPT):

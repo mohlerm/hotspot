@@ -369,6 +369,10 @@ void print_statistics() {
     CodeCache::print();
   }
 
+  if (PrintDeoptimizationCount) {
+    Deoptimization::print_deoptimization_count();
+  }
+
   if (PrintMethodFlushingStatistics) {
     NMethodSweeper::print();
   }

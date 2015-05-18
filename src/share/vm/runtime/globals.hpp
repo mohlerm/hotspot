@@ -3410,6 +3410,9 @@ class CommandLineFlags {
            "Prints cache profiling information")                            \
                                                                             \
   experimental(bool, PrintDeoptimizationCount, false,                       \
+           "Prints count of deoptimizations at JVM shutdown")               \
+                                                                            \
+  experimental(bool, PrintDeoptimizationCountVerbose, false,                \
            "Prints count of deoptimizations after each deopt")              \
                                                                             \
   experimental(bool, PrintCompileQueueSize, false,                          \

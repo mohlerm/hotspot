@@ -33,6 +33,10 @@ Tiered compilation was introduced to improve start-up performance of the JVM.
 Starting with the interpreter means that there is zero wait time until the method is executed since one does not need to wait until a compilation is finished. C1 allows the JVM to have more optimized of the code available early which then can be used to create a richer profile to be used when compiling with C2. Ideally this profile already contains most of the program flow so less deoptimizations (see \ref{sec:deoptimizations} occur.
 
 \section{On Stack Replacement}
+\label{sec:onstackreplacement}
+At some point during interpretation or just-in-time compilation a method's code might need to be replaced by a higher tier compiled method. This happens for example when a method is interpreted and a version compiled with C1 is ready.
+Instead of waiting for the next method invocation Hotspot can replace the method directly on the stack while it is still running (see Figure \ref{fig:osr}).
+This is usually done when the JVM realizes that the method contains a long running loop by counting the back branches.
 \begin{figure}[h]
   \begin{center}
     \centering
@@ -41,9 +45,12 @@ Starting with the interpreter means that there is zero wait time until the metho
     \label{fig:osr}
   \end{center}
 \end{figure}
+
 \section{Deoptimizations}
 \label{sec:deoptimizations}
 
 \section{Compile Thresholds}
+\label{sec:compilethresholds}
 
 \section{Examples}
+\label{sec:examples}

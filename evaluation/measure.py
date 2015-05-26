@@ -1,4 +1,11 @@
 #!/usr/bin/python
+# measure.py
+# Measurement Script for BA
+# Marcel Mohler
+# <mohlerm@student.ethz.ch>
+
+# Usage: python measure.py ClassName MethodName1 MethodName2 etc..
+
 import re, sys, os, time
 from subprocess import call, check_call, check_output, CalledProcessError
 

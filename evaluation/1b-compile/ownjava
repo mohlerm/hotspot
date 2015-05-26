@@ -2,28 +2,28 @@
 CLASS=$2
 if [ "$1" = "run" ] 
 then
-  ../../hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -cp . $CLASS
+  ../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -cp . $CLASS
 elif [ "$1" = "jmc" ] 
 then
-  ../../hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+FlightRecorder -cp . $CLASS
+  ../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+FlightRecorder -cp . $CLASS
 elif [ "$1" = "log" ] 
 then
-  ../../hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+LogCompilation -cp . $CLASS
+  ../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+LogCompilation -cp . $CLASS
 elif [ "$1" = "option" ] 
 then
-  ../../hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:CompileCommand=option,Main.inc,double,CompileThresholdScaling,0.01 -cp . $CLASS
+  ../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:CompileCommand=option,Main.inc,double,CompileThresholdScaling,0.01 -cp . $CLASS
 elif [ "$1" = "debug" ]
 then
- gdb --args ../../hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -Xbatch -Xcomp -XX:+PrintCompilation -XX:CompileCommand=option,Main.inc,double,CompileThresholdScaling,0.01 -cp . $CLASS
+ gdb --args ../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -Xbatch -Xcomp -XX:+PrintCompilation -XX:CompileCommand=option,Main.inc,double,CompileThresholdScaling,0.01 -cp . $CLASS
 elif [ "$1" = "file" ]
 then
-  ../../hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:CompileCommandFile=compileCommandFile -cp . $CLASS
+  ../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:CompileCommandFile=compileCommandFile -cp . $CLASS
 elif [ "$1" = "perf" ]
 then
-  perf stat -B ../../hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:CompileCommandFile=compileCommandFile -cp . $CLASS
+  perf stat -B ../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:CompileCommandFile=compileCommandFile -cp . $CLASS
 elif [ "$1" = "show" ]
 then
-  java -jar ../../hs-comp/hotspot/src/share/tools/LogCompilation/logc.jar $2
+  java -jar ../../../hotspot/src/share/tools/LogCompilation/logc.jar $2
 else
-  ../../hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/javac $CLASS.java
+  ../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/javac $CLASS.java
 fi

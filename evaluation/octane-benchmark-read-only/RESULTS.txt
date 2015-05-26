@@ -1,0 +1,39 @@
+creating profiles
+Richards: 823
+DeltaBlue: 132
+Crypto: 1664
+RayTrace: 436
+EarleyBoyer: 439
+RegExp: 315
+Splay: 972
+SplayLatency: 254
+NavierStokes: 4365
+PdfJS: 268
+Mandreel: 109
+MandreelLatency: 25.8
+Gameboy: 375
+CodeLoad: 51.4
+Box2D: 120
+zlib: ReferenceError: "read" is not defined
+Typescript: 483
+
+use profiles: (mode0)
+Richards: 573
+DeltaBlue: 87.6
+Crypto: 1150
+RayTrace: 444
+EarleyBoyer: 235
+RegExp: 239
+Splay: 826
+SplayLatency: 252
+NavierStokes: 5675
+PdfJS: 200
+Mandreel: 91.2
+MandreelLatency: 22.5
+Gameboy: 304
+CodeLoad: 36.5
+Box2D: 99.4
+zlib: ReferenceError: "read" is not defined
+Typescript: 225
+
+

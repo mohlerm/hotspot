@@ -1139,7 +1139,7 @@ void MethodData::init() {
   // Set per-method invoke- and backedge mask.
   double scale = 1.0;
 
-  if(!FLAG_IS_DEFAULT(CacheProfiles) && ciCacheProfiles::is_initialized()) {
+  if(CacheProfiles && ciCacheProfiles::is_initialized()) {
     if(CacheProfilesMode==0 && ciCacheProfiles::is_cached(_method)) {
       scale = 0.01;
     }

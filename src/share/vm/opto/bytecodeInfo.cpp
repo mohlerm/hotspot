@@ -715,12 +715,10 @@ int InlineTree::count() const {
 
 void InlineTree::dump_replay_data(outputStream* out) {
   out->print(" %d %d ", inline_level(), caller_bci());
-  //tty->print(">DUMP_INLINE_TREE FOR:");method()->print_name(tty);tty->print("\n");
   method()->dump_name_as_ascii(out);
   for (int i = 0 ; i < _subtrees.length(); i++) {
     _subtrees.at(i)->dump_replay_data(out);
   }
-  //tty->print(">DONE<");method()->print_name(tty);tty->print("\n");
 }
 
 

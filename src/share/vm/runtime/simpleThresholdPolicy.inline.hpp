@@ -32,7 +32,7 @@ template<CompLevel level>
 bool SimpleThresholdPolicy::call_predicate_helper(int i, int b, double scale, Method* method) {
   double threshold_scaling;
 
-  if(!FLAG_IS_DEFAULT(CacheProfiles) && ciCacheProfiles::is_initialized()) {
+  if(CacheProfiles && ciCacheProfiles::is_initialized()) {
     if(CacheProfilesMode==0 && ciCacheProfiles::is_cached(method)) {
       threshold_scaling = 0.01;
       scale *= threshold_scaling;
@@ -57,7 +57,7 @@ template<CompLevel level>
 bool SimpleThresholdPolicy::loop_predicate_helper(int i, int b, double scale, Method* method) {
   double threshold_scaling;
 
-  if(!FLAG_IS_DEFAULT(CacheProfiles) && ciCacheProfiles::is_initialized()) {
+  if(CacheProfiles && ciCacheProfiles::is_initialized()) {
     if(CacheProfilesMode==0 && ciCacheProfiles::is_cached(method)) {
       threshold_scaling = 0.01;
       scale *= threshold_scaling;

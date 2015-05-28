@@ -3387,25 +3387,25 @@ class CommandLineFlags {
   product(ccstr, ReplayDataFile, NULL,                                      \
           "File containing compilation replay information"                  \
           "[default: ./replay_pid%p.log] (%p replaced with pid)")           \
-		  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	    \
-	experimental(bool, DumpProfiles, false,                                   \
+                                                                            \
+  experimental(bool, DumpProfiles, false,                                   \
           "Cache profiling information for future VM runs")                 \
                                                                             \
   experimental(bool, CacheProfiles, false,                                  \
-		       "Use profiling information")                                     \
-		  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	    \
+          "Use profiling information")                                      \
+                                                                            \
   experimental(intx, CacheProfilesMode, 0,                                  \
           "Mode in which CacheProfiling is operating: "                     \
           "0 - lower threshold and compile to C2 directly; "                \
           "1 - do not lower thresholds and"                                 \
-          "     compile to highest profile directly; "                      \
+          "    compile to highest profile directly; "                       \
           "2 - skip C1 profiling phase and"                                 \
-          "     keep everything else as standard; ")                        \
+          "    keep everything else as standard; ")                         \
                                                                             \
   experimental(ccstr, CacheProfilesFile, NULL,                              \
-		       "File containing cached profiles"                                \
-		       "[default: ./profiles_pid%p.log] (%p replaced with pid)")        \
-		                                                                        \
+          "File containing cached profiles"                                 \
+          "[default: ./profiles_pid%p.log] (%p replaced with pid)")         \
+                                                                            \
   experimental(bool, PrintCacheProfiles, false,                             \
            "Prints cache profiling information")                            \
                                                                             \
@@ -3417,7 +3417,7 @@ class CommandLineFlags {
                                                                             \
   experimental(bool, PrintCompileQueueSize, false,                          \
            "Prints size of compile queue after each add")                   \
-		                                                                        \
+                                                                            \
   product(ccstr, InlineDataFile, NULL,                                      \
           "File containing inlining replay information"                     \
           "[default: ./inline_pid%p.log] (%p replaced with pid)")           \

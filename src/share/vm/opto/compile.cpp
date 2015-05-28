@@ -873,7 +873,7 @@ Compile::Compile( ciEnv* ci_env, C2Compiler* compiler, ciMethod* target, int osr
   }
   // Dump profile to allow profile caching
   if ((DumpProfiles || method()->has_option("DumpProfile")) && (!method()->has_option("IgnoreDumpProfile"))) {
-// marcel:
+// marcel: ugly workaround to make Octane work...
     const char* klassmethod = method()->holder()->name()->as_utf8();
     int length = strlen(klassmethod);
     if(length > 49) {

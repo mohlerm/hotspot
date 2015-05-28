@@ -28,11 +28,11 @@
 #include "ci/ciMethod.hpp"
 
 // -------------------
-// ciCacheProfiles
+// ciCacheProfiles & ciCacheProfilesBroker
 // -------------------
 //
 // Cache profiling information of a java method to disk and retrieve this data
-// in further executions of the JVM
+// in further executions of the JVM.
 //
 // NOTE: this functionality is only enabled in "experimental mode"
 // (flag: -XX:+UnlockExperimentalVMOptions)
@@ -41,7 +41,7 @@
 // Dump profile data.
 // -------------------
 //
-// Use the flag -XX:+DumpProfiles to dump all compiled methods to disk (cachedProfiles.txt)
+// Use the flag -XX:+DumpProfiles to dump all compiled methods to disk (cached_profiles.dat)
 //
 // One can also specify the flags DumpProfile or IgnoreDumpProfile as CompileCommand
 // for specific method inclusions / exclusions

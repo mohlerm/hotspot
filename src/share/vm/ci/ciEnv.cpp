@@ -1316,9 +1316,9 @@ bool ciEnv::first_dump = true;
 
 void ciEnv::dump_cache_profiles(int compile_id, const char* methodName) {
   static char buffer[O_BUFLEN];
-  //int ret = jio_snprintf(buffer, O_BUFLEN, "profiles_pid%d_compid%d.log", os::current_process_id(), compile_id);
-  //int ret = jio_snprintf(buffer, O_BUFLEN, "cached_profiles_%s.log", methodName);
-  int ret = jio_snprintf(buffer, O_BUFLEN, "cached_profiles.log");
+  //int ret = jio_snprintf(buffer, O_BUFLEN, "profiles_pid%d_compid%d.dat", os::current_process_id(), compile_id);
+  //int ret = jio_snprintf(buffer, O_BUFLEN, "cached_profiles_%s.dat", methodName);
+  int ret = jio_snprintf(buffer, O_BUFLEN, "cached_profiles.dat");
   if (ret > 0) {
     int fd = -1;
     if(first_dump) {

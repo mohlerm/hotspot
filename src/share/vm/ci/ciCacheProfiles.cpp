@@ -543,8 +543,8 @@ void ciCacheProfiles::initialize(TRAPS) {
   if (!is_initialized()) {
     HandleMark hm;
     if (FLAG_IS_DEFAULT(CacheProfilesFile)) {
-      tty->print_cr("NOTE: no explicit compiler cache profiles file specified, uses -XX:CacheProfilesFile=cached_profiles.txt.");
-      CacheProfilesFile = "cached_profiles.log";
+      tty->print_cr("NOTE: no explicit compiler cache profiles file specified, uses -XX:CacheProfilesFile=cached_profiles.dat.");
+      CacheProfilesFile = "cached_profiles.dat";
     }
 
     // Load and parse the replay data

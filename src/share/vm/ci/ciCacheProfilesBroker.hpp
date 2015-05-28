@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,6 +21,11 @@
  * questions.
  *
  */
+
+// This class contains the functionality of CacheProfiles that interact
+// with the CompileBroker when cached profiles are loaded.
+// more information about this functionality can be found in
+// ciCacheProfiles.hpp
 
 #ifndef SHARE_VM_CI_CICACHEPROFILESBROKER_HPP
 #define SHARE_VM_CI_CICACHEPROFILESBROKER_HPP

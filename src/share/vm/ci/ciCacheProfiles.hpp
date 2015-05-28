@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,76 +27,60 @@
 
 #include "ci/ciMethod.hpp"
 
+// -------------------
 // ciCacheProfiles
-
-//
-// Replay compilation of a java method by using an information in replay file.
-// Replay inlining decisions during compilation by using an information in inline file.
-//
-// NOTE: these replay functions only exist in debug version of VM.
-//
-// Replay compilation.
 // -------------------
 //
-// Replay data file replay.txt can be created by Serviceability Agent
-// from a core file, see agent/doc/cireplay.html
+// Cache profiling information of a java method to disk and retrieve this data
+// in further executions of the JVM
 //
-// $ java -cp <jdk>/lib/sa-jdi.jar sun.jvm.hotspot.CLHSDB
-// hsdb> attach <jdk>/bin/java ./core
-// hsdb> threads
-// t@10 Service Thread
-// t@9 C2 CompilerThread0
-// t@8 Signal Dispatcher
-// t@7 Finalizer
-// t@6 Reference Handler
-// t@2 main
-// hsdb> dumpreplaydata t@9 > replay.txt
-// hsdb> quit
+// NOTE: this functionality is only enabled in "experimental mode"
+// (flag: -XX:+UnlockExperimentalVMOptions)
 //
-// (Note: SA could be also used to extract app.jar and boot.jar files
-//  from core file to replay compilation if only core file is available)
+// -------------------
+// Dump profile data.
+// -------------------
 //
-// Replay data file replay_pid%p.log is also created when VM crashes
-// in Compiler thread during compilation. It is controlled by
-// DumpReplayDataOnError flag which is ON by default.
+// Use the flag -XX:+DumpProfiles to dump all compiled methods to disk (cachedProfiles.txt)
 //
-// Replay file replay_pid%p_compid%d.log can be created
-// for the specified java method during normal execution using
-// CompileCommand option DumpProfile:
+// One can also specify the flags DumpProfile or IgnoreDumpProfile as CompileCommand
+// for specific method inclusions / exclusions
+// e.g. -XX:CompileCommand=option,Benchmark::test,DumpProfile
 //
-// -XX:CompileCommand=option,Benchmark::test,DumpProfile
+// -------------------
+// Use profile data.
+// -------------------
 //
-// In this case the file name has additional compilation id "_compid%d"
-// because the method could be compiled several times.
+// The flag -XX:+CacheProfiles tells the VM to use cached profiles when available
+// Before any compilation happen this class scans through the txt file and builds
+// the datastructure (consider the linear overhead).
+// One can also specify a profiles file with -XX:CacheProfilesFile=foo.txt
 //
-// To replay compilation the replay file should be specified:
+// CacheProfiles can be used in 3 different modes:
+// with flag =XX:CacheProfilesMode={0,1,2}
 //
-// -XX:+ReplayCompiles -XX:ReplayDataFile=replay_pid2133.log
+// Mode 0: lower the compilation threshold scaling of cached methods automatically
+//         to 0.01 of cached methods automatically so they get compiled
+//         earlier and with the highest available profile (usually C2)
+// Mode 1: do not lower the thresholds but once a compilation is triggered
+//         use highest available profile (usually C2)
+// Mode 2: do not lower the thresholds but use compile level 2 (limited profiles)
+//         instead of compile level 3 (full profiles) when a cached method gets
+//         compiled with C1.
+//         The idea is that this method already has enough profiles (on disk)
+//         available so we get a faster C1 phase.
+//         C2 will still use the cached profile like in other modes.
 //
-// VM thread reads data from the file immediately after VM initialization
-// and puts the compilation task on compile queue. After that it goes into
-// wait state (BackgroundCompilation flag is set to false) since there is no
-// a program to execute. VM exits when the compilation is finished.
+// -------------------
+// Debug flags.
+// -------------------
 //
-//
-// Replay inlining.
-// ----------------
-//
-// Replay inlining file inline_pid%p_compid%d.log is created for
-// a specific java method during normal execution of a java program
-// using CompileCommand option DumpInline:
-//
-// -XX:CompileCommand=option,Benchmark::test,DumpInline
-//
-// To replay inlining the replay file and the method should be specified:
-//
-// -XX:CompileCommand=option,Benchmark::test,ReplayInline -XX:InlineDataFile=inline_pid3244_compid6.log
-//
-// The difference from replay compilation is that replay inlining
-// is performed during normal java program execution.
-//
-// class to represent the cached compilations
+// -XX:+PrintCacheProfiles - prints debug information about cache profiles thread
+// -XX:+PrintDeoptimizationCount - prints deoptimization count after JVM execution
+// -XX:+PrintDeoptimizationCountVerbose - prints deopt count after each compilation
+// -XX:+PrintCompileQueueSize - print size of compile queue after each compilation
 
+// class to represent the cached compilations
 class MethodRecord : public CHeapObj<mtCompiler> {
 public:
   char* _klass_name;
@@ -314,9 +298,6 @@ class ciCacheProfiles : AllStatic {
   static void process_compile(TRAPS);
   static void process_ciMethod(TRAPS);
   static void process_ciMethodData(TRAPS);
-//  static void process_instanceKlass(TRAPS);
-//  static void process_ciInstanceKlass(TRAPS);
-//  static void process_staticfield(TRAPS);
   static void process_JvmtiExport(TRAPS);
 
   // Create and initialize a record for a ciMethod
@@ -335,21 +316,10 @@ class ciCacheProfiles : AllStatic {
   // Lookup data for a set of strings
   static CompileRecord* find_compileRecord(char* klass_name, char* method_name, char* signature);
 
-//  // Create and initialize a record for a ciInlineRecord
-//  static InlineRecord* new_inlineRecord(Method* method, int bci, int depth);
-//
-//  // Lookup inlining data for a ciMethod
-//  static InlineRecord* find_inlineRecord(Method* method, int bci, int depth);
-//
-//  static InlineRecord* find_inlineRecord(GrowableArray<InlineRecord*>* records,
-//  Method* method, int bci, int depth);
-
 
  public:
   // parse cached profiles to set flag in methods
   static void initialize(TRAPS);
-//  static bool is_loaded(Method* method);
-//  static bool is_loaded(Klass* klass);
 
   static int is_cached(Method* method);
   static int is_cached(methodHandle method);

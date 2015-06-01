@@ -181,6 +181,12 @@ INPUT ./figures/osr.png
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmcsc10.tfm
 INPUT /usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
 INPUT /usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
+INPUT figures/nocompile.png
+INPUT ./figures/nocompile.png
+INPUT ./figures/nocompile.png
+INPUT figures/manydeopt.png
+INPUT ./figures/manydeopt.png
+INPUT ./figures/manydeopt.png
 INPUT implementation.tex
 INPUT implementation.tex
 INPUT performance.tex

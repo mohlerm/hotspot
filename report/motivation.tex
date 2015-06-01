@@ -73,10 +73,7 @@ Please note that there are further conditions influencing the compilation like t
 
 \section{Examples}
 
-I will continue with presenting three very simple examples that illustrate the usage and benefit from using cached profiles. To start I will consider a standard Java Hotspot execution with OnStackReplacement disabled.
-\\\\
-Example one is a simple class that invokes a method one hundred times. The method itself consists of a long running loop. The source code is shown in Listing \ref{l:nocompile}.
-Since OSR is disabled and a compilation to level 3 is triggered after 200 invocations this method will never leave the interpreter. 
+I continue with presenting two very simple examples that illustrate the usage and benefit from using cached profiles. To start I consider a standard Java Hotspot execution with OnStackReplacement disabled.
 \lstset{numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt}
 \lstset{basicstyle=\ttfamily}
 \lstset{frame=tb}
@@ -86,10 +83,63 @@ class NoCompile {
     for(int c = 0; c < 100; c++) {
       result = method1(result);
     }
-    public double method1(double count) {
+    public static double method1(double count) {
         for(int k = 0; k < 10000000; k++) {
             count = count + 50000;
         }
+        return count;
    }
 }
 \end{lstlisting}
+\\\\
+Example one is a simple class that invokes a method one hundred times. The method itself consists of a long running loop. The source code is shown in Listing \ref{l:nocompile}.
+Since OSR is disabled and a compilation to level 3 is triggered after 200 invocations this method never leaves the interpreter. I call this run the \textit{Baseline}.
+To show the influence of cached profiles I use a compiler flag to lower the compile threshold explicitly and, using the functionality written for this thesis, tell Hotspot to cache the profile.
+In a next execution I use these profiles and achieve significantly better performance as you can see in Figure \ref{fig:nocompile}.
+\begin{figure}[h]
+  \begin{center}
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/nocompile.png}
+    \caption{NoCompile.method1 - per method invocation time comparison}
+    \label{fig:nocompile}
+  \end{center}
+\end{figure}
+\\
+Enabling OSR again and the difference between with and without cached profiles vanishes.
+This happens because Hotspot quickly realizes the hotness of the method and compiles it during the first invocation already. 
+
+\lstset{numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt}
+\lstset{basicstyle=\ttfamily}
+\lstset{frame=tb}
+\begin{lstlisting}[float,caption=Example usage of the listing package,label=l:manydeopts,language=Java]
+class ManyDeopts {
+    double result = 0.0;
+    for(int c = 0; c < 100; c++) {
+      result = method1(result);
+    }
+    public static long method1(long count) {
+        for(int k = 0l; k < 10000000l; k++) {
+            if (count < 10000000l) {
+                count = count + 1;
+            } else if (count < 30000000l) {
+                count = count + 2;
+                .
+                .
+                .
+            } else if (count < 50500000000l) {
+               count = count + 100;
+            }
+            count = count + 50000;
+        }
+        return count;
+   }
+}
+\end{lstlisting}
+\begin{figure}[h]
+  \begin{center}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/manydeopt.png}
+    \caption{ManyDeopt.method1 - per method invocation time and deoptimization count comparison}
+    \label{fig:manydeopt}
+  \end{center}
+\end{figure}

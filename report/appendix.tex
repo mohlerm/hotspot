@@ -1,0 +1,32 @@
+\newpage
+\section{Tiered Compilation Thresholds}
+\label{app:compilethresholds}
+\begin{table}[h]
+  \centering
+ % \caption{}
+  \label{tab:compilethresholds}
+  \begin{center}
+    \begin{tabular}{| l | p{9.0cm} | r | }
+       \hline
+       \textbf{flag} & \textbf{description} & \textbf{default} \\ \hline\hline
+       CompileThresholdScaling & number of interpreted method invocations before (re-)compiling & 1.0\\ \hline
+       Tier0InvokeNotifyFreqLog & Interpreter (tier 0) invocation notification frequency & 7\\ \hline
+       Tier2InvokeNotifyFreqLog & C1 without MDO (tier 2) invocation notification frequency & 11 \\ \hline
+       Tier3InvokeNotifyFreqLog & C1 with MDO profiling (tier 3) invocation notification frequency & 10 \\ \hline
+       Tier23InlineeNotifyFreqLog & Inlinee invocation (tiers 2 and 3) notification frequency & 20 \\ \hline
+       Tier0BackedgeNotifyFreqLog & Interpreter (tier 0) invocation notification frequency & 10 \\ \hline
+       Tier2BackedgeNotifyFreqLog & C1 without MDO (tier 2) invocation notification frequency & 14 \\ \hline
+       Tier3BackedgeNotifyFreqLog & C1 with MDO profiling (tier 3) invocation notification frequency & 13 \\ \hline
+       Tier2CompileThreshold & threshold at which tier 2 compilation is invoked & 0 \\ \hline
+       Tier2BackEdgeThreshold & Back edge threshold at which tier 2 compilation is invoked & 0 \\ \hline
+       Tier3InvocationThreshold & Compile if number of method invocations crosses this threshold & 200 \\ \hline
+       Tier3MinInvocationThreshold & Minimum invocation to compile at tier 3 & 100 \\ \hline
+       Tier3CompileThreshold & Threshold at which tier 3 compilation is invoked (invocation minimum must be satisfied) & 2000 \\ \hline
+       Tier3BackEdgeThreshold & Back edge threshold at which tier 3 OSR compilation is invoked & 60000 \\ \hline
+       Tier4InvocationThreshold & Compile if number of method invocations crosses this threshold & 5000 \\ \hline
+       Tier4MinInvocationThreshold & Minimum invocation to compile at tier 4 & 600 \\ \hline
+       Tier4CompileThreshold & Threshold at which tier 4 compilation is invoked (invocation minimum must be satisfied) & 15000 \\ \hline
+       Tier4BackEdgeThreshold & Back edge threshold at which tier 4 OSR compilation is invoked & 40000 \\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}

@@ -1,4 +1,4 @@
-JAVA PROFILE 1.0.1, created Mon May 11 08:12:45 2015
+JAVA PROFILE 1.0.1, created Mon Jun  1 17:55:36 2015
 
 Copyright (c) 2003, 2005, Oracle and/or its affiliates. All rights reserved.
 
@@ -89,3 +89,32 @@ Ctrl-\ (on Solaris) or by typing Ctrl-Break (on Win32).
 
 --------
 
+THREAD START (obj=50000173, id = 200002, name="HPROF gc_finish watcher", group="system")
+THREAD START (obj=50000173, id = 200001, name="main", group="main")
+THREAD END (id = 200001)
+THREAD START (obj=50000173, id = 200003, name="DestroyJavaVM", group="main")
+THREAD END (id = 200003)
+TRACE 301487:
+	ManyDeopt.method1(ManyDeopt.java:Unknown line)
+	ManyDeopt.main(ManyDeopt.java:Unknown line)
+TRACE 300134:
+	java.io.UnixFileSystem.normalize(UnixFileSystem.java:Unknown line)
+	java.io.File.<init>(File.java:Unknown line)
+	sun.misc.URLClassPath$JImageLoader.<init>(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath$3.run(URLClassPath.java:Unknown line)
+TRACE 300961:
+	sun.net.www.protocol.file.Handler.createFileURLConnection(Handler.java:Unknown line)
+	sun.net.www.protocol.file.Handler.openConnection(Handler.java:Unknown line)
+	sun.net.www.protocol.file.Handler.openConnection(Handler.java:Unknown line)
+	java.net.URL.openConnection(URL.java:Unknown line)
+TRACE 301481:
+	java.lang.Long.valueOf(Long.java:Unknown line)
+	ManyDeopt.method1(ManyDeopt.java:Unknown line)
+	ManyDeopt.main(ManyDeopt.java:Unknown line)
+CPU TIME (ms) BEGIN (total = 18991) Mon Jun  1 17:55:55 2015
+rank   self  accum   count trace method
+   1 99.78% 99.78%     100 301487 ManyDeopt.method1
+   2  0.01% 99.79%       4 300134 java.io.UnixFileSystem.normalize
+   3  0.01% 99.81%       1 300961 sun.net.www.protocol.file.Handler.createFileURLConnection
+   4  0.01% 99.82%     200 301481 java.lang.Long.valueOf
+CPU TIME (ms) END

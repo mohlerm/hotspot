@@ -1,0 +1,7 @@
+option java/lang/invoke/LambdaForm$MH IgnoreDumpReplay
+option java/lang/invoke/LambdaForm$BMH IgnoreDumpReplay
+option java/lang/invoke/LambdaForm$DMH IgnoreDumpReplay
+option jdk/nashorn/internal/runtime/ScriptObject IgnoreDumpReplay
+option jdk/nashorn/internal/scripts/Script$Recompilation$1026$10341$richards IgnoreDumpReplay
+option jdk/nashorn/internal/scripts/Script$Recompilation$1052$12418A$richards IgnoreDumpReplay
+

@@ -6,8 +6,9 @@ class NoCompile {
   public static List<Long> measurements = new ArrayList<Long>();
   public static void main(String argv[]) {
     if(VERBOSE) System.out.println("> START EXECUTION OF NoCompile.main() <");
+    Long classloadinghack = 0l;
     double result = 0.0;
-    for(int c = 0; c < 200; c++) {
+    for(int c = 0; c < 100; c++) {
       result = method1(result); //+ method2(result);
       //result = method1(0); // more trivial version for better code caching
     }

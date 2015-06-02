@@ -33,8 +33,8 @@
 #include "classfile/verificationType.hpp"
 #include "classfile/verifier.hpp"
 #include "classfile/vmSymbols.hpp"
+#include "gc/shared/gcLocker.hpp"
 #include "memory/allocation.hpp"
-#include "memory/gcLocker.hpp"
 #include "memory/metadataFactory.hpp"
 #include "memory/oopFactory.hpp"
 #include "memory/referenceType.hpp"
@@ -59,8 +59,8 @@
 #include "services/classLoadingService.hpp"
 #include "services/threadService.hpp"
 #include "utilities/array.hpp"
-#include "utilities/globalDefinitions.hpp"
 #include "utilities/exceptions.hpp"
+#include "utilities/globalDefinitions.hpp"
 #include "utilities/macros.hpp"
 #include "utilities/ostream.hpp"
 #include "utilities/resourceHash.hpp"
@@ -4838,20 +4838,21 @@ void ClassFileParser::verify_legal_method_modifiers(
       }
     }
   } else { // not interface
-    if (is_initializer) {
-      if (is_static || is_final || is_synchronized || is_native ||
-          is_abstract || (major_gte_15 && is_bridge)) {
-        is_illegal = true;
-      }
-    } else { // not initializer
-      if (is_abstract) {
-        if ((is_final || is_native || is_private || is_static ||
-            (major_gte_15 && (is_synchronized || is_strict)))) {
+    if (has_illegal_visibility(flags)) {
+      is_illegal = true;
+    } else {
+      if (is_initializer) {
+        if (is_static || is_final || is_synchronized || is_native ||
+            is_abstract || (major_gte_15 && is_bridge)) {
           is_illegal = true;
         }
-      }
-      if (has_illegal_visibility(flags)) {
-        is_illegal = true;
+      } else { // not initializer
+        if (is_abstract) {
+          if ((is_final || is_native || is_private || is_static ||
+              (major_gte_15 && (is_synchronized || is_strict)))) {
+            is_illegal = true;
+          }
+        }
       }
     }
   }

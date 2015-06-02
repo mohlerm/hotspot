@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -1387,12 +1387,6 @@ bool Node::remove_dead_region(PhaseGVN *phase, bool can_reshape) {
   return false;
 }
 
-//------------------------------Ideal_DU_postCCP-------------------------------
-// Idealize graph, using DU info.  Must clone result into new-space
-Node *Node::Ideal_DU_postCCP( PhaseCCP * ) {
-  return NULL;                 // Default to no change
-}
-
 //------------------------------hash-------------------------------------------
 // Hash function over Nodes.
 uint Node::hash() const {
@@ -1664,6 +1658,9 @@ void Node::dump(const char* suffix, outputStream *st) const {
     return;                     // don't process dead nodes
   }
 
+  if (C->clone_map().value(_idx) != 0) {
+    C->clone_map().dump(_idx);
+  }
   // Dump node-specific info
   dump_spec(st);
 #ifdef ASSERT
@@ -2079,6 +2076,14 @@ Node* Node::unique_ctrl_out() const {
     }
   }
   return found;
+}
+
+void Node::ensure_control_or_add_prec(Node* c) {
+  if (in(0) == NULL) {
+    set_req(0, c);
+  } else if (in(0) != c) {
+    add_prec(c);
+  }
 }
 
 //=============================================================================

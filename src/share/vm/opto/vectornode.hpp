@@ -90,6 +90,30 @@ class AddVINode : public VectorNode {
   virtual int Opcode() const;
 };
 
+//------------------------------AddVLNode--------------------------------------
+// Vector add long
+class AddVLNode : public VectorNode {
+public:
+  AddVLNode(Node* in1, Node* in2, const TypeVect* vt) : VectorNode(in1, in2, vt) {}
+  virtual int Opcode() const;
+};
+
+//------------------------------AddVFNode--------------------------------------
+// Vector add float
+class AddVFNode : public VectorNode {
+public:
+  AddVFNode(Node* in1, Node* in2, const TypeVect* vt) : VectorNode(in1, in2, vt) {}
+  virtual int Opcode() const;
+};
+
+//------------------------------AddVDNode--------------------------------------
+// Vector add double
+class AddVDNode : public VectorNode {
+public:
+  AddVDNode(Node* in1, Node* in2, const TypeVect* vt) : VectorNode(in1, in2, vt) {}
+  virtual int Opcode() const;
+};
+
 //------------------------------ReductionNode------------------------------------
 // Perform reduction of a vector
 class ReductionNode : public Node {
@@ -121,22 +145,6 @@ public:
   virtual uint ideal_reg() const { return Op_RegL; }
 };
 
-//------------------------------AddVLNode--------------------------------------
-// Vector add long
-class AddVLNode : public VectorNode {
- public:
-  AddVLNode(Node* in1, Node* in2, const TypeVect* vt) : VectorNode(in1,in2,vt) {}
-  virtual int Opcode() const;
-};
-
-//------------------------------AddVFNode--------------------------------------
-// Vector add float
-class AddVFNode : public VectorNode {
- public:
-  AddVFNode(Node* in1, Node* in2, const TypeVect* vt) : VectorNode(in1,in2,vt) {}
-  virtual int Opcode() const;
-};
-
 //------------------------------AddReductionVFNode--------------------------------------
 // Vector add float as a reduction
 class AddReductionVFNode : public ReductionNode {
@@ -145,14 +153,6 @@ public:
   virtual int Opcode() const;
   virtual const Type* bottom_type() const { return Type::FLOAT; }
   virtual uint ideal_reg() const { return Op_RegF; }
-};
-
-//------------------------------AddVDNode--------------------------------------
-// Vector add double
-class AddVDNode : public VectorNode {
- public:
-  AddVDNode(Node* in1, Node* in2, const TypeVect* vt) : VectorNode(in1,in2,vt) {}
-  virtual int Opcode() const;
 };
 
 //------------------------------AddReductionVDNode--------------------------------------
@@ -229,6 +229,30 @@ class MulVINode : public VectorNode {
   virtual int Opcode() const;
 };
 
+//------------------------------MulVLNode--------------------------------------
+// Vector multiply long
+class MulVLNode : public VectorNode {
+public:
+  MulVLNode(Node* in1, Node* in2, const TypeVect* vt) : VectorNode(in1, in2, vt) {}
+  virtual int Opcode() const;
+};
+
+//------------------------------MulVFNode--------------------------------------
+// Vector multiply float
+class MulVFNode : public VectorNode {
+public:
+  MulVFNode(Node* in1, Node* in2, const TypeVect* vt) : VectorNode(in1, in2, vt) {}
+  virtual int Opcode() const;
+};
+
+//------------------------------MulVDNode--------------------------------------
+// Vector multiply double
+class MulVDNode : public VectorNode {
+public:
+  MulVDNode(Node* in1, Node* in2, const TypeVect* vt) : VectorNode(in1, in2, vt) {}
+  virtual int Opcode() const;
+};
+
 //------------------------------MulReductionVINode--------------------------------------
 // Vector multiply int as a reduction
 class MulReductionVINode : public ReductionNode {
@@ -239,12 +263,14 @@ public:
   virtual uint ideal_reg() const { return Op_RegI; }
 };
 
-//------------------------------MulVFNode--------------------------------------
-// Vector multiply float
-class MulVFNode : public VectorNode {
- public:
-  MulVFNode(Node* in1, Node* in2, const TypeVect* vt) : VectorNode(in1,in2,vt) {}
+//------------------------------MulReductionVLNode--------------------------------------
+// Vector multiply int as a reduction
+class MulReductionVLNode : public ReductionNode {
+public:
+  MulReductionVLNode(Node *ctrl, Node* in1, Node* in2) : ReductionNode(ctrl, in1, in2) {}
   virtual int Opcode() const;
+  virtual const Type* bottom_type() const { return TypeLong::LONG; }
+  virtual uint ideal_reg() const { return Op_RegI; }
 };
 
 //------------------------------MulReductionVFNode--------------------------------------
@@ -255,14 +281,6 @@ public:
   virtual int Opcode() const;
   virtual const Type* bottom_type() const { return Type::FLOAT; }
   virtual uint ideal_reg() const { return Op_RegF; }
-};
-
-//------------------------------MulVDNode--------------------------------------
-// Vector multiply double
-class MulVDNode : public VectorNode {
- public:
-  MulVDNode(Node* in1, Node* in2, const TypeVect* vt) : VectorNode(in1,in2,vt) {}
-  virtual int Opcode() const;
 };
 
 //------------------------------MulReductionVDNode--------------------------------------
@@ -436,8 +454,8 @@ class XorVNode : public VectorNode {
 // Load Vector from memory
 class LoadVectorNode : public LoadNode {
  public:
-  LoadVectorNode(Node* c, Node* mem, Node* adr, const TypePtr* at, const TypeVect* vt)
-    : LoadNode(c, mem, adr, at, vt, MemNode::unordered) {
+  LoadVectorNode(Node* c, Node* mem, Node* adr, const TypePtr* at, const TypeVect* vt, ControlDependency control_dependency = LoadNode::DependsOnlyOnTest)
+    : LoadNode(c, mem, adr, at, vt, MemNode::unordered, control_dependency) {
     init_class_id(Class_LoadVector);
   }
 
@@ -453,7 +471,9 @@ class LoadVectorNode : public LoadNode {
   virtual int store_Opcode() const { return Op_StoreVector; }
 
   static LoadVectorNode* make(int opc, Node* ctl, Node* mem,
-                              Node* adr, const TypePtr* atyp, uint vlen, BasicType bt);
+                              Node* adr, const TypePtr* atyp,
+                              uint vlen, BasicType bt,
+                              ControlDependency control_dependency = LoadNode::DependsOnlyOnTest);
 };
 
 //------------------------------StoreVectorNode--------------------------------

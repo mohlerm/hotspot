@@ -83,6 +83,7 @@ Matcher::Matcher()
   idealreg2spillmask  [Op_VecD] = NULL;
   idealreg2spillmask  [Op_VecX] = NULL;
   idealreg2spillmask  [Op_VecY] = NULL;
+  idealreg2spillmask  [Op_VecZ] = NULL;
 
   idealreg2debugmask  [Op_RegI] = NULL;
   idealreg2debugmask  [Op_RegN] = NULL;
@@ -94,6 +95,7 @@ Matcher::Matcher()
   idealreg2debugmask  [Op_VecD] = NULL;
   idealreg2debugmask  [Op_VecX] = NULL;
   idealreg2debugmask  [Op_VecY] = NULL;
+  idealreg2debugmask  [Op_VecZ] = NULL;
 
   idealreg2mhdebugmask[Op_RegI] = NULL;
   idealreg2mhdebugmask[Op_RegN] = NULL;
@@ -105,6 +107,7 @@ Matcher::Matcher()
   idealreg2mhdebugmask[Op_VecD] = NULL;
   idealreg2mhdebugmask[Op_VecX] = NULL;
   idealreg2mhdebugmask[Op_VecY] = NULL;
+  idealreg2mhdebugmask[Op_VecZ] = NULL;
 
   debug_only(_mem_node = NULL;)   // Ideal memory node consumed by mach node
 }
@@ -413,7 +416,7 @@ static RegMask *init_input_masks( uint size, RegMask &ret_adr, RegMask &fp ) {
 void Matcher::init_first_stack_mask() {
 
   // Allocate storage for spill masks as masks for the appropriate load type.
-  RegMask *rms = (RegMask*)C->comp_arena()->Amalloc_D(sizeof(RegMask) * (3*6+4));
+  RegMask *rms = (RegMask*)C->comp_arena()->Amalloc_D(sizeof(RegMask) * (3*6+5));
 
   idealreg2spillmask  [Op_RegN] = &rms[0];
   idealreg2spillmask  [Op_RegI] = &rms[1];
@@ -440,6 +443,7 @@ void Matcher::init_first_stack_mask() {
   idealreg2spillmask  [Op_VecD] = &rms[19];
   idealreg2spillmask  [Op_VecX] = &rms[20];
   idealreg2spillmask  [Op_VecY] = &rms[21];
+  idealreg2spillmask  [Op_VecZ] = &rms[22];
 
   OptoReg::Name i;
 
@@ -523,6 +527,18 @@ void Matcher::init_first_stack_mask() {
      assert(aligned_stack_mask.is_AllStack(), "should be infinite stack");
     *idealreg2spillmask[Op_VecY] = *idealreg2regmask[Op_VecY];
      idealreg2spillmask[Op_VecY]->OR(aligned_stack_mask);
+  }
+  if (Matcher::vector_size_supported(T_FLOAT,16)) {
+    // For VecZ we need enough alignment and 64 bytes (16 slots) for spills.
+    OptoReg::Name in = OptoReg::add(_in_arg_limit, -1);
+    for (int k = 1; (in >= init_in) && (k < RegMask::SlotsPerVecZ); k++) {
+      aligned_stack_mask.Remove(in);
+      in = OptoReg::add(in, -1);
+    }
+     aligned_stack_mask.clear_to_sets(RegMask::SlotsPerVecZ);
+     assert(aligned_stack_mask.is_AllStack(), "should be infinite stack");
+    *idealreg2spillmask[Op_VecZ] = *idealreg2regmask[Op_VecZ];
+     idealreg2spillmask[Op_VecZ]->OR(aligned_stack_mask);
   }
    if (UseFPUForSpilling) {
      // This mask logic assumes that the spill operations are
@@ -828,7 +844,7 @@ void Matcher::init_spill_mask( Node *ret ) {
   MachNode *spillCP = match_tree(new LoadNNode(NULL,mem,fp,atp,TypeInstPtr::BOTTOM,MemNode::unordered));
 #endif
   MachNode *spillI  = match_tree(new LoadINode(NULL,mem,fp,atp,TypeInt::INT,MemNode::unordered));
-  MachNode *spillL  = match_tree(new LoadLNode(NULL,mem,fp,atp,TypeLong::LONG,MemNode::unordered,false));
+  MachNode *spillL  = match_tree(new LoadLNode(NULL,mem,fp,atp,TypeLong::LONG,MemNode::unordered, LoadNode::DependsOnlyOnTest, false));
   MachNode *spillF  = match_tree(new LoadFNode(NULL,mem,fp,atp,Type::FLOAT,MemNode::unordered));
   MachNode *spillD  = match_tree(new LoadDNode(NULL,mem,fp,atp,Type::DOUBLE,MemNode::unordered));
   MachNode *spillP  = match_tree(new LoadPNode(NULL,mem,fp,atp,TypeInstPtr::BOTTOM,MemNode::unordered));
@@ -861,6 +877,10 @@ void Matcher::init_spill_mask( Node *ret ) {
   if (Matcher::vector_size_supported(T_FLOAT,8)) {
     MachNode *spillVectY = match_tree(new LoadVectorNode(NULL,mem,fp,atp,TypeVect::VECTY));
     idealreg2regmask[Op_VecY] = &spillVectY->out_RegMask();
+  }
+  if (Matcher::vector_size_supported(T_FLOAT,16)) {
+    MachNode *spillVectZ = match_tree(new LoadVectorNode(NULL,mem,fp,atp,TypeVect::VECTZ));
+    idealreg2regmask[Op_VecZ] = &spillVectZ->out_RegMask();
   }
 }
 
@@ -1045,6 +1065,15 @@ Node *Matcher::xform( Node *n, int max_stack ) {
       for (i = oldn->req(); (uint)i < oldn->len(); i++) {
         Node *m = oldn->in(i);
         if (m == NULL) break;
+        // set -1 to call add_prec() instead of set_req() during Step1
+        mstack.push(m, Visit, n, -1);
+      }
+
+      // Handle precedence edges for interior nodes
+      for (i = n->len()-1; (uint)i >= n->req(); i--) {
+        Node *m = n->in(i);
+        if (m == NULL || C->node_arena()->contains(m)) continue;
+        n->rm_prec(i);
         // set -1 to call add_prec() instead of set_req() during Step1
         mstack.push(m, Visit, n, -1);
       }
@@ -1738,6 +1767,14 @@ MachNode *Matcher::ReduceInst( State *s, int rule, Node *&mem ) {
   return ex;
 }
 
+void Matcher::handle_precedence_edges(Node* n, MachNode *mach) {
+  for (uint i = n->req(); i < n->len(); i++) {
+    if (n->in(i) != NULL) {
+      mach->add_prec(n->in(i));
+    }
+  }
+}
+
 void Matcher::ReduceInst_Chain_Rule( State *s, int rule, Node *&mem, MachNode *mach ) {
   // 'op' is what I am expecting to receive
   int op = _leftOp[rule];
@@ -1772,6 +1809,8 @@ void Matcher::ReduceInst_Chain_Rule( State *s, int rule, Node *&mem, MachNode *m
 
 
 uint Matcher::ReduceInst_Interior( State *s, int rule, Node *&mem, MachNode *mach, uint num_opnds ) {
+  handle_precedence_edges(s->_leaf, mach);
+
   if( s->_leaf->is_Load() ) {
     Node *mem2 = s->_leaf->in(MemNode::Memory);
     assert( mem == (Node*)1 || mem == mem2, "multiple Memories being matched at once?" );
@@ -1854,6 +1893,9 @@ void Matcher::ReduceOper( State *s, int rule, Node *&mem, MachNode *mach ) {
     mem = s->_leaf->in(MemNode::Memory);
     debug_only(_mem_node = s->_leaf;)
   }
+
+  handle_precedence_edges(s->_leaf, mach);
+
   if( s->_leaf->in(0) && s->_leaf->req() > 1) {
     if( !mach->in(0) )
       mach->set_req(0,s->_leaf->in(0));

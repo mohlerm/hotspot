@@ -158,9 +158,6 @@ static pid_t _initial_pid = 0;
 static int SR_signum = SIGUSR2;
 sigset_t SR_sigset;
 
-// Used to protect dlsym() calls
-static pthread_mutex_t dl_mutex;
-
 // Declarations
 static void unpackTime(timespec* absTime, bool isAbsolute, jlong time);
 
@@ -184,20 +181,6 @@ julong os::physical_memory() {
   return Linux::physical_memory();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// environment support
-
-bool os::getenv(const char* name, char* buf, int len) {
-  const char* val = ::getenv(name);
-  if (val != NULL && strlen(val) < (size_t)len) {
-    strcpy(buf, val);
-    return true;
-  }
-  if (len > 0) buf[0] = 0;  // return a null string
-  return false;
-}
-
-
 // Return true if user is running as root.
 
 bool os::have_special_privileges() {
@@ -215,14 +198,20 @@ bool os::have_special_privileges() {
 // i386: 224, ia64: 1105, amd64: 186, sparc 143
   #ifdef __ia64__
     #define SYS_gettid 1105
-  #elif __i386__
-    #define SYS_gettid 224
-  #elif __amd64__
-    #define SYS_gettid 186
-  #elif __sparc__
-    #define SYS_gettid 143
   #else
-    #error define gettid for the arch
+    #ifdef __i386__
+      #define SYS_gettid 224
+    #else
+      #ifdef __amd64__
+        #define SYS_gettid 186
+      #else
+        #ifdef __sparc__
+          #define SYS_gettid 143
+        #else
+          #error define gettid for the arch
+        #endif
+      #endif
+    #endif
   #endif
 #endif
 
@@ -1490,6 +1479,10 @@ void os::shutdown() {
 // called from signal handler. Before adding something to os::abort(), make
 // sure it is async-safe and can handle partially initialized VM.
 void os::abort(bool dump_core) {
+  abort(dump_core, NULL, NULL);
+}
+
+void os::abort(bool dump_core, void* siginfo, void* context) {
   os::shutdown();
   if (dump_core) {
 #ifndef PRODUCT
@@ -2039,14 +2032,8 @@ void * os::Linux::dll_load_in_vmthread(const char *filename, char *ebuf,
   return result;
 }
 
-// glibc-2.0 libdl is not MT safe.  If you are building with any glibc,
-// chances are you might want to run the generated bits against glibc-2.0
-// libdl.so, so always use locking for any version of glibc.
-//
 void* os::dll_lookup(void* handle, const char* name) {
-  pthread_mutex_lock(&dl_mutex);
   void* res = dlsym(handle, name);
-  pthread_mutex_unlock(&dl_mutex);
   return res;
 }
 
@@ -3487,38 +3474,75 @@ char* os::Linux::reserve_memory_special_huge_tlbfs_only(size_t bytes,
   return addr;
 }
 
+// Helper for os::Linux::reserve_memory_special_huge_tlbfs_mixed().
+// Allocate (using mmap, NO_RESERVE, with small pages) at either a given request address
+//   (req_addr != NULL) or with a given alignment.
+//  - bytes shall be a multiple of alignment.
+//  - req_addr can be NULL. If not NULL, it must be a multiple of alignment.
+//  - alignment sets the alignment at which memory shall be allocated.
+//     It must be a multiple of allocation granularity.
+// Returns address of memory or NULL. If req_addr was not NULL, will only return
+//  req_addr or NULL.
+static char* anon_mmap_aligned(size_t bytes, size_t alignment, char* req_addr) {
+
+  size_t extra_size = bytes;
+  if (req_addr == NULL && alignment > 0) {
+    extra_size += alignment;
+  }
+
+  char* start = (char*) ::mmap(req_addr, extra_size, PROT_NONE,
+    MAP_PRIVATE|MAP_ANONYMOUS|MAP_NORESERVE,
+    -1, 0);
+  if (start == MAP_FAILED) {
+    start = NULL;
+  } else {
+    if (req_addr != NULL) {
+      if (start != req_addr) {
+        ::munmap(start, extra_size);
+        start = NULL;
+      }
+    } else {
+      char* const start_aligned = (char*) align_ptr_up(start, alignment);
+      char* const end_aligned = start_aligned + bytes;
+      char* const end = start + extra_size;
+      if (start_aligned > start) {
+        ::munmap(start, start_aligned - start);
+      }
+      if (end_aligned < end) {
+        ::munmap(end_aligned, end - end_aligned);
+      }
+      start = start_aligned;
+    }
+  }
+  return start;
+
+}
+
+// Reserve memory using mmap(MAP_HUGETLB).
+//  - bytes shall be a multiple of alignment.
+//  - req_addr can be NULL. If not NULL, it must be a multiple of alignment.
+//  - alignment sets the alignment at which memory shall be allocated.
+//     It must be a multiple of allocation granularity.
+// Returns address of memory or NULL. If req_addr was not NULL, will only return
+//  req_addr or NULL.
 char* os::Linux::reserve_memory_special_huge_tlbfs_mixed(size_t bytes,
                                                          size_t alignment,
                                                          char* req_addr,
                                                          bool exec) {
   size_t large_page_size = os::large_page_size();
-
   assert(bytes >= large_page_size, "Shouldn't allocate large pages for small sizes");
 
-  // Allocate small pages.
+  assert(is_ptr_aligned(req_addr, alignment), "Must be");
+  assert(is_size_aligned(bytes, alignment), "Must be");
 
-  char* start;
-  if (req_addr != NULL) {
-    assert(is_ptr_aligned(req_addr, alignment), "Must be");
-    assert(is_size_aligned(bytes, alignment), "Must be");
-    start = os::reserve_memory(bytes, req_addr);
-    assert(start == NULL || start == req_addr, "Must be");
-  } else {
-    start = os::reserve_memory_aligned(bytes, alignment);
-  }
+  // First reserve - but not commit - the address range in small pages.
+  char* const start = anon_mmap_aligned(bytes, alignment, req_addr);
 
   if (start == NULL) {
     return NULL;
   }
 
   assert(is_ptr_aligned(start, alignment), "Must be");
-
-  if (MemTracker::tracking_level() > NMT_minimal) {
-    // os::reserve_memory_special will record this memory area.
-    // Need to release it here to prevent overlapping reservations.
-    Tracker tkr = MemTracker::get_virtual_memory_release_tracker();
-    tkr.record((address)start, bytes);
-  }
 
   char* end = start + bytes;
 
@@ -3539,9 +3563,9 @@ char* os::Linux::reserve_memory_special_huge_tlbfs_mixed(size_t bytes,
 
   int prot = exec ? PROT_READ|PROT_WRITE|PROT_EXEC : PROT_READ|PROT_WRITE;
 
-
   void* result;
 
+  // Commit small-paged leading area.
   if (start != lp_start) {
     result = ::mmap(start, lp_start - start, prot,
                     MAP_PRIVATE|MAP_ANONYMOUS|MAP_FIXED,
@@ -3552,11 +3576,12 @@ char* os::Linux::reserve_memory_special_huge_tlbfs_mixed(size_t bytes,
     }
   }
 
+  // Commit large-paged area.
   result = ::mmap(lp_start, lp_bytes, prot,
                   MAP_PRIVATE|MAP_ANONYMOUS|MAP_FIXED|MAP_HUGETLB,
                   -1, 0);
   if (result == MAP_FAILED) {
-    warn_on_large_pages_failure(req_addr, bytes, errno);
+    warn_on_large_pages_failure(lp_start, lp_bytes, errno);
     // If the mmap above fails, the large pages region will be unmapped and we
     // have regions before and after with small pages. Release these regions.
     //
@@ -3569,6 +3594,7 @@ char* os::Linux::reserve_memory_special_huge_tlbfs_mixed(size_t bytes,
     return NULL;
   }
 
+  // Commit small-paged trailing area.
   if (lp_end != end) {
     result = ::mmap(lp_end, end - lp_end, prot,
                     MAP_PRIVATE|MAP_ANONYMOUS|MAP_FIXED,
@@ -3588,7 +3614,7 @@ char* os::Linux::reserve_memory_special_huge_tlbfs(size_t bytes,
                                                    bool exec) {
   assert(UseLargePages && UseHugeTLBFS, "only for Huge TLBFS large pages");
   assert(is_ptr_aligned(req_addr, alignment), "Must be");
-  assert(is_power_of_2(alignment), "Must be");
+  assert(is_size_aligned(alignment, os::vm_allocation_granularity()), "Must be");
   assert(is_power_of_2(os::large_page_size()), "Must be");
   assert(bytes >= os::large_page_size(), "Shouldn't allocate large pages for small sizes");
 
@@ -4655,8 +4681,6 @@ void os::init(void) {
   }
   // else it defaults to CLOCK_REALTIME
 
-  pthread_mutex_init(&dl_mutex, NULL);
-
   // If the pagesize of the VM is greater than 8K determine the appropriate
   // number of initial guard pages.  The user can change this with the
   // command line arguments, if needed.
@@ -4775,8 +4799,8 @@ jint os::init_2(void) {
             FLAG_IS_DEFAULT(UseSHM) &&
             FLAG_IS_DEFAULT(UseHugeTLBFS)) {
           UseLargePages = false;
-        } else {
-          warning("UseNUMA is not fully compatible with SHM/HugeTLBFS large pages, disabling adaptive resizing");
+        } else if (UseAdaptiveSizePolicy || UseAdaptiveNUMAChunkSizing) {
+          warning("UseNUMA is not fully compatible with SHM/HugeTLBFS large pages, disabling adaptive resizing (-XX:-UseAdaptiveSizePolicy -XX:-UseAdaptiveNUMAChunkSizing)");
           UseAdaptiveSizePolicy = false;
           UseAdaptiveNUMAChunkSizing = false;
         }
@@ -5854,14 +5878,6 @@ void Parker::unpark() {
 
 extern char** environ;
 
-#ifndef __NR_fork
-  #define __NR_fork IA32_ONLY(2) IA64_ONLY(not defined) AMD64_ONLY(57) AARCH64_ONLY(1079)
-#endif
-
-#ifndef __NR_execve
-  #define __NR_execve IA32_ONLY(11) IA64_ONLY(1033) AMD64_ONLY(59) AARCH64_ONLY(221)
-#endif
-
 // Run the specified command in a separate process. Return its exit value,
 // or -1 on failure (e.g. can't fork a new process).
 // Unlike system(), this function can be called from signal handler. It
@@ -5869,13 +5885,7 @@ extern char** environ;
 int os::fork_and_exec(char* cmd) {
   const char * argv[4] = {"sh", "-c", cmd, NULL};
 
-  // fork() in LinuxThreads/NPTL is not async-safe. It needs to run
-  // pthread_atfork handlers and reset pthread library. All we need is a
-  // separate process to execve. Make a direct syscall to fork process.
-  // On IA64 there's no fork syscall, we have to use fork() and hope for
-  // the best...
-  pid_t pid = NOT_IA64(syscall(__NR_fork);)
-  IA64_ONLY(fork();)
+  pid_t pid = fork();
 
   if (pid < 0) {
     // fork failed
@@ -5884,15 +5894,7 @@ int os::fork_and_exec(char* cmd) {
   } else if (pid == 0) {
     // child process
 
-    // execve() in LinuxThreads will call pthread_kill_other_threads_np()
-    // first to kill every thread on the thread list. Because this list is
-    // not reset by fork() (see notes above), execve() will instead kill
-    // every thread in the parent process. We know this is the only thread
-    // in the new process, so make a system call directly.
-    // IA64 should use normal execve() from glibc to match the glibc fork()
-    // above.
-    NOT_IA64(syscall(__NR_execve, "/bin/sh", argv, environ);)
-    IA64_ONLY(execve("/bin/sh", (char* const*)argv, environ);)
+    execve("/bin/sh", (char* const*)argv, environ);
 
     // execve failed
     _exit(-1);
@@ -6101,47 +6103,100 @@ class TestReserveMemorySpecial : AllStatic {
     }
   }
 
-  static void test_reserve_memory_special_huge_tlbfs_mixed(size_t size, size_t alignment) {
-    if (!UseHugeTLBFS) {
-      return;
-    }
-
-    test_log("test_reserve_memory_special_huge_tlbfs_mixed(" SIZE_FORMAT ", " SIZE_FORMAT ")",
-             size, alignment);
-
-    assert(size >= os::large_page_size(), "Incorrect input to test");
-
-    char* addr = os::Linux::reserve_memory_special_huge_tlbfs_mixed(size, alignment, NULL, false);
-
-    if (addr != NULL) {
-      small_page_write(addr, size);
-
-      os::Linux::release_memory_special_huge_tlbfs(addr, size);
-    }
-  }
-
-  static void test_reserve_memory_special_huge_tlbfs_mixed_all_alignments(size_t size) {
-    size_t lp = os::large_page_size();
-    size_t ag = os::vm_allocation_granularity();
-
-    for (size_t alignment = ag; is_size_aligned(size, alignment); alignment *= 2) {
-      test_reserve_memory_special_huge_tlbfs_mixed(size, alignment);
-    }
-  }
-
   static void test_reserve_memory_special_huge_tlbfs_mixed() {
     size_t lp = os::large_page_size();
     size_t ag = os::vm_allocation_granularity();
 
-    test_reserve_memory_special_huge_tlbfs_mixed_all_alignments(lp);
-    test_reserve_memory_special_huge_tlbfs_mixed_all_alignments(lp + ag);
-    test_reserve_memory_special_huge_tlbfs_mixed_all_alignments(lp + lp / 2);
-    test_reserve_memory_special_huge_tlbfs_mixed_all_alignments(lp * 2);
-    test_reserve_memory_special_huge_tlbfs_mixed_all_alignments(lp * 2 + ag);
-    test_reserve_memory_special_huge_tlbfs_mixed_all_alignments(lp * 2 - ag);
-    test_reserve_memory_special_huge_tlbfs_mixed_all_alignments(lp * 2 + lp / 2);
-    test_reserve_memory_special_huge_tlbfs_mixed_all_alignments(lp * 10);
-    test_reserve_memory_special_huge_tlbfs_mixed_all_alignments(lp * 10 + lp / 2);
+    // sizes to test
+    const size_t sizes[] = {
+      lp, lp + ag, lp + lp / 2, lp * 2,
+      lp * 2 + ag, lp * 2 - ag, lp * 2 + lp / 2,
+      lp * 10, lp * 10 + lp / 2
+    };
+    const int num_sizes = sizeof(sizes) / sizeof(size_t);
+
+    // For each size/alignment combination, we test three scenarios:
+    // 1) with req_addr == NULL
+    // 2) with a non-null req_addr at which we expect to successfully allocate
+    // 3) with a non-null req_addr which contains a pre-existing mapping, at which we
+    //    expect the allocation to either fail or to ignore req_addr
+
+    // Pre-allocate two areas; they shall be as large as the largest allocation
+    //  and aligned to the largest alignment we will be testing.
+    const size_t mapping_size = sizes[num_sizes - 1] * 2;
+    char* const mapping1 = (char*) ::mmap(NULL, mapping_size,
+      PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_NORESERVE,
+      -1, 0);
+    assert(mapping1 != MAP_FAILED, "should work");
+
+    char* const mapping2 = (char*) ::mmap(NULL, mapping_size,
+      PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_NORESERVE,
+      -1, 0);
+    assert(mapping2 != MAP_FAILED, "should work");
+
+    // Unmap the first mapping, but leave the second mapping intact: the first
+    // mapping will serve as a value for a "good" req_addr (case 2). The second
+    // mapping, still intact, as "bad" req_addr (case 3).
+    ::munmap(mapping1, mapping_size);
+
+    // Case 1
+    test_log("%s, req_addr NULL:", __FUNCTION__);
+    test_log("size            align           result");
+
+    for (int i = 0; i < num_sizes; i++) {
+      const size_t size = sizes[i];
+      for (size_t alignment = ag; is_size_aligned(size, alignment); alignment *= 2) {
+        char* p = os::Linux::reserve_memory_special_huge_tlbfs_mixed(size, alignment, NULL, false);
+        test_log(SIZE_FORMAT_HEX " " SIZE_FORMAT_HEX " ->  " PTR_FORMAT " %s",
+            size, alignment, p, (p != NULL ? "" : "(failed)"));
+        if (p != NULL) {
+          assert(is_ptr_aligned(p, alignment), "must be");
+          small_page_write(p, size);
+          os::Linux::release_memory_special_huge_tlbfs(p, size);
+        }
+      }
+    }
+
+    // Case 2
+    test_log("%s, req_addr non-NULL:", __FUNCTION__);
+    test_log("size            align           req_addr         result");
+
+    for (int i = 0; i < num_sizes; i++) {
+      const size_t size = sizes[i];
+      for (size_t alignment = ag; is_size_aligned(size, alignment); alignment *= 2) {
+        char* const req_addr = (char*) align_ptr_up(mapping1, alignment);
+        char* p = os::Linux::reserve_memory_special_huge_tlbfs_mixed(size, alignment, req_addr, false);
+        test_log(SIZE_FORMAT_HEX " " SIZE_FORMAT_HEX " " PTR_FORMAT " ->  " PTR_FORMAT " %s",
+            size, alignment, req_addr, p,
+            ((p != NULL ? (p == req_addr ? "(exact match)" : "") : "(failed)")));
+        if (p != NULL) {
+          assert(p == req_addr, "must be");
+          small_page_write(p, size);
+          os::Linux::release_memory_special_huge_tlbfs(p, size);
+        }
+      }
+    }
+
+    // Case 3
+    test_log("%s, req_addr non-NULL with preexisting mapping:", __FUNCTION__);
+    test_log("size            align           req_addr         result");
+
+    for (int i = 0; i < num_sizes; i++) {
+      const size_t size = sizes[i];
+      for (size_t alignment = ag; is_size_aligned(size, alignment); alignment *= 2) {
+        char* const req_addr = (char*) align_ptr_up(mapping2, alignment);
+        char* p = os::Linux::reserve_memory_special_huge_tlbfs_mixed(size, alignment, req_addr, false);
+        test_log(SIZE_FORMAT_HEX " " SIZE_FORMAT_HEX " " PTR_FORMAT " ->  " PTR_FORMAT " %s",
+            size, alignment, req_addr, p,
+            ((p != NULL ? "" : "(failed)")));
+        // as the area around req_addr contains already existing mappings, the API should always
+        // return NULL (as per contract, it cannot return another address)
+        assert(p == NULL, "must be");
+      }
+    }
+
+    ::munmap(mapping2, mapping_size);
+
   }
 
   static void test_reserve_memory_special_huge_tlbfs() {

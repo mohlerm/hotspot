@@ -234,15 +234,23 @@ static Node* split_if(IfNode *iff, PhaseIterGVN *igvn) {
   // Make a region merging constants and a region merging the rest
   uint req_c = 0;
   Node* predicate_proj = NULL;
+  int nb_predicate_proj = 0;
   for (uint ii = 1; ii < r->req(); ii++) {
     if (phi->in(ii) == con1) {
       req_c++;
     }
     Node* proj = PhaseIdealLoop::find_predicate(r->in(ii));
     if (proj != NULL) {
-      assert(predicate_proj == NULL, "only one predicate entry expected");
+      nb_predicate_proj++;
       predicate_proj = proj;
     }
+  }
+  if (nb_predicate_proj > 1) {
+    // Can happen in case of loop unswitching and when the loop is
+    // optimized out: it's not a loop anymore so we don't care about
+    // predicates.
+    assert(!r->is_Loop(), "this must not be a loop anymore");
+    predicate_proj = NULL;
   }
   Node* predicate_c = NULL;
   Node* predicate_x = NULL;
@@ -826,10 +834,10 @@ bool IfNode::fold_compares_helper(ProjNode* proj, ProjNode* success, ProjNode* f
     swap(lo_type, hi_type);
     swap(lo_test, hi_test);
 
-    assert((this_bool->_test.is_less() && proj->_con) ||
-           (this_bool->_test.is_greater() && !proj->_con), "incorrect test");
+    assert((dom_bool->_test.is_less() && proj->_con) ||
+           (dom_bool->_test.is_greater() && !proj->_con), "incorrect test");
     // this test was canonicalized
-    assert(dom_bool->_test.is_less() && !fail->_con, "incorrect test");
+    assert(this_bool->_test.is_less() && !fail->_con, "incorrect test");
 
     cond = (hi_test == BoolTest::le || hi_test == BoolTest::gt) ? BoolTest::gt : BoolTest::ge;
 
@@ -965,21 +973,25 @@ void IfNode::improve_address_types(Node* l, Node* r, ProjNode* fail, PhaseIterGV
           assert(init_n->Opcode() == Op_ConvI2L, "unexpected first node");
           Node* new_n = igvn->C->conv_I2X_index(igvn, l, array_size);
 
-          for (uint j = 2; j < stack.size(); j++) {
-            Node* n = stack.node_at(j);
-            Node* clone = n->clone();
-            int rep = clone->replace_edge(init_n, new_n);
+          // The type of the ConvI2L may be widen and so the new
+          // ConvI2L may not be better than an existing ConvI2L
+          if (new_n != init_n) {
+            for (uint j = 2; j < stack.size(); j++) {
+              Node* n = stack.node_at(j);
+              Node* clone = n->clone();
+              int rep = clone->replace_edge(init_n, new_n);
+              assert(rep > 0, "can't find expected node?");
+              clone = igvn->transform(clone);
+              init_n = n;
+              new_n = clone;
+            }
+            igvn->hash_delete(use);
+            int rep = use->replace_edge(init_n, new_n);
             assert(rep > 0, "can't find expected node?");
-            clone = igvn->transform(clone);
-            init_n = n;
-            new_n = clone;
-          }
-          igvn->hash_delete(use);
-          int rep = use->replace_edge(init_n, new_n);
-          assert(rep > 0, "can't find expected node?");
-          igvn->transform(use);
-          if (init_n->outcnt() == 0) {
-            igvn->_worklist.push(init_n);
+            igvn->transform(use);
+            if (init_n->outcnt() == 0) {
+              igvn->_worklist.push(init_n);
+            }
           }
         }
       } else if (use->in(0) == NULL && (igvn->type(use)->isa_long() ||

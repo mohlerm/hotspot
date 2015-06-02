@@ -32,11 +32,12 @@
 #include "code/codeCache.hpp"
 #include "code/scopeDesc.hpp"
 #include "compiler/compileBroker.hpp"
+#include "gc/shared/gcLocker.inline.hpp"
+#include "gc/shared/workgroup.hpp"
 #include "interpreter/interpreter.hpp"
 #include "interpreter/linkResolver.hpp"
 #include "interpreter/oopMapCache.hpp"
 #include "jvmtifiles/jvmtiEnv.hpp"
-#include "memory/gcLocker.inline.hpp"
 #include "memory/metaspaceShared.hpp"
 #include "memory/oopFactory.hpp"
 #include "memory/universe.inline.hpp"
@@ -84,18 +85,17 @@
 #include "services/management.hpp"
 #include "services/memTracker.hpp"
 #include "services/threadService.hpp"
-#include "trace/tracing.hpp"
 #include "trace/traceMacros.hpp"
+#include "trace/tracing.hpp"
 #include "utilities/defaultStream.hpp"
 #include "utilities/dtrace.hpp"
 #include "utilities/events.hpp"
 #include "utilities/macros.hpp"
 #include "utilities/preserveException.hpp"
-#include "utilities/workgroup.hpp"
 #if INCLUDE_ALL_GCS
-#include "gc_implementation/concurrentMarkSweep/concurrentMarkSweepThread.hpp"
-#include "gc_implementation/g1/concurrentMarkThread.inline.hpp"
-#include "gc_implementation/parallelScavenge/pcTasks.hpp"
+#include "gc/cms/concurrentMarkSweepThread.hpp"
+#include "gc/g1/concurrentMarkThread.inline.hpp"
+#include "gc/parallel/pcTasks.hpp"
 #endif // INCLUDE_ALL_GCS
 #ifdef COMPILER1
 #include "c1/c1_Compiler.hpp"
@@ -192,6 +192,7 @@ Thread::Thread() {
   set_stack_size(0);
   set_self_raw_id(0);
   set_lgrp_id(-1);
+  DEBUG_ONLY(clear_suspendible_thread();)
 
   // allocated data structures
   set_osthread(NULL);
@@ -272,6 +273,11 @@ Thread::Thread() {
            "bug in forced alignment of thread objects");
   }
 #endif // ASSERT
+}
+
+// Non-inlined version to be used where thread.inline.hpp shouldn't be included.
+Thread* Thread::current_noinline() {
+  return Thread::current();
 }
 
 void Thread::initialize_thread_local_storage() {
@@ -756,13 +762,9 @@ bool Thread::claim_oops_do_par_case(int strong_roots_parity) {
       return true;
     } else {
       guarantee(res == strong_roots_parity, "Or else what?");
-      assert(SharedHeap::heap()->workers()->active_workers() > 0,
-             "Should only fail when parallel.");
       return false;
     }
   }
-  assert(SharedHeap::heap()->workers()->active_workers() > 0,
-         "Should only fail when parallel.");
   return false;
 }
 
@@ -3231,6 +3233,8 @@ void Threads::initialize_java_lang_classes(JavaThread* main_thread, TRAPS) {
 
   // Initialize java_lang.System (needed before creating the thread)
   initialize_class(vmSymbols::java_lang_System(), CHECK);
+  // The VM creates & returns objects of this class. Make sure it's initialized.
+  initialize_class(vmSymbols::java_lang_Class(), CHECK);
   initialize_class(vmSymbols::java_lang_ThreadGroup(), CHECK);
   Handle thread_group = create_initial_thread_group(CHECK);
   Universe::set_main_thread_group(thread_group());
@@ -3241,9 +3245,6 @@ void Threads::initialize_java_lang_classes(JavaThread* main_thread, TRAPS) {
   // been started and running.
   java_lang_Thread::set_thread_status(thread_object,
                                       java_lang_Thread::RUNNABLE);
-
-  // The VM creates & returns objects of this class. Make sure it's initialized.
-  initialize_class(vmSymbols::java_lang_Class(), CHECK);
 
   // The VM preresolves methods to these classes. Make sure that they get initialized
   initialize_class(vmSymbols::java_lang_reflect_Method(), CHECK);
@@ -4063,7 +4064,7 @@ void Threads::change_thread_claim_parity() {
          "Not in range.");
 }
 
-#ifndef PRODUCT
+#ifdef ASSERT
 void Threads::assert_all_threads_claimed() {
   ALL_JAVA_THREADS(p) {
     const int thread_parity = p->oops_do_parity();
@@ -4071,22 +4072,9 @@ void Threads::assert_all_threads_claimed() {
         err_msg("Thread " PTR_FORMAT " has incorrect parity %d != %d", p2i(p), thread_parity, _thread_claim_parity));
   }
 }
-#endif // PRODUCT
+#endif // ASSERT
 
-void Threads::possibly_parallel_oops_do(OopClosure* f, CLDClosure* cld_f, CodeBlobClosure* cf) {
-  // Introduce a mechanism allowing parallel threads to claim threads as
-  // root groups.  Overhead should be small enough to use all the time,
-  // even in sequential code.
-  SharedHeap* sh = SharedHeap::heap();
-  // Cannot yet substitute active_workers for n_par_threads
-  // because of G1CollectedHeap::verify() use of
-  // SharedHeap::process_roots().  n_par_threads == 0 will
-  // turn off parallelism in process_roots while active_workers
-  // is being used for parallelism elsewhere.
-  bool is_par = sh->n_par_threads() > 0;
-  assert(!is_par ||
-         (SharedHeap::heap()->n_par_threads() ==
-         SharedHeap::heap()->workers()->active_workers()), "Mismatch");
+void Threads::possibly_parallel_oops_do(bool is_par, OopClosure* f, CLDClosure* cld_f, CodeBlobClosure* cf) {
   int cp = Threads::thread_claim_parity();
   ALL_JAVA_THREADS(p) {
     if (p->claim_oops_do(is_par, cp)) {
@@ -4229,13 +4217,13 @@ void Threads::print_on(outputStream* st, bool print_stacks,
                Abstract_VM_Version::vm_info_string());
   st->cr();
 
-#if INCLUDE_ALL_GCS
+#if INCLUDE_SERVICES
   // Dump concurrent locks
   ConcurrentLocksDump concurrent_locks;
   if (print_concurrent_locks) {
     concurrent_locks.dump_at_safepoint();
   }
-#endif // INCLUDE_ALL_GCS
+#endif // INCLUDE_SERVICES
 
   ALL_JAVA_THREADS(p) {
     ResourceMark rm;
@@ -4248,11 +4236,11 @@ void Threads::print_on(outputStream* st, bool print_stacks,
       }
     }
     st->cr();
-#if INCLUDE_ALL_GCS
+#if INCLUDE_SERVICES
     if (print_concurrent_locks) {
       concurrent_locks.print_locks_on(p, st);
     }
-#endif // INCLUDE_ALL_GCS
+#endif // INCLUDE_SERVICES
   }
 
   VMThread::vm_thread()->print_on(st);

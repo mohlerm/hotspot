@@ -127,7 +127,7 @@ LIBS += -lm -ldl -lpthread
 # By default, link the *.o into the library, not the executable.
 LINK_INTO$(LINK_INTO) = LIBJVM
 
-JDK_LIBDIR = $(JAVA_HOME)/jre/lib/$(LIBARCH)
+JDK_LIBDIR = $(JAVA_HOME)/lib/$(LIBARCH)
 
 #----------------------------------------------------------------------
 # jvm_db & dtrace
@@ -142,7 +142,7 @@ LIBJVM   = lib$(JVM).so
 LIBJVM_DEBUGINFO   = lib$(JVM).debuginfo
 LIBJVM_DIZ         = lib$(JVM).diz
 
-SPECIAL_PATHS:=adlc c1 gc_implementation opto shark libadt
+SPECIAL_PATHS:=adlc c1 gc opto shark libadt
 
 SOURCE_PATHS=\
   $(shell find $(HS_COMMON_SRC)/share/vm/* -type d \! \

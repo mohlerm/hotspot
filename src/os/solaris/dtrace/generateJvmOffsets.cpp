@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2003, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -41,16 +41,16 @@
 #include "code/codeBlob.hpp"
 #include "code/nmethod.hpp"
 #include "code/pcDesc.hpp"
-#include "gc_interface/collectedHeap.hpp"
+#include "gc/shared/collectedHeap.hpp"
 #include "memory/heap.hpp"
 #include "memory/memRegion.hpp"
 #include "memory/universe.hpp"
+#include "memory/virtualspace.hpp"
 #include "oops/constMethod.hpp"
 #include "oops/klass.hpp"
 #include "oops/method.hpp"
 #include "oops/oop.hpp"
 #include "oops/symbol.hpp"
-#include "runtime/virtualspace.hpp"
 #include "runtime/vmStructs.hpp"
 #include "utilities/accessFlags.hpp"
 #include "utilities/globalDefinitions.hpp"

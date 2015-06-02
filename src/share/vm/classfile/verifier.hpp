@@ -26,12 +26,12 @@
 #define SHARE_VM_CLASSFILE_VERIFIER_HPP
 
 #include "classfile/verificationType.hpp"
-#include "memory/gcLocker.hpp"
+#include "gc/shared/gcLocker.hpp"
 #include "oops/klass.hpp"
 #include "oops/method.hpp"
 #include "runtime/handles.hpp"
-#include "utilities/growableArray.hpp"
 #include "utilities/exceptions.hpp"
+#include "utilities/growableArray.hpp"
 
 // The verifier class
 class Verifier : AllStatic {
@@ -59,6 +59,9 @@ class Verifier : AllStatic {
 
   // Relax certain verifier checks to enable some broken 1.1 apps to run on 1.2.
   static bool relax_verify_for(oop class_loader);
+
+  // Print output for -XX:+TraceClassResolution
+  static void trace_class_resolution(Klass* resolve_class, InstanceKlass* verify_class);
 
  private:
   static bool is_eligible_for_verification(instanceKlassHandle klass, bool should_verify_class);
@@ -305,9 +308,10 @@ class ClassVerifier : public StackObj {
     bool* this_uninit, constantPoolHandle cp, StackMapTable* stackmap_table,
     TRAPS);
 
-  // Used by ends_in_athrow() to push all handlers that contain bci onto
-  // the handler_stack, if the handler is not already on the stack.
+  // Used by ends_in_athrow() to push all handlers that contain bci onto the
+  // handler_stack, if the handler has not already been pushed on the stack.
   void push_handlers(ExceptionTable* exhandlers,
+                     GrowableArray<u4>* handler_list,
                      GrowableArray<u4>* handler_stack,
                      u4 bci);
 

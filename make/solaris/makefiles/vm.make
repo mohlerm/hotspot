@@ -1,5 +1,5 @@
 #
-# Copyright (c) 1998, 2014, Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 1998, 2015, Oracle and/or its affiliates. All rights reserved.
 # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 #
 # This code is free software; you can redistribute it and/or modify it
@@ -148,7 +148,7 @@ LIBS += -lkstat
 # By default, link the *.o into the library, not the executable.
 LINK_INTO$(LINK_INTO) = LIBJVM
 
-JDK_LIBDIR = $(JAVA_HOME)/jre/lib/$(LIBARCH)
+JDK_LIBDIR = $(JAVA_HOME)/lib/$(LIBARCH)
 
 #----------------------------------------------------------------------
 # jvm_db & dtrace
@@ -163,7 +163,7 @@ LIBJVM   = lib$(JVM).so
 LIBJVM_DEBUGINFO   = lib$(JVM).debuginfo
 LIBJVM_DIZ         = lib$(JVM).diz
 
-SPECIAL_PATHS:=adlc c1 dist gc_implementation opto shark libadt
+SPECIAL_PATHS:=adlc c1 dist gc opto shark libadt
 
 SOURCE_PATHS=\
   $(shell find $(HS_COMMON_SRC)/share/vm/* -type d \! \
@@ -287,6 +287,8 @@ else
   LIBS_VM                  += $(STATIC_STDCXX) $(LIBS)
 endif
 endif
+
+LFLAGS_VM += $(EXTRA_LDFLAGS)
 
 ifdef USE_GCC
 LINK_VM = $(LINK_LIB.CC)

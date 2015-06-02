@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,7 +23,7 @@
  */
 
 #include "precompiled.hpp"
-#include "gc_interface/collectedHeap.hpp"
+#include "gc/shared/collectedHeap.hpp"
 #include "interpreter/interp_masm.hpp"
 #include "interpreter/templateTable.hpp"
 #include "runtime/timer.hpp"
@@ -516,6 +516,12 @@ void TemplateTable::initialize() {
   def(Bytecodes::_return_register_finalizer , ____|disp|clvm|____, vtos, vtos, _return       ,  vtos        );
 
   def(Bytecodes::_invokehandle        , ubcp|disp|clvm|____, vtos, vtos, invokehandle        , f1_byte      );
+
+  def(Bytecodes::_nofast_getfield     , ubcp|____|clvm|____, vtos, vtos, nofast_getfield     , f1_byte      );
+  def(Bytecodes::_nofast_putfield     , ubcp|____|clvm|____, vtos, vtos, nofast_putfield     , f2_byte      );
+
+  def(Bytecodes::_nofast_aload_0      , ____|____|clvm|____, vtos, atos, nofast_aload_0      ,  _           );
+  def(Bytecodes::_nofast_iload        , ubcp|____|clvm|____, vtos, itos, nofast_iload        ,  _           );
 
   def(Bytecodes::_shouldnotreachhere   , ____|____|____|____, vtos, vtos, shouldnotreachhere ,  _           );
   // platform specific bytecodes

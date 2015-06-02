@@ -33,7 +33,7 @@
  * @author thomas.schatzl@oracle.com
  */
 
-import com.oracle.java.testlibrary.*;
+import jdk.test.lib.*;
 
 public class TestInitialTenuringThreshold {
 
@@ -70,6 +70,7 @@ public class TestInitialTenuringThreshold {
     runWithThresholds(10, 0, true);
     runWithThresholds(9, 8, true);
     runWithThresholds(-1, 8, true);
+    runWithThresholds(0, -1, true);
     runWithThresholds(8, -1, true);
     runWithThresholds(16, 8, true);
     runWithThresholds(8, 17, true);

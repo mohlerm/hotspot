@@ -33,12 +33,12 @@
  * @run main ArchiveDoesNotExist
  */
 
-import com.oracle.java.testlibrary.*;
+import jdk.test.lib.*;
 import java.io.File;
 
 public class ArchiveDoesNotExist {
     public static void main(String[] args) throws Exception {
-        String fileName = "test.jsa";
+        String fileName = "ArchiveDoesNotExist.jsa";
 
         File cdsFile = new File(fileName);
         if (cdsFile.exists())

@@ -94,6 +94,21 @@ bool Verifier::relax_verify_for(oop loader) {
   return !need_verify;
 }
 
+void Verifier::trace_class_resolution(Klass* resolve_class, InstanceKlass* verify_class) {
+  assert(verify_class != NULL, "Unexpected null verify_class");
+  ResourceMark rm;
+  Symbol* s = verify_class->source_file_name();
+  const char* source_file = (s != NULL ? s->as_C_string() : NULL);
+  const char* verify = verify_class->external_name();
+  const char* resolve = resolve_class->external_name();
+  // print in a single call to reduce interleaving between threads
+  if (source_file != NULL) {
+    tty->print("RESOLVE %s %s %s (verification)\n", verify, resolve, source_file);
+  } else {
+    tty->print("RESOLVE %s %s (verification)\n", verify, resolve);
+  }
+}
+
 bool Verifier::verify(instanceKlassHandle klass, Verifier::Mode mode, bool should_verify_class, TRAPS) {
   HandleMark hm;
   ResourceMark rm(THREAD);
@@ -172,6 +187,10 @@ bool Verifier::verify(instanceKlassHandle klass, Verifier::Mode mode, bool shoul
     ResourceMark rm(THREAD);
     instanceKlassHandle kls =
       SystemDictionary::resolve_or_fail(exception_name, true, CHECK_false);
+    if (TraceClassResolution) {
+      Verifier::trace_class_resolution(kls(), klass());
+    }
+
     while (!kls.is_null()) {
       if (kls == klass) {
         // If the class being verified is the exception we're creating
@@ -657,6 +676,7 @@ void ClassVerifier::verify_method(methodHandle m, TRAPS) {
 
 
     bool this_uninit = false;  // Set to true when invokespecial <init> initialized 'this'
+    bool verified_exc_handlers = false;
 
     // Merge with the next instruction
     {
@@ -686,6 +706,18 @@ void ClassVerifier::verify_method(methodHandle m, TRAPS) {
           verify_error(ErrorContext::bad_code(bci), "Bad wide instruction");
           return;
         }
+      }
+
+      // Look for possible jump target in exception handlers and see if it
+      // matches current_frame.  Do this check here for astore*, dstore*,
+      // fstore*, istore*, and lstore* opcodes because they can change the type
+      // state by adding a local.  JVM Spec says that the incoming type state
+      // should be used for this check.  So, do the check here before a possible
+      // local is added to the type state.
+      if (Bytecodes::is_store_into_local(opcode) && bci >= ex_min && bci < ex_max) {
+        verify_exception_handler_targets(
+          bci, this_uninit, &current_frame, &stackmap_table, CHECK_VERIFY(this));
+        verified_exc_handlers = true;
       }
 
       switch (opcode) {
@@ -1669,9 +1701,13 @@ void ClassVerifier::verify_method(methodHandle m, TRAPS) {
       }  // end switch
     }  // end Merge with the next instruction
 
-    // Look for possible jump target in exception handlers and see if it
-    // matches current_frame
-    if (bci >= ex_min && bci < ex_max) {
+    // Look for possible jump target in exception handlers and see if it matches
+    // current_frame.  Don't do this check if it has already been done (for
+    // ([a,d,f,i,l]store* opcodes).  This check cannot be done earlier because
+    // opcodes, such as invokespecial, may set the this_uninit flag.
+    assert(!(verified_exc_handlers && this_uninit),
+      "Exception handler targets got verified before this_uninit got set");
+    if (!verified_exc_handlers && bci >= ex_min && bci < ex_max) {
       verify_exception_handler_targets(
         bci, this_uninit, &current_frame, &stackmap_table, CHECK_VERIFY(this));
     }
@@ -1930,9 +1966,15 @@ Klass* ClassVerifier::load_class(Symbol* name, TRAPS) {
   oop loader = current_class()->class_loader();
   oop protection_domain = current_class()->protection_domain();
 
-  return SystemDictionary::resolve_or_fail(
+  Klass* kls = SystemDictionary::resolve_or_fail(
     name, Handle(THREAD, loader), Handle(THREAD, protection_domain),
     true, THREAD);
+
+  if (TraceClassResolution) {
+    instanceKlassHandle cur_class = current_class();
+    Verifier::trace_class_resolution(kls, cur_class());
+  }
+  return kls;
 }
 
 bool ClassVerifier::is_protected_access(instanceKlassHandle this_class,
@@ -2236,14 +2278,20 @@ void ClassVerifier::verify_field_instructions(RawBytecodeStream* bcs,
 }
 
 // Look at the method's handlers.  If the bci is in the handler's try block
-// then check if the handler_pc is already on the stack.  If not, push it.
+// then check if the handler_pc is already on the stack.  If not, push it
+// unless the handler has already been scanned.
 void ClassVerifier::push_handlers(ExceptionTable* exhandlers,
+                                  GrowableArray<u4>* handler_list,
                                   GrowableArray<u4>* handler_stack,
                                   u4 bci) {
   int exlength = exhandlers->length();
   for(int x = 0; x < exlength; x++) {
     if (bci >= exhandlers->start_pc(x) && bci < exhandlers->end_pc(x)) {
-      handler_stack->append_if_missing(exhandlers->handler_pc(x));
+      u4 exhandler_pc = exhandlers->handler_pc(x);
+      if (!handler_list->contains(exhandler_pc)) {
+        handler_stack->append_if_missing(exhandler_pc);
+        handler_list->append(exhandler_pc);
+      }
     }
   }
 }
@@ -2261,6 +2309,10 @@ bool ClassVerifier::ends_in_athrow(u4 start_bc_offset) {
   GrowableArray<u4>* bci_stack = new GrowableArray<u4>(30);
   // Create stack for handlers for try blocks containing this handler.
   GrowableArray<u4>* handler_stack = new GrowableArray<u4>(30);
+  // Create list of handlers that have been pushed onto the handler_stack
+  // so that handlers embedded inside of their own TRY blocks only get
+  // scanned once.
+  GrowableArray<u4>* handler_list = new GrowableArray<u4>(30);
   // Create list of visited branch opcodes (goto* and if*).
   GrowableArray<u4>* visited_branches = new GrowableArray<u4>(30);
   ExceptionTable exhandlers(_method());
@@ -2279,7 +2331,7 @@ bool ClassVerifier::ends_in_athrow(u4 start_bc_offset) {
 
     // If the bytecode is in a TRY block, push its handlers so they
     // will get parsed.
-    push_handlers(&exhandlers, handler_stack, bci);
+    push_handlers(&exhandlers, handler_list, handler_stack, bci);
 
     switch (opcode) {
       case Bytecodes::_if_icmpeq:

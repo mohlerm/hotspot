@@ -30,7 +30,7 @@
  *          java.management
  */
 
-import com.oracle.java.testlibrary.*;
+import jdk.test.lib.*;
 import sun.misc.Unsafe;
 
 public class RangeCheck {
@@ -45,6 +45,7 @@ public class RangeCheck {
                 true,
                 "-Xmx32m",
                 "-XX:-TransmitErrorReport",
+                "-XX:-CreateCoredumpOnCrash",
                 "-XX:-InlineUnsafeOps", // The compiler intrinsics doesn't have the assert
                 DummyClassWithMainRangeCheck.class.getName());
 

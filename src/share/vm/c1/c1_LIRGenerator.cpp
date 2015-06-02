@@ -23,8 +23,8 @@
  */
 
 #include "precompiled.hpp"
-#include "c1/c1_Defs.hpp"
 #include "c1/c1_Compilation.hpp"
+#include "c1/c1_Defs.hpp"
 #include "c1/c1_FrameMap.hpp"
 #include "c1/c1_Instruction.hpp"
 #include "c1/c1_LIRAssembler.hpp"
@@ -33,7 +33,7 @@
 #include "ci/ciArrayKlass.hpp"
 #include "ci/ciInstance.hpp"
 #include "ci/ciObjArray.hpp"
-#include "memory/cardTableModRefBS.hpp"
+#include "gc/shared/cardTableModRefBS.hpp"
 #include "runtime/arguments.hpp"
 #include "runtime/sharedRuntime.hpp"
 #include "runtime/stubRoutines.hpp"
@@ -41,7 +41,7 @@
 #include "utilities/bitMap.inline.hpp"
 #include "utilities/macros.hpp"
 #if INCLUDE_ALL_GCS
-#include "gc_implementation/g1/heapRegion.hpp"
+#include "gc/g1/heapRegion.hpp"
 #endif // INCLUDE_ALL_GCS
 
 #ifdef ASSERT
@@ -1469,7 +1469,9 @@ void LIRGenerator::G1SATBCardTableModRef_pre_barrier(LIR_Opr addr_opr, LIR_Opr p
   } else {
     guarantee(in_bytes(PtrQueue::byte_width_of_active()) == 1,
               "Assumption");
-    flag_type = T_BYTE;
+    // Use unsigned type T_BOOLEAN here rather than signed T_BYTE since some platforms, eg. ARM,
+    // need to use unsigned instructions to use the large offset to load the satb_mark_queue.
+    flag_type = T_BOOLEAN;
   }
   LIR_Opr thrd = getThreadPointer();
   LIR_Address* mark_active_flag_addr =
@@ -1606,13 +1608,26 @@ void LIRGenerator::CardTableModRef_post_barrier(LIR_OprDesc* addr, LIR_OprDesc* 
   } else {
     __ unsigned_shift_right(addr, CardTableModRefBS::card_shift, tmp);
   }
+
+  LIR_Address* card_addr;
   if (can_inline_as_constant(card_table_base)) {
-    __ move(LIR_OprFact::intConst(0),
-              new LIR_Address(tmp, card_table_base->as_jint(), T_BYTE));
+    card_addr = new LIR_Address(tmp, card_table_base->as_jint(), T_BYTE);
   } else {
-    __ move(LIR_OprFact::intConst(0),
-              new LIR_Address(tmp, load_constant(card_table_base),
-                              T_BYTE));
+    card_addr = new LIR_Address(tmp, load_constant(card_table_base), T_BYTE);
+  }
+
+  LIR_Opr dirty = LIR_OprFact::intConst(CardTableModRefBS::dirty_card_val());
+  if (UseCondCardMark) {
+    LIR_Opr cur_value = new_register(T_INT);
+    __ move(card_addr, cur_value);
+
+    LabelObj* L_already_dirty = new LabelObj();
+    __ cmp(lir_cond_equal, cur_value, dirty);
+    __ branch(lir_cond_equal, T_BYTE, L_already_dirty->label());
+    __ move(dirty, card_addr);
+    __ branch_destination(L_already_dirty->label());
+  } else {
+    __ move(dirty, card_addr);
   }
 #endif
 }
@@ -2862,7 +2877,7 @@ LIRItemList* LIRGenerator::invoke_visit_arguments(Invoke* x) {
 //   g) lock result registers and emit call operation
 //
 // Before issuing a call, we must spill-save all values on stack
-// that are in caller-save register. "spill-save" moves thos registers
+// that are in caller-save register. "spill-save" moves those registers
 // either in a free callee-save register or spills them if no free
 // callee save register is available.
 //
@@ -2870,7 +2885,7 @@ LIRItemList* LIRGenerator::invoke_visit_arguments(Invoke* x) {
 // - if invoked between e) and f), we may lock callee save
 //   register in "spill-save" that destroys the receiver register
 //   before f) is executed
-// - if we rearange the f) to be earlier, by loading %o0, it
+// - if we rearrange f) to be earlier (by loading %o0) it
 //   may destroy a value on the stack that is currently in %o0
 //   and is waiting to be spilled
 // - if we keep the receiver locked while doing spill-save,
@@ -2903,14 +2918,16 @@ void LIRGenerator::do_Invoke(Invoke* x) {
   assert(receiver->is_illegal() || receiver->is_equal(LIR_Assembler::receiverOpr()), "must match");
 
   // JSR 292
-  // Preserve the SP over MethodHandle call sites.
+  // Preserve the SP over MethodHandle call sites, if needed.
   ciMethod* target = x->target();
   bool is_method_handle_invoke = (// %%% FIXME: Are both of these relevant?
                                   target->is_method_handle_intrinsic() ||
                                   target->is_compiled_lambda_form());
   if (is_method_handle_invoke) {
     info->set_is_method_handle_invoke(true);
-    __ move(FrameMap::stack_pointer(), FrameMap::method_handle_invoke_SP_save_opr());
+    if(FrameMap::method_handle_invoke_SP_save_opr() != LIR_OprFact::illegalOpr) {
+        __ move(FrameMap::stack_pointer(), FrameMap::method_handle_invoke_SP_save_opr());
+    }
   }
 
   switch (x->code()) {
@@ -2950,8 +2967,9 @@ void LIRGenerator::do_Invoke(Invoke* x) {
   }
 
   // JSR 292
-  // Restore the SP after MethodHandle call sites.
-  if (is_method_handle_invoke) {
+  // Restore the SP after MethodHandle call sites, if needed.
+  if (is_method_handle_invoke
+      && FrameMap::method_handle_invoke_SP_save_opr() != LIR_OprFact::illegalOpr) {
     __ move(FrameMap::method_handle_invoke_SP_save_opr(), FrameMap::stack_pointer());
   }
 

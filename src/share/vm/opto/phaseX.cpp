@@ -1573,11 +1573,12 @@ void PhaseCCP::analyze() {
       set_type(n, t);
       for (DUIterator_Fast imax, i = n->fast_outs(imax); i < imax; i++) {
         Node* m = n->fast_out(i);   // Get user
-        if( m->is_Region() ) {  // New path to Region?  Must recheck Phis too
+        if (m->is_Region()) {  // New path to Region?  Must recheck Phis too
           for (DUIterator_Fast i2max, i2 = m->fast_outs(i2max); i2 < i2max; i2++) {
             Node* p = m->fast_out(i2); // Propagate changes to uses
-            if( p->bottom_type() != type(p) ) // If not already bottomed out
+            if (p->bottom_type() != type(p)) { // If not already bottomed out
               worklist.push(p); // Propagate change to user
+            }
           }
         }
         // If we changed the receiver type to a call, we need to revisit
@@ -1587,12 +1588,31 @@ void PhaseCCP::analyze() {
         if (m->is_Call()) {
           for (DUIterator_Fast i2max, i2 = m->fast_outs(i2max); i2 < i2max; i2++) {
             Node* p = m->fast_out(i2);  // Propagate changes to uses
-            if (p->is_Proj() && p->as_Proj()->_con == TypeFunc::Control && p->outcnt() == 1)
+            if (p->is_Proj() && p->as_Proj()->_con == TypeFunc::Control && p->outcnt() == 1) {
               worklist.push(p->unique_out());
+            }
           }
         }
-        if( m->bottom_type() != type(m) ) // If not already bottomed out
+        if (m->bottom_type() != type(m)) { // If not already bottomed out
           worklist.push(m);     // Propagate change to user
+        }
+
+        // CmpU nodes can get their type information from two nodes up in the
+        // graph (instead of from the nodes immediately above). Make sure they
+        // are added to the worklist if nodes they depend on are updated, since
+        // they could be missed and get wrong types otherwise.
+        uint m_op = m->Opcode();
+        if (m_op == Op_AddI || m_op == Op_SubI) {
+          for (DUIterator_Fast i2max, i2 = m->fast_outs(i2max); i2 < i2max; i2++) {
+            Node* p = m->fast_out(i2); // Propagate changes to uses
+            if (p->Opcode() == Op_CmpU) {
+              // Got a CmpU which might need the new type information from node n.
+              if(p->bottom_type() != type(p)) { // If not already bottomed out
+                worklist.push(p); // Propagate change to user
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -1605,21 +1625,6 @@ void PhaseCCP::do_transform() {
   C->set_root( transform(C->root())->as_Root() );
   assert( C->top(),  "missing TOP node" );
   assert( C->root(), "missing root" );
-
-  // Eagerly remove castPP nodes here. CastPP nodes might not be
-  // removed in the subsequent IGVN phase if a node that changes
-  // in(1) of a castPP is processed prior to the castPP node.
-  for (uint i = 0; i < _worklist.size(); i++) {
-    Node* n = _worklist.at(i);
-
-    if (n->is_ConstraintCast()) {
-      Node* nn = n->Identity(this);
-      if (nn != n) {
-        replace_node(n, nn);
-        --i;
-      }
-    }
-  }
 }
 
 //------------------------------transform--------------------------------------
@@ -1700,11 +1705,6 @@ Node *PhaseCCP::transform_once( Node *n ) {
     _worklist.push(n);          // n re-enters the hash table via the worklist
   }
 
-  // Idealize graph using DU info.  Must clone() into new-space.
-  // DU info is generally used to show profitability, progress or safety
-  // (but generally not needed for correctness).
-  Node *nn = n->Ideal_DU_postCCP(this);
-
   // TEMPORARY fix to ensure that 2nd GVN pass eliminates NULL checks
   switch( n->Opcode() ) {
   case Op_FastLock:      // Revisit FastLocks for lock coarsening
@@ -1720,12 +1720,6 @@ Node *PhaseCCP::transform_once( Node *n ) {
     break;
   default:
     break;
-  }
-  if( nn ) {
-    _worklist.push(n);
-    // Put users of 'n' onto worklist for second igvn transform
-    add_users_to_worklist(n);
-    return nn;
   }
 
   return  n;

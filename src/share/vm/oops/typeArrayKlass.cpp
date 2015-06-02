@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,8 +26,8 @@
 #include "classfile/symbolTable.hpp"
 #include "classfile/systemDictionary.hpp"
 #include "classfile/vmSymbols.hpp"
-#include "gc_interface/collectedHeap.hpp"
-#include "gc_interface/collectedHeap.inline.hpp"
+#include "gc/shared/collectedHeap.hpp"
+#include "gc/shared/collectedHeap.inline.hpp"
 #include "memory/metadataFactory.hpp"
 #include "memory/resourceArea.hpp"
 #include "memory/universe.hpp"
@@ -36,7 +36,7 @@
 #include "oops/klass.inline.hpp"
 #include "oops/objArrayKlass.hpp"
 #include "oops/oop.inline.hpp"
-#include "oops/typeArrayKlass.hpp"
+#include "oops/typeArrayKlass.inline.hpp"
 #include "oops/typeArrayOop.hpp"
 #include "runtime/handles.inline.hpp"
 #include "runtime/orderAccess.inline.hpp"
@@ -203,57 +203,6 @@ int TypeArrayKlass::oop_size(oop obj) const {
   typeArrayOop t = typeArrayOop(obj);
   return t->object_size();
 }
-
-void TypeArrayKlass::oop_follow_contents(oop obj) {
-  assert(obj->is_typeArray(),"must be a type array");
-  // Performance tweak: We skip iterating over the klass pointer since we
-  // know that Universe::TypeArrayKlass never moves.
-}
-
-#if INCLUDE_ALL_GCS
-void TypeArrayKlass::oop_follow_contents(ParCompactionManager* cm, oop obj) {
-  assert(obj->is_typeArray(),"must be a type array");
-  // Performance tweak: We skip iterating over the klass pointer since we
-  // know that Universe::TypeArrayKlass never moves.
-}
-#endif // INCLUDE_ALL_GCS
-
-int TypeArrayKlass::oop_adjust_pointers(oop obj) {
-  assert(obj->is_typeArray(),"must be a type array");
-  typeArrayOop t = typeArrayOop(obj);
-  // Performance tweak: We skip iterating over the klass pointer since we
-  // know that Universe::TypeArrayKlass never moves.
-  return t->object_size();
-}
-
-int TypeArrayKlass::oop_oop_iterate(oop obj, ExtendedOopClosure* blk) {
-  assert(obj->is_typeArray(),"must be a type array");
-  typeArrayOop t = typeArrayOop(obj);
-  // Performance tweak: We skip iterating over the klass pointer since we
-  // know that Universe::TypeArrayKlass never moves.
-  return t->object_size();
-}
-
-int TypeArrayKlass::oop_oop_iterate_m(oop obj, ExtendedOopClosure* blk, MemRegion mr) {
-  assert(obj->is_typeArray(),"must be a type array");
-  typeArrayOop t = typeArrayOop(obj);
-  // Performance tweak: We skip iterating over the klass pointer since we
-  // know that Universe::TypeArrayKlass never moves.
-  return t->object_size();
-}
-
-#if INCLUDE_ALL_GCS
-void TypeArrayKlass::oop_push_contents(PSPromotionManager* pm, oop obj) {
-  ShouldNotReachHere();
-  assert(obj->is_typeArray(),"must be a type array");
-}
-
-int
-TypeArrayKlass::oop_update_pointers(ParCompactionManager* cm, oop obj) {
-  assert(obj->is_typeArray(),"must be a type array");
-  return typeArrayOop(obj)->object_size();
-}
-#endif // INCLUDE_ALL_GCS
 
 void TypeArrayKlass::initialize(TRAPS) {
   // Nothing to do. Having this function is handy since objArrayKlasses can be

@@ -28,13 +28,12 @@
  * @library /testlibrary /../../test/lib
  * @modules java.base/sun.misc
  *          java.management
- * @ignore
  * @build JcmdDetailDiff
  * @run main ClassFileInstaller sun.hotspot.WhiteBox
  * @run main/othervm -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions -XX:+WhiteBoxAPI -XX:NativeMemoryTracking=detail JcmdDetailDiff
  */
 
-import com.oracle.java.testlibrary.*;
+import jdk.test.lib.*;
 
 import sun.hotspot.WhiteBox;
 

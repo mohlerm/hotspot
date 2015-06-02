@@ -188,11 +188,20 @@ grep "ppc" vm_version.out > ${NULL}
 if [ $? = 0 ]
 then
   VM_CPU="ppc"
+  if [ $VM_BITS = "64" ]
+  then
+    VM_CPU="ppc64"
+  fi
 fi
 grep "ia64" vm_version.out > ${NULL}
 if [ $? = 0 ]
 then
   VM_CPU="ia64"
+fi
+grep "aarch64" vm_version.out > ${NULL}
+if [ $? = 0 ]
+then
+  VM_CPU="aarch64"
 fi
 export VM_TYPE VM_BITS VM_OS VM_CPU
 echo "VM_TYPE=${VM_TYPE}"

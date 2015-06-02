@@ -907,6 +907,13 @@ void PhaseChaitin::gather_lrg_masks( bool after_aggressive ) {
           lrg.set_num_regs(RegMask::SlotsPerVecY);
           lrg.set_reg_pressure(1);
           break;
+        case Op_VecZ:
+          assert(Matcher::vector_size_supported(T_FLOAT,RegMask::SlotsPerVecZ), "sanity");
+          assert(RegMask::num_registers(Op_VecZ) == RegMask::SlotsPerVecZ, "sanity");
+          assert(lrgmask.is_aligned_sets(RegMask::SlotsPerVecZ), "vector should be aligned");
+          lrg.set_num_regs(RegMask::SlotsPerVecZ);
+          lrg.set_reg_pressure(1);
+          break;
         default:
           ShouldNotReachHere();
         }
@@ -1514,7 +1521,7 @@ uint PhaseChaitin::Select( ) {
       int n_regs = lrg->num_regs();
       assert(!lrg->_is_vector || !lrg->_fat_proj, "sanity");
       if (n_regs == 1 || !lrg->_fat_proj) {
-        assert(!lrg->_is_vector || n_regs <= RegMask::SlotsPerVecY, "sanity");
+        assert(!lrg->_is_vector || n_regs <= RegMask::SlotsPerVecZ, "sanity");
         lrg->Clear();           // Clear the mask
         lrg->Insert(reg);       // Set regmask to match selected reg
         // For vectors and pairs, also insert the low bit of the pair
@@ -2095,7 +2102,7 @@ static char *print_reg( OptoReg::Name reg, const PhaseChaitin *pc, char *buf ) {
 // Dump a register name into a buffer.  Be intelligent if we get called
 // before allocation is complete.
 char *PhaseChaitin::dump_register( const Node *n, char *buf  ) const {
-  if( !this ) {                 // Not got anything?
+  if( this == NULL ) {          // Not got anything?
     sprintf(buf,"N%d",n->_idx); // Then use Node index
   } else if( _node_regs ) {
     // Post allocation, use direct mappings, no LRG info available

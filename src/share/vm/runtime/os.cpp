@@ -30,7 +30,7 @@
 #include "code/codeCache.hpp"
 #include "code/icBuffer.hpp"
 #include "code/vtableStubs.hpp"
-#include "gc_implementation/shared/vmGCOperations.hpp"
+#include "gc/shared/vmGCOperations.hpp"
 #include "interpreter/interpreter.hpp"
 #include "memory/allocation.inline.hpp"
 #ifdef ASSERT
@@ -52,9 +52,9 @@
 #include "runtime/thread.inline.hpp"
 #include "runtime/vm_version.hpp"
 #include "services/attachListener.hpp"
-#include "services/nmtCommon.hpp"
 #include "services/mallocTracker.hpp"
 #include "services/memTracker.hpp"
+#include "services/nmtCommon.hpp"
 #include "services/threadService.hpp"
 #include "utilities/defaultStream.hpp"
 #include "utilities/events.hpp"
@@ -813,16 +813,16 @@ void os::print_hex_dump(outputStream* st, address start, address end, int unitsi
   st->cr();
 }
 
-void os::print_environment_variables(outputStream* st, const char** env_list,
-                                     char* buffer, int len) {
+void os::print_environment_variables(outputStream* st, const char** env_list) {
   if (env_list) {
     st->print_cr("Environment Variables:");
 
     for (int i = 0; env_list[i] != NULL; i++) {
-      if (getenv(env_list[i], buffer, len)) {
+      char *envvar = ::getenv(env_list[i]);
+      if (envvar != NULL) {
         st->print("%s", env_list[i]);
         st->print("=");
-        st->print_cr("%s", buffer);
+        st->print_cr("%s", envvar);
       }
     }
   }

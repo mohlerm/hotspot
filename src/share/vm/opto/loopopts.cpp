@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1999, 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1999, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -718,7 +718,7 @@ Node *PhaseIdealLoop::split_if_with_blocks_pre( Node *n ) {
   }
 
   // Use same limit as split_if_with_blocks_post
-  if( C->unique() > 35000 ) return n; // Method too big
+  if( C->live_nodes() > 35000 ) return n; // Method too big
 
   // Split 'n' through the merge point if it is profitable
   Node *phi = split_thru_phi( n, n_blk, policy );
@@ -802,7 +802,7 @@ void PhaseIdealLoop::split_if_with_blocks_post( Node *n ) {
   // Cloning Cmp through Phi's involves the split-if transform.
   // FastLock is not used by an If
   if( n->is_Cmp() && !n->is_FastLock() ) {
-    if( C->unique() > 35000 ) return; // Method too big
+    if( C->live_nodes() > 35000 ) return; // Method too big
 
     // Do not do 'split-if' if irreducible loops are present.
     if( _has_irreducible_loops )
@@ -1267,12 +1267,36 @@ void PhaseIdealLoop::sink_use( Node *use, Node *post_loop ) {
 void PhaseIdealLoop::clone_loop( IdealLoopTree *loop, Node_List &old_new, int dd,
                                  Node* side_by_side_idom) {
 
+#ifndef PRODUCT
+  if (C->do_vector_loop() && PrintOpto) {
+    const char* mname = C->method()->name()->as_quoted_ascii();
+    if (mname != NULL) {
+      tty->print("PhaseIdealLoop::clone_loop: for vectorize method %s\n", mname);
+    }
+  }
+#endif
+
+  CloneMap& cm = C->clone_map();
+  Dict* dict = cm.dict();
+  if (C->do_vector_loop()) {
+    cm.set_clone_idx(cm.max_gen()+1);
+#ifndef PRODUCT
+    if (PrintOpto) {
+      tty->print_cr("PhaseIdealLoop::clone_loop: _clone_idx %d", cm.clone_idx());
+      loop->dump_head();
+    }
+#endif
+  }
+
   // Step 1: Clone the loop body.  Make the old->new mapping.
   uint i;
   for( i = 0; i < loop->_body.size(); i++ ) {
     Node *old = loop->_body.at(i);
     Node *nnn = old->clone();
     old_new.map( old->_idx, nnn );
+    if (C->do_vector_loop()) {
+      cm.verify_insert_and_clone(old, nnn, cm.clone_idx());
+    }
     _igvn.register_new_node_with_optimizer(nnn);
   }
 
@@ -1335,6 +1359,9 @@ void PhaseIdealLoop::clone_loop( IdealLoopTree *loop, Node_List &old_new, int dd
 
         // Clone the loop exit control projection
         Node *newuse = use->clone();
+        if (C->do_vector_loop()) {
+          cm.verify_insert_and_clone(use, newuse, cm.clone_idx());
+        }
         newuse->set_req(0,nnn);
         _igvn.register_new_node_with_optimizer(newuse);
         set_loop(newuse, use_loop);

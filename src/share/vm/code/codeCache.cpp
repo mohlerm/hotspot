@@ -31,21 +31,22 @@
 #include "code/nmethod.hpp"
 #include "code/pcDesc.hpp"
 #include "compiler/compileBroker.hpp"
+#include "gc/shared/gcLocker.hpp"
 #include "memory/allocation.inline.hpp"
-#include "memory/gcLocker.hpp"
 #include "memory/iterator.hpp"
 #include "memory/resourceArea.hpp"
 #include "oops/method.hpp"
 #include "oops/objArrayOop.hpp"
 #include "oops/oop.inline.hpp"
 #include "oops/verifyOopClosure.hpp"
-#include "runtime/handles.inline.hpp"
 #include "runtime/arguments.hpp"
+#include "runtime/compilationPolicy.hpp"
+#include "runtime/deoptimization.hpp"
+#include "runtime/handles.inline.hpp"
 #include "runtime/icache.hpp"
 #include "runtime/java.hpp"
 #include "runtime/mutexLocker.hpp"
 #include "runtime/sweeper.hpp"
-#include "runtime/compilationPolicy.hpp"
 #include "services/memoryService.hpp"
 #include "trace/tracing.hpp"
 #include "utilities/xmlstream.hpp"
@@ -1046,37 +1047,6 @@ void CodeCache::flush_dependents_on(instanceKlassHandle dependee) {
   }
 }
 
-// Flushes compiled methods dependent on a particular CallSite
-// instance when its target is different than the given MethodHandle.
-void CodeCache::flush_dependents_on(Handle call_site, Handle method_handle) {
-  assert_lock_strong(Compile_lock);
-
-  if (number_of_nmethods_with_dependencies() == 0) return;
-
-  // CodeCache can only be updated by a thread_in_VM and they will all be
-  // stopped during the safepoint so CodeCache will be safe to update without
-  // holding the CodeCache_lock.
-
-  CallSiteDepChange changes(call_site(), method_handle());
-
-  // Compute the dependent nmethods that have a reference to a
-  // CallSite object.  We use InstanceKlass::mark_dependent_nmethod
-  // directly instead of CodeCache::mark_for_deoptimization because we
-  // want dependents on the call site class only not all classes in
-  // the ContextStream.
-  int marked = 0;
-  {
-    MutexLockerEx mu(CodeCache_lock, Mutex::_no_safepoint_check_flag);
-    InstanceKlass* call_site_klass = InstanceKlass::cast(call_site->klass());
-    marked = call_site_klass->mark_dependent_nmethods(changes);
-  }
-  if (marked > 0) {
-    // At least one nmethod has been marked for deoptimization
-    VM_Deoptimize op;
-    VMThread::execute(&op);
-  }
-}
-
 #ifdef HOTSWAP
 // Flushes compiled methods dependent on dependee in the evolutionary sense
 void CodeCache::flush_evol_dependents_on(instanceKlassHandle ev_k_h) {
@@ -1368,10 +1338,10 @@ void CodeCache::print() {
         if (cb->is_alive()) {
           number_of_blobs++;
           code_size += cb->code_size();
-          OopMapSet* set = cb->oop_maps();
+          ImmutableOopMapSet* set = cb->oop_maps();
           if (set != NULL) {
-            number_of_oop_maps += set->size();
-            map_size           += set->heap_size();
+            number_of_oop_maps += set->count();
+            map_size           += set->nr_of_bytes();
           }
         }
       }

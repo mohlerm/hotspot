@@ -27,14 +27,14 @@
 #include "code/vmreg.inline.hpp"
 #include "compiler/abstractCompiler.hpp"
 #include "compiler/disassembler.hpp"
-#include "gc_interface/collectedHeap.inline.hpp"
+#include "gc/shared/collectedHeap.inline.hpp"
 #include "interpreter/interpreter.hpp"
 #include "interpreter/oopMapCache.hpp"
 #include "memory/resourceArea.hpp"
 #include "memory/universe.inline.hpp"
 #include "oops/markOop.hpp"
-#include "oops/methodData.hpp"
 #include "oops/method.hpp"
+#include "oops/methodData.hpp"
 #include "oops/oop.inline.hpp"
 #include "oops/verifyOopClosure.hpp"
 #include "prims/methodHandles.hpp"
@@ -1104,9 +1104,9 @@ void frame::nmethods_do(CodeBlobClosure* cf) {
 // call f() on the interpreted Method*s in the stack.
 // Have to walk the entire code cache for the compiled frames Yuck.
 void frame::metadata_do(void f(Metadata*)) {
-  if (_cb != NULL && Interpreter::contains(pc())) {
+  if (is_interpreted_frame()) {
     Method* m = this->interpreter_frame_method();
-    assert(m != NULL, "huh?");
+    assert(m != NULL, "expecting a method in this frame");
     f(m);
   }
 }

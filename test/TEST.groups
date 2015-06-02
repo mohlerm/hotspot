@@ -145,9 +145,13 @@ needs_compact3 = \
   gc/g1/TestShrinkAuxiliaryData25.java \
   gc/g1/TestShrinkAuxiliaryData30.java \
   gc/survivorAlignment \
+  gc/TestGCLogRotationViaJcmd.java \
   runtime/InternalApi/ThreadCpuTimesDeadlock.java \
+  serviceability/sa/jmap-hashcode/Test8028623.java \
   serviceability/threads/TestFalseDeadLock.java \
   compiler/codecache/jmx \
+  compiler/jsr292/RedefineMethodUsedByMultipleMethodHandles.java \
+  compiler/rangechecks/TestRangeCheckSmearing.java \
   serviceability/dcmd
 
 # Compact 2 adds full VM tests
@@ -233,6 +237,7 @@ needs_g1gc = \
   gc/arguments/TestParallelGCThreads.java \
   gc/arguments/TestUseCompressedOopsErgo.java \
   gc/class_unloading/TestG1ClassUnloadingHWM.java \
+  gc/ergonomics/TestDynamicNumberOfGCThreads.java
   gc/g1/ \
   gc/metaspace/G1AddMetaspaceDependency.java \
   gc/metaspace/TestMetaspacePerfCounters.java \
@@ -248,7 +253,7 @@ needs_serialgc = \
   gc/arguments/TestMaxNewSize.java \
   gc/arguments/TestSerialHeapSizeFlags.java \
   gc/arguments/TestUseCompressedOopsErgo.java \
-  gc/defnew/HeapChangeLogging.java \
+  gc/serial/HeapChangeLogging.java \
   gc/metaspace/TestMetaspacePerfCounters.java \
   gc/metaspace/TestPerfCountersAndMemoryPools.java \
   gc/startup_warnings/TestSerialGC.java 
@@ -262,8 +267,9 @@ needs_parallelgc = \
   gc/arguments/TestMinInitialErgonomics.java \
   gc/arguments/TestParallelGCThreads.java \
   gc/arguments/TestUseCompressedOopsErgo.java \
+  gc/ergonomics/TestDynamicNumberOfGCThreads.java
   gc/metaspace/TestMetaspacePerfCounters.java \
-  gc/parallelScavenge/ \
+  gc/parallel/ \
   gc/startup_warnings/TestParallelGC.java \
   gc/startup_warnings/TestParallelScavengeSerialOld.java
 
@@ -278,7 +284,8 @@ needs_cmsgc = \
   gc/arguments/TestParallelGCThreads.java \
   gc/arguments/TestUseCompressedOopsErgo.java \
   gc/class_unloading/TestCMSClassUnloadingEnabledHWM.java \
-  gc/concurrentMarkSweep/ \
+  gc/cms/ \
+  gc/ergonomics/TestDynamicNumberOfGCThreads.java
   gc/startup_warnings/TestCMS.java \
   gc/startup_warnings/TestDefNewCMS.java \
   gc/startup_warnings/TestParNewCMS.java
@@ -328,11 +335,6 @@ applicable_cmsgc = \
  -:needs_g1gc \
  -:needs_serialgc \
  -:needs_parallelgc
-
-
-# When called from top level the test suites use the hotspot_ prefix
-hotspot_wbapitest = \
-  sanity/
 
 hotspot_native_sanity = \
   native_sanity
@@ -394,6 +396,7 @@ hotspot_compiler_closed = \
 hotspot_gc = \
   sanity/ExecuteInternalVMTests.java \
   gc/ \
+  -gc/g1/TestGreyReclaimedHumongousObjects.java \
   -gc/metaspace/CompressedClassSpaceSizeInJmapHeap.java
 
 hotspot_gc_closed = \
@@ -416,10 +419,8 @@ hotspot_runtime = \
  -runtime/SharedArchiveFile/CdsSameObjectAlignment.java \
  -runtime/SharedArchiveFile/DefaultUseWithClient.java \
  -runtime/Thread/CancellableThreadTest.java \
- -runtime/7158988/FieldMonitor.java
-
-hotspot_runtime_closed = \
-  sanity/ExecuteInternalVMTests.java \
+ -runtime/7158988/FieldMonitor.java \
+  sanity/ \
   testlibrary_tests/TestMutuallyExclusivePlatformPredicates.java
 
 hotspot_serviceability = \
@@ -427,7 +428,6 @@ hotspot_serviceability = \
   serviceability/dcmd/compiler
 
 hotspot_jprt = \
-  :hotspot_wbapitest \
   :hotspot_compiler_1 \
   :hotspot_compiler_2 \
   :hotspot_compiler_3 \
@@ -436,7 +436,6 @@ hotspot_jprt = \
   :hotspot_gc_closed \
   :hotspot_gc_gcold \
   :hotspot_runtime \
-  :hotspot_runtime_closed \
   :hotspot_serviceability
 
 #All tests that depends on nashorn extension.

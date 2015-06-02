@@ -26,8 +26,8 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Properties;
 
-import com.oracle.java.testlibrary.ByteCodeLoader;
-import com.oracle.java.testlibrary.Platform;
+import jdk.test.lib.ByteCodeLoader;
+import jdk.test.lib.Platform;
 import jdk.internal.org.objectweb.asm.ClassVisitor;
 import jdk.internal.org.objectweb.asm.ClassWriter;
 import jdk.internal.org.objectweb.asm.Label;
@@ -46,7 +46,7 @@ import uncommontrap.Verifier;
  *          java.compiler
  *          java.management
  *          jdk.jvmstat/sun.jvmstat.monitor
- * @build TestUnstableIfTrap com.oracle.java.testlibrary.* uncommontrap.Verifier
+ * @build TestUnstableIfTrap jdk.test.lib.* uncommontrap.Verifier
  * @run main ClassFileInstaller sun.hotspot.WhiteBox
  *                              sun.hotspot.WhiteBox$WhiteBoxPermission
  * @run main/othervm -Xbatch -Xbootclasspath/a:. -XX:+UnlockDiagnosticVMOptions
@@ -69,7 +69,7 @@ import uncommontrap.Verifier;
  *                   -XX:CompileCommand=compileonly,UnstableIfExecutable.test
  *                   -XX:LogFile=never_taken_fired.xml
  *                   TestUnstableIfTrap NEVER_TAKEN true
- * @run main uncommontrap.Verifier always_taken_not_fired.xml
+ * @run main/othervm uncommontrap.Verifier always_taken_not_fired.xml
  *                                 always_taken_fired.xml
  *                                 never_taken_not_fired.xml
  *                                 never_taken_fired.xml

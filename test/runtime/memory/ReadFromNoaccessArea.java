@@ -33,7 +33,7 @@
  * @run main ReadFromNoaccessArea
  */
 
-import com.oracle.java.testlibrary.*;
+import jdk.test.lib.*;
 import sun.hotspot.WhiteBox;
 
 public class ReadFromNoaccessArea {
@@ -50,6 +50,7 @@ public class ReadFromNoaccessArea {
           "-XX:+WhiteBoxAPI",
           "-XX:+UseCompressedOops",
           "-XX:HeapBaseMinAddress=33G",
+          "-XX:-CreateCoredumpOnCrash",
           "-Xmx32m",
           DummyClassWithMainTryingToReadFromNoaccessArea.class.getName());
 

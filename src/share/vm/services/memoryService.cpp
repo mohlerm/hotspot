@@ -25,15 +25,15 @@
 #include "precompiled.hpp"
 #include "classfile/systemDictionary.hpp"
 #include "classfile/vmSymbols.hpp"
-#include "gc_implementation/shared/mutableSpace.hpp"
-#include "memory/collectorPolicy.hpp"
-#include "memory/defNewGeneration.hpp"
-#include "memory/genCollectedHeap.hpp"
-#include "memory/generation.hpp"
-#include "memory/generationSpec.hpp"
+#include "gc/parallel/mutableSpace.hpp"
+#include "gc/serial/defNewGeneration.hpp"
+#include "gc/serial/tenuredGeneration.hpp"
+#include "gc/shared/collectorPolicy.hpp"
+#include "gc/shared/genCollectedHeap.hpp"
+#include "gc/shared/generation.hpp"
+#include "gc/shared/generationSpec.hpp"
 #include "memory/heap.hpp"
 #include "memory/memRegion.hpp"
-#include "memory/tenuredGeneration.hpp"
 #include "oops/oop.inline.hpp"
 #include "runtime/globals.hpp"
 #include "runtime/javaCalls.hpp"
@@ -46,12 +46,12 @@
 #include "utilities/growableArray.hpp"
 #include "utilities/macros.hpp"
 #if INCLUDE_ALL_GCS
-#include "gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.hpp"
-#include "gc_implementation/g1/g1CollectedHeap.inline.hpp"
-#include "gc_implementation/parNew/parNewGeneration.hpp"
-#include "gc_implementation/parallelScavenge/parallelScavengeHeap.hpp"
-#include "gc_implementation/parallelScavenge/psOldGen.hpp"
-#include "gc_implementation/parallelScavenge/psYoungGen.hpp"
+#include "gc/cms/concurrentMarkSweepGeneration.hpp"
+#include "gc/cms/parNewGeneration.hpp"
+#include "gc/g1/g1CollectedHeap.inline.hpp"
+#include "gc/parallel/parallelScavengeHeap.hpp"
+#include "gc/parallel/psOldGen.hpp"
+#include "gc/parallel/psYoungGen.hpp"
 #include "services/g1MemoryPool.hpp"
 #include "services/psMemoryPool.hpp"
 #endif // INCLUDE_ALL_GCS
@@ -126,9 +126,8 @@ void MemoryService::add_gen_collected_heap_info(GenCollectedHeap* heap) {
   CollectorPolicy* policy = heap->collector_policy();
 
   assert(policy->is_generation_policy(), "Only support two generations");
-  guarantee(heap->n_gens() == 2, "Only support two-generation heap");
-
   GenCollectorPolicy* gen_policy = policy->as_generation_policy();
+  guarantee(gen_policy->number_of_generations() == 2, "Only support two-generation heap");
   if (gen_policy != NULL) {
     Generation::Name kind = gen_policy->young_gen_spec()->name();
     switch (kind) {

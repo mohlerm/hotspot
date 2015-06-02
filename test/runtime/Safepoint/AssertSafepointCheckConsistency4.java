@@ -34,7 +34,7 @@
  * @run main AssertSafepointCheckConsistency4
  */
 
-import com.oracle.java.testlibrary.*;
+import jdk.test.lib.*;
 
 import sun.hotspot.WhiteBox;
 
@@ -49,7 +49,7 @@ public class AssertSafepointCheckConsistency4 {
                "-XX:+UnlockDiagnosticVMOptions",
                "-XX:+WhiteBoxAPI",
                "-XX:-TransmitErrorReport",
-               "-XX:-CreateMinidumpOnCrash",
+               "-XX:-CreateCoredumpOnCrash",
                "-Xmx32m",
                "AssertSafepointCheckConsistency4",
                "test");

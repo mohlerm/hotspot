@@ -35,6 +35,7 @@
 #include "oops/objArrayOop.inline.hpp"
 #include "oops/oop.inline.hpp"
 #include "prims/methodHandles.hpp"
+#include "prims/jvmtiRedefineClassesTrace.hpp"
 #include "runtime/compilationPolicy.hpp"
 #include "runtime/javaCalls.hpp"
 #include "runtime/reflection.hpp"
@@ -185,7 +186,9 @@ oop MethodHandles::init_MemberName(Handle mname, Handle target) {
 oop MethodHandles::init_method_MemberName(Handle mname, CallInfo& info) {
   assert(info.resolved_appendix().is_null(), "only normal methods here");
   methodHandle m = info.resolved_method();
+  assert(m.not_null(), "null method handle");
   KlassHandle m_klass = m->method_holder();
+  assert(m.not_null(), "null holder for method handle");
   int flags = (jushort)( m->access_flags().as_short() & JVM_RECOGNIZED_METHOD_MODIFIERS );
   int vmindex = Method::invalid_vtable_index;
 
@@ -939,6 +942,58 @@ int MethodHandles::find_MemberNames(KlassHandle k,
   return rfill + overflow;
 }
 
+void MethodHandles::add_dependent_nmethod(oop call_site, nmethod* nm) {
+  assert_locked_or_safepoint(CodeCache_lock);
+
+  oop context = java_lang_invoke_CallSite::context(call_site);
+  nmethodBucket* deps = java_lang_invoke_MethodHandleNatives_CallSiteContext::vmdependencies(context);
+
+  nmethodBucket* new_deps = nmethodBucket::add_dependent_nmethod(deps, nm);
+  if (deps != new_deps) {
+    java_lang_invoke_MethodHandleNatives_CallSiteContext::set_vmdependencies(context, new_deps);
+  }
+}
+
+void MethodHandles::remove_dependent_nmethod(oop call_site, nmethod* nm) {
+  assert_locked_or_safepoint(CodeCache_lock);
+
+  oop context = java_lang_invoke_CallSite::context(call_site);
+  nmethodBucket* deps = java_lang_invoke_MethodHandleNatives_CallSiteContext::vmdependencies(context);
+
+  if (nmethodBucket::remove_dependent_nmethod(deps, nm)) {
+    nmethodBucket* new_deps = nmethodBucket::clean_dependent_nmethods(deps);
+    if (deps != new_deps) {
+      java_lang_invoke_MethodHandleNatives_CallSiteContext::set_vmdependencies(context, new_deps);
+    }
+  }
+}
+
+void MethodHandles::flush_dependent_nmethods(Handle call_site, Handle target) {
+  assert_lock_strong(Compile_lock);
+
+  int marked = 0;
+  CallSiteDepChange changes(call_site(), target());
+  {
+    MutexLockerEx mu2(CodeCache_lock, Mutex::_no_safepoint_check_flag);
+
+    oop context = java_lang_invoke_CallSite::context(call_site());
+    nmethodBucket* deps = java_lang_invoke_MethodHandleNatives_CallSiteContext::vmdependencies(context);
+
+    marked = nmethodBucket::mark_dependent_nmethods(deps, changes);
+    if (marked > 0) {
+      nmethodBucket* new_deps = nmethodBucket::clean_dependent_nmethods(deps);
+      if (deps != new_deps) {
+        java_lang_invoke_MethodHandleNatives_CallSiteContext::set_vmdependencies(context, new_deps);
+      }
+    }
+  }
+  if (marked > 0) {
+    // At least one nmethod has been marked for deoptimization
+    VM_Deoptimize op;
+    VMThread::execute(&op);
+  }
+}
+
 //------------------------------------------------------------------------------
 // MemberNameTable
 //
@@ -965,21 +1020,41 @@ void MemberNameTable::add_member_name(jweak mem_name_wref) {
 
 #if INCLUDE_JVMTI
 // It is called at safepoint only for RedefineClasses
-void MemberNameTable::adjust_method_entries(Method** old_methods, Method** new_methods,
-                                            int methods_length, bool *trace_name_printed) {
+void MemberNameTable::adjust_method_entries(InstanceKlass* holder, bool * trace_name_printed) {
   assert(SafepointSynchronize::is_at_safepoint(), "only called at safepoint");
   // For each redefined method
-  for (int j = 0; j < methods_length; j++) {
-    Method* old_method = old_methods[j];
-    Method* new_method = new_methods[j];
+  for (int idx = 0; idx < length(); idx++) {
+    oop mem_name = JNIHandles::resolve(this->at(idx));
+    if (mem_name == NULL) {
+      continue;
+    }
+    Method* old_method = (Method*)java_lang_invoke_MemberName::vmtarget(mem_name);
 
-    // search the MemberNameTable for uses of either obsolete or EMCP methods
-    for (int idx = 0; idx < length(); idx++) {
-      oop mem_name = JNIHandles::resolve(this->at(idx));
-      if (mem_name != NULL) {
-        java_lang_invoke_MemberName::adjust_vmtarget(mem_name, old_method, new_method,
-                                                     trace_name_printed);
+    if (old_method == NULL || !old_method->is_old()) {
+      continue; // skip uninteresting entries
+    }
+    if (old_method->is_deleted()) {
+      // skip entries with deleted methods
+      continue;
+    }
+    Method* new_method = holder->method_with_idnum(old_method->orig_method_idnum());
+
+    assert(new_method != NULL, "method_with_idnum() should not be NULL");
+    assert(old_method != new_method, "sanity check");
+
+    java_lang_invoke_MemberName::set_vmtarget(mem_name, new_method);
+
+    if (RC_TRACE_IN_RANGE(0x00100000, 0x00400000)) {
+      if (!(*trace_name_printed)) {
+        // RC_TRACE_MESG macro has an embedded ResourceMark
+        RC_TRACE_MESG(("adjust: name=%s",
+                       old_method->method_holder()->external_name()));
+        *trace_name_printed = true;
       }
+      // RC_TRACE macro has an embedded ResourceMark
+      RC_TRACE(0x00400000, ("MemberName method update: %s(%s)",
+                            new_method->name()->as_C_string(),
+                            new_method->signature()->as_C_string()));
     }
   }
 }
@@ -1231,11 +1306,11 @@ JVM_END
 
 JVM_ENTRY(void, MHN_setCallSiteTargetNormal(JNIEnv* env, jobject igcls, jobject call_site_jh, jobject target_jh)) {
   Handle call_site(THREAD, JNIHandles::resolve_non_null(call_site_jh));
-  Handle target   (THREAD, JNIHandles::resolve(target_jh));
+  Handle target   (THREAD, JNIHandles::resolve_non_null(target_jh));
   {
     // Walk all nmethods depending on this call site.
     MutexLocker mu(Compile_lock, thread);
-    CodeCache::flush_dependents_on(call_site, target);
+    MethodHandles::flush_dependent_nmethods(call_site, target);
     java_lang_invoke_CallSite::set_target(call_site(), target());
   }
 }
@@ -1243,12 +1318,43 @@ JVM_END
 
 JVM_ENTRY(void, MHN_setCallSiteTargetVolatile(JNIEnv* env, jobject igcls, jobject call_site_jh, jobject target_jh)) {
   Handle call_site(THREAD, JNIHandles::resolve_non_null(call_site_jh));
-  Handle target   (THREAD, JNIHandles::resolve(target_jh));
+  Handle target   (THREAD, JNIHandles::resolve_non_null(target_jh));
   {
     // Walk all nmethods depending on this call site.
     MutexLocker mu(Compile_lock, thread);
-    CodeCache::flush_dependents_on(call_site, target);
+    MethodHandles::flush_dependent_nmethods(call_site, target);
     java_lang_invoke_CallSite::set_target_volatile(call_site(), target());
+  }
+}
+JVM_END
+
+JVM_ENTRY(void, MHN_clearCallSiteContext(JNIEnv* env, jobject igcls, jobject context_jh)) {
+  Handle context(THREAD, JNIHandles::resolve_non_null(context_jh));
+  {
+    // Walk all nmethods depending on this call site.
+    MutexLocker mu1(Compile_lock, thread);
+
+    int marked = 0;
+    {
+      MutexLockerEx mu2(CodeCache_lock, Mutex::_no_safepoint_check_flag);
+      nmethodBucket* b = java_lang_invoke_MethodHandleNatives_CallSiteContext::vmdependencies(context());
+      while(b != NULL) {
+        nmethod* nm = b->get_nmethod();
+        if (b->count() > 0 && nm->is_alive() && !nm->is_marked_for_deoptimization()) {
+          nm->mark_for_deoptimization();
+          marked++;
+        }
+        nmethodBucket* next = b->next();
+        delete b;
+        b = next;
+      }
+      java_lang_invoke_MethodHandleNatives_CallSiteContext::set_vmdependencies(context(), NULL); // reset context
+    }
+    if (marked > 0) {
+      // At least one nmethod has been marked for deoptimization
+      VM_Deoptimize op;
+      VMThread::execute(&op);
+    }
   }
 }
 JVM_END
@@ -1289,6 +1395,7 @@ JVM_END
 #define MT    JLINV"MethodType;"
 #define MH    JLINV"MethodHandle;"
 #define MEM   JLINV"MemberName;"
+#define CTX   JLINV"MethodHandleNatives$CallSiteContext;"
 
 #define CC (char*)  /*cast a literal from (const char*)*/
 #define FN_PTR(f) CAST_FROM_FN_PTR(void*, &f)
@@ -1306,6 +1413,7 @@ static JNINativeMethod MHN_methods[] = {
   {CC"objectFieldOffset",         CC"("MEM")J",                          FN_PTR(MHN_objectFieldOffset)},
   {CC"setCallSiteTargetNormal",   CC"("CS""MH")V",                       FN_PTR(MHN_setCallSiteTargetNormal)},
   {CC"setCallSiteTargetVolatile", CC"("CS""MH")V",                       FN_PTR(MHN_setCallSiteTargetVolatile)},
+  {CC"clearCallSiteContext",      CC"("CTX")V",                          FN_PTR(MHN_clearCallSiteContext)},
   {CC"staticFieldOffset",         CC"("MEM")J",                          FN_PTR(MHN_staticFieldOffset)},
   {CC"staticFieldBase",           CC"("MEM")"OBJ,                        FN_PTR(MHN_staticFieldBase)},
   {CC"getMemberVMInfo",           CC"("MEM")"OBJ,                        FN_PTR(MHN_getMemberVMInfo)}

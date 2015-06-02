@@ -117,7 +117,6 @@ void Dependencies::assert_has_no_finalizable_subclasses(ciKlass* ctxk) {
 }
 
 void Dependencies::assert_call_site_target_value(ciCallSite* call_site, ciMethodHandle* method_handle) {
-  check_ctxk(call_site->klass());
   assert_common_2(call_site_target_value, call_site, method_handle);
 }
 
@@ -174,7 +173,6 @@ void Dependencies::assert_common_2(DepType dept,
       }
     }
   } else {
-    assert(dep_implicit_context_arg(dept) == 0, "sanity");
     if (note_dep_seen(dept, x0) && note_dep_seen(dept, x1)) {
       // look in this bucket for redundant assertions
       const int stride = 2;
@@ -594,7 +592,7 @@ void Dependencies::DepStream::log_dependency(Klass* witness) {
   const int nargs = argument_count();
   GrowableArray<DepArgument>* args = new GrowableArray<DepArgument>(nargs);
   for (int j = 0; j < nargs; j++) {
-    if (type() == call_site_target_value) {
+    if (is_oop_argument(j)) {
       args->push(argument_oop(j));
     } else {
       args->push(argument(j));
@@ -614,7 +612,7 @@ void Dependencies::DepStream::print_dependency(Klass* witness, bool verbose) {
   int nargs = argument_count();
   GrowableArray<DepArgument>* args = new GrowableArray<DepArgument>(nargs);
   for (int j = 0; j < nargs; j++) {
-    if (type() == call_site_target_value) {
+    if (is_oop_argument(j)) {
       args->push(argument_oop(j));
     } else {
       args->push(argument(j));
@@ -710,7 +708,7 @@ Metadata* Dependencies::DepStream::argument(int i) {
  * Returns a unique identifier for each dependency argument.
  */
 uintptr_t Dependencies::DepStream::get_identifier(int i) {
-  if (has_oop_argument()) {
+  if (is_oop_argument(i)) {
     return (uintptr_t)(oopDesc*)argument_oop(i);
   } else {
     return (uintptr_t)argument(i);
@@ -737,7 +735,7 @@ Klass* Dependencies::DepStream::context_type() {
   }
 
   // Some dependencies are using the klass of the first object
-  // argument as implicit context type (e.g. call_site_target_value).
+  // argument as implicit context type.
   {
     int ctxkj = dep_implicit_context_arg(type());
     if (ctxkj >= 0) {
@@ -1515,8 +1513,10 @@ Klass* Dependencies::check_has_no_finalizable_subclasses(Klass* ctxk, KlassDepCh
 }
 
 Klass* Dependencies::check_call_site_target_value(oop call_site, oop method_handle, CallSiteDepChange* changes) {
-  assert(call_site    ->is_a(SystemDictionary::CallSite_klass()),     "sanity");
-  assert(method_handle->is_a(SystemDictionary::MethodHandle_klass()), "sanity");
+  assert(!oopDesc::is_null(call_site), "sanity");
+  assert(!oopDesc::is_null(method_handle), "sanity");
+  assert(call_site->is_a(SystemDictionary::CallSite_klass()),     "sanity");
+
   if (changes == NULL) {
     // Validate all CallSites
     if (java_lang_invoke_CallSite::target(call_site) != method_handle)
@@ -1530,7 +1530,6 @@ Klass* Dependencies::check_call_site_target_value(oop call_site, oop method_hand
   }
   return NULL;  // assertion still valid
 }
-
 
 void Dependencies::DepStream::trace_and_log_witness(Klass* witness) {
   if (witness != NULL) {

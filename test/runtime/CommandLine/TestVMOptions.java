@@ -31,7 +31,7 @@
  * @run main TestVMOptions
  */
 
-import com.oracle.java.testlibrary.*;
+import jdk.test.lib.*;
 import java.io.File;
 
 public class TestVMOptions {
@@ -46,7 +46,7 @@ public class TestVMOptions {
     pb = ProcessTools.createJavaProcessBuilder(
         "-XX:-PrintVMOptions", "-version");
     output = new OutputAnalyzer(pb.start());
-    output.shouldContain("java version");
+    output.shouldMatch("(openjdk|java)\\sversion");
 
     File dir = new File(System.getProperty("test.src", "."));
     File file = new File(dir, "flagfile.txt");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,9 +23,9 @@
  */
 
 #include "precompiled.hpp"
-#include "gc_interface/collectedHeap.hpp"
-#include "gc_interface/collectedHeap.inline.hpp"
-#include "memory/genCollectedHeap.hpp"
+#include "gc/shared/collectedHeap.hpp"
+#include "gc/shared/collectedHeap.inline.hpp"
+#include "gc/shared/genCollectedHeap.hpp"
 #include "memory/resourceArea.hpp"
 #include "runtime/atomic.inline.hpp"
 #include "runtime/init.hpp"
@@ -239,7 +239,7 @@ void InterfaceSupport::stress_derived_pointers() {
     CodeBlob* cb = sfs.current()->cb();
     if (cb != NULL && cb->oop_maps() ) {
       // Find oopmap for current method
-      OopMap* map = cb->oop_map_for_return_address(sfs.current()->pc());
+      const ImmutableOopMap* map = cb->oop_map_for_return_address(sfs.current()->pc());
       assert(map != NULL, "no oopmap found for pc");
       found = map->has_derived_pointer();
     }

@@ -29,7 +29,7 @@
  * @run main LimitSharedSizes
  */
 
-import com.oracle.java.testlibrary.*;
+import jdk.test.lib.*;
 
 public class LimitSharedSizes {
     static enum Region {
@@ -125,9 +125,11 @@ public class LimitSharedSizes {
     };
 
     public static void main(String[] args) throws Exception {
-        String fileName = "test.jsa";
-
+        int counter = 0;
         for (SharedSizeTestData td : testTable) {
+            String fileName = "LimitSharedSizes" + counter + ".jsa";
+            counter++;
+
             String option = td.optionName + "=" + td.optionValue;
             System.out.println("testing option <" + option + ">");
 

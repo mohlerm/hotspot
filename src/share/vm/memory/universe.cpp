@@ -31,18 +31,18 @@
 #include "classfile/vmSymbols.hpp"
 #include "code/codeCache.hpp"
 #include "code/dependencies.hpp"
-#include "gc_interface/collectedHeap.inline.hpp"
+#include "gc/shared/cardTableModRefBS.hpp"
+#include "gc/shared/collectedHeap.inline.hpp"
+#include "gc/shared/gcLocker.inline.hpp"
+#include "gc/shared/genCollectedHeap.hpp"
+#include "gc/shared/genRemSet.hpp"
+#include "gc/shared/generation.hpp"
+#include "gc/shared/space.hpp"
 #include "interpreter/interpreter.hpp"
-#include "memory/cardTableModRefBS.hpp"
 #include "memory/filemap.hpp"
-#include "memory/gcLocker.inline.hpp"
-#include "memory/genCollectedHeap.hpp"
-#include "memory/genRemSet.hpp"
-#include "memory/generation.hpp"
 #include "memory/metadataFactory.hpp"
 #include "memory/metaspaceShared.hpp"
 #include "memory/oopFactory.hpp"
-#include "memory/space.hpp"
 #include "memory/universe.hpp"
 #include "memory/universe.inline.hpp"
 #include "oops/constantPool.hpp"
@@ -71,14 +71,14 @@
 #include "utilities/copy.hpp"
 #include "utilities/events.hpp"
 #include "utilities/hashtable.inline.hpp"
-#include "utilities/preserveException.hpp"
 #include "utilities/macros.hpp"
+#include "utilities/preserveException.hpp"
 #if INCLUDE_ALL_GCS
-#include "gc_implementation/shared/adaptiveSizePolicy.hpp"
-#include "gc_implementation/concurrentMarkSweep/cmsCollectorPolicy.hpp"
-#include "gc_implementation/g1/g1CollectedHeap.inline.hpp"
-#include "gc_implementation/g1/g1CollectorPolicy_ext.hpp"
-#include "gc_implementation/parallelScavenge/parallelScavengeHeap.hpp"
+#include "gc/cms/cmsCollectorPolicy.hpp"
+#include "gc/g1/g1CollectedHeap.inline.hpp"
+#include "gc/g1/g1CollectorPolicy_ext.hpp"
+#include "gc/parallel/parallelScavengeHeap.hpp"
+#include "gc/shared/adaptiveSizePolicy.hpp"
 #endif // INCLUDE_ALL_GCS
 #if INCLUDE_CDS
 #include "classfile/sharedClassUtil.hpp"
@@ -687,6 +687,15 @@ jint universe_init() {
   return JNI_OK;
 }
 
+template <class Heap, class Policy>
+jint Universe::create_heap() {
+  assert(_collectedHeap == NULL, "Heap already created");
+  Policy* policy = new Policy();
+  policy->initialize_all();
+  _collectedHeap = new Heap(policy);
+  return _collectedHeap->initialize();
+}
+
 // Choose the heap base address and oop encoding mode
 // when compressed oops are used:
 // Unscaled  - Use 32-bits oops without encoding when
@@ -696,49 +705,34 @@ jint universe_init() {
 // HeapBased - Use compressed oops with heap base + encoding.
 
 jint Universe::initialize_heap() {
+  jint status = JNI_ERR;
 
+#if !INCLUDE_ALL_GCS
   if (UseParallelGC) {
-#if INCLUDE_ALL_GCS
-    Universe::_collectedHeap = new ParallelScavengeHeap();
-#else  // INCLUDE_ALL_GCS
     fatal("UseParallelGC not supported in this VM.");
-#endif // INCLUDE_ALL_GCS
-
   } else if (UseG1GC) {
-#if INCLUDE_ALL_GCS
-    G1CollectorPolicyExt* g1p = new G1CollectorPolicyExt();
-    g1p->initialize_all();
-    G1CollectedHeap* g1h = new G1CollectedHeap(g1p);
-    Universe::_collectedHeap = g1h;
-#else  // INCLUDE_ALL_GCS
-    fatal("UseG1GC not supported in java kernel vm.");
-#endif // INCLUDE_ALL_GCS
-
+    fatal("UseG1GC not supported in this VM.");
+  } else if (UseConcMarkSweepGC) {
+    fatal("UseConcMarkSweepGC not supported in this VM.");
+#else
+  if (UseParallelGC) {
+    status = Universe::create_heap<ParallelScavengeHeap, GenerationSizer>();
+  } else if (UseG1GC) {
+    status = Universe::create_heap<G1CollectedHeap, G1CollectorPolicyExt>();
+  } else if (UseConcMarkSweepGC) {
+    status = Universe::create_heap<GenCollectedHeap, ConcurrentMarkSweepPolicy>();
+#endif
+  } else if (UseSerialGC) {
+    status = Universe::create_heap<GenCollectedHeap, MarkSweepPolicy>();
   } else {
-    GenCollectorPolicy *gc_policy;
-
-    if (UseSerialGC) {
-      gc_policy = new MarkSweepPolicy();
-    } else if (UseConcMarkSweepGC) {
-#if INCLUDE_ALL_GCS
-      gc_policy = new ConcurrentMarkSweepPolicy();
-#else  // INCLUDE_ALL_GCS
-      fatal("UseConcMarkSweepGC not supported in this VM.");
-#endif // INCLUDE_ALL_GCS
-    } else { // default old generation
-      gc_policy = new MarkSweepPolicy();
-    }
-    gc_policy->initialize_all();
-
-    Universe::_collectedHeap = new GenCollectedHeap(gc_policy);
+    ShouldNotReachHere();
   }
 
-  ThreadLocalAllocBuffer::set_max_size(Universe::heap()->max_tlab_size());
-
-  jint status = Universe::heap()->initialize();
   if (status != JNI_OK) {
     return status;
   }
+
+  ThreadLocalAllocBuffer::set_max_size(Universe::heap()->max_tlab_size());
 
 #ifdef _LP64
   if (UseCompressedOops) {
@@ -1063,7 +1057,7 @@ bool universe_post_init() {
 
   MemoryService::add_metaspace_memory_pools();
 
-  MemoryService::set_universe_heap(Universe::_collectedHeap);
+  MemoryService::set_universe_heap(Universe::heap());
 #if INCLUDE_CDS
   SharedClassUtil::initialize(CHECK_false);
 #endif

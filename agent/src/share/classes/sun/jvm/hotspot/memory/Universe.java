@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2000, 2012, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2000, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,9 +27,9 @@ package sun.jvm.hotspot.memory;
 import java.io.*;
 import java.util.*;
 import sun.jvm.hotspot.debugger.*;
-import sun.jvm.hotspot.gc_interface.*;
-import sun.jvm.hotspot.gc_implementation.g1.G1CollectedHeap;
-import sun.jvm.hotspot.gc_implementation.parallelScavenge.*;
+import sun.jvm.hotspot.gc.shared.*;
+import sun.jvm.hotspot.gc.g1.G1CollectedHeap;
+import sun.jvm.hotspot.gc.parallel.*;
 import sun.jvm.hotspot.oops.*;
 import sun.jvm.hotspot.types.*;
 import sun.jvm.hotspot.runtime.*;
@@ -112,11 +112,7 @@ public class Universe {
     return "";
   }
   public CollectedHeap heap() {
-    try {
-      return (CollectedHeap) heapConstructor.instantiateWrapperFor(collectedHeapField.getValue());
-    } catch (WrongTypeException e) {
-      return new CollectedHeap(collectedHeapField.getValue());
-    }
+    return (CollectedHeap) heapConstructor.instantiateWrapperFor(collectedHeapField.getValue());
   }
 
   public static long getNarrowOopBase() {

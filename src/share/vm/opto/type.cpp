@@ -28,8 +28,8 @@
 #include "classfile/symbolTable.hpp"
 #include "classfile/systemDictionary.hpp"
 #include "compiler/compileLog.hpp"
+#include "gc/shared/gcLocker.hpp"
 #include "libadt/dict.hpp"
-#include "memory/gcLocker.hpp"
 #include "memory/oopFactory.hpp"
 #include "memory/resourceArea.hpp"
 #include "oops/instanceKlass.hpp"
@@ -68,16 +68,19 @@ Type::TypeInfo Type::_type_info[Type::lastype] = {
   { Bad,             T_ILLEGAL,    "vectord:",      false, Op_RegD,              relocInfo::none          },  // VectorD
   { Bad,             T_ILLEGAL,    "vectorx:",      false, 0,                    relocInfo::none          },  // VectorX
   { Bad,             T_ILLEGAL,    "vectory:",      false, 0,                    relocInfo::none          },  // VectorY
+  { Bad,             T_ILLEGAL,    "vectorz:",      false, 0,                    relocInfo::none          },  // VectorZ
 #elif defined(PPC64)
   { Bad,             T_ILLEGAL,    "vectors:",      false, 0,                    relocInfo::none          },  // VectorS
   { Bad,             T_ILLEGAL,    "vectord:",      false, Op_RegL,              relocInfo::none          },  // VectorD
   { Bad,             T_ILLEGAL,    "vectorx:",      false, 0,                    relocInfo::none          },  // VectorX
   { Bad,             T_ILLEGAL,    "vectory:",      false, 0,                    relocInfo::none          },  // VectorY
+  { Bad,             T_ILLEGAL,    "vectorz:",      false, 0,                    relocInfo::none          },  // VectorZ
 #else // all other
   { Bad,             T_ILLEGAL,    "vectors:",      false, Op_VecS,              relocInfo::none          },  // VectorS
   { Bad,             T_ILLEGAL,    "vectord:",      false, Op_VecD,              relocInfo::none          },  // VectorD
   { Bad,             T_ILLEGAL,    "vectorx:",      false, Op_VecX,              relocInfo::none          },  // VectorX
   { Bad,             T_ILLEGAL,    "vectory:",      false, Op_VecY,              relocInfo::none          },  // VectorY
+  { Bad,             T_ILLEGAL,    "vectorz:",      false, Op_VecZ,              relocInfo::none          },  // VectorZ
 #endif
   { Bad,             T_ADDRESS,    "anyptr:",       false, Op_RegP,              relocInfo::none          },  // AnyPtr
   { Bad,             T_ADDRESS,    "rawptr:",       false, Op_RegP,              relocInfo::none          },  // RawPtr
@@ -503,10 +506,14 @@ void Type::Initialize_shared(Compile* current) {
   if (Matcher::vector_size_supported(T_FLOAT,8)) {
     TypeVect::VECTY = TypeVect::make(T_FLOAT,8);
   }
+  if (Matcher::vector_size_supported(T_FLOAT,16)) {
+    TypeVect::VECTZ = TypeVect::make(T_FLOAT,16);
+  }
   mreg2type[Op_VecS] = TypeVect::VECTS;
   mreg2type[Op_VecD] = TypeVect::VECTD;
   mreg2type[Op_VecX] = TypeVect::VECTX;
   mreg2type[Op_VecY] = TypeVect::VECTY;
+  mreg2type[Op_VecZ] = TypeVect::VECTZ;
 
   // Restore working type arena.
   current->set_type_arena(save);
@@ -798,6 +805,7 @@ const Type::TYPES Type::dual_type[Type::lastype] = {
   Bad,          // VectorD - handled in v-call
   Bad,          // VectorX - handled in v-call
   Bad,          // VectorY - handled in v-call
+  Bad,          // VectorZ - handled in v-call
 
   Bad,          // AnyPtr - handled in v-call
   Bad,          // RawPtr - handled in v-call
@@ -1158,11 +1166,11 @@ static int normalize_int_widen( jint lo, jint hi, int w ) {
   // Certain normalizations keep us sane when comparing types.
   // The 'SMALLINT' covers constants and also CC and its relatives.
   if (lo <= hi) {
-    if ((juint)(hi - lo) <= SMALLINT)  w = Type::WidenMin;
-    if ((juint)(hi - lo) >= max_juint) w = Type::WidenMax; // TypeInt::INT
+    if (((juint)hi - lo) <= SMALLINT)  w = Type::WidenMin;
+    if (((juint)hi - lo) >= max_juint) w = Type::WidenMax; // TypeInt::INT
   } else {
-    if ((juint)(lo - hi) <= SMALLINT)  w = Type::WidenMin;
-    if ((juint)(lo - hi) >= max_juint) w = Type::WidenMin; // dual TypeInt::INT
+    if (((juint)lo - hi) <= SMALLINT)  w = Type::WidenMin;
+    if (((juint)lo - hi) >= max_juint) w = Type::WidenMin; // dual TypeInt::INT
   }
   return w;
 }
@@ -1416,11 +1424,11 @@ static int normalize_long_widen( jlong lo, jlong hi, int w ) {
   // Certain normalizations keep us sane when comparing types.
   // The 'SMALLINT' covers constants.
   if (lo <= hi) {
-    if ((julong)(hi - lo) <= SMALLINT)   w = Type::WidenMin;
-    if ((julong)(hi - lo) >= max_julong) w = Type::WidenMax; // TypeLong::LONG
+    if (((julong)hi - lo) <= SMALLINT)   w = Type::WidenMin;
+    if (((julong)hi - lo) >= max_julong) w = Type::WidenMax; // TypeLong::LONG
   } else {
-    if ((julong)(lo - hi) <= SMALLINT)   w = Type::WidenMin;
-    if ((julong)(lo - hi) >= max_julong) w = Type::WidenMin; // dual TypeLong::LONG
+    if (((julong)lo - hi) <= SMALLINT)   w = Type::WidenMin;
+    if (((julong)lo - hi) >= max_julong) w = Type::WidenMin; // dual TypeLong::LONG
   }
   return w;
 }
@@ -2051,6 +2059,7 @@ const TypeVect *TypeVect::VECTS = NULL; //  32-bit vectors
 const TypeVect *TypeVect::VECTD = NULL; //  64-bit vectors
 const TypeVect *TypeVect::VECTX = NULL; // 128-bit vectors
 const TypeVect *TypeVect::VECTY = NULL; // 256-bit vectors
+const TypeVect *TypeVect::VECTZ = NULL; // 512-bit vectors
 
 //------------------------------make-------------------------------------------
 const TypeVect* TypeVect::make(const Type *elem, uint length) {
@@ -2070,6 +2079,8 @@ const TypeVect* TypeVect::make(const Type *elem, uint length) {
     return (TypeVect*)(new TypeVectX(elem, length))->hashcons();
   case Op_VecY:
     return (TypeVect*)(new TypeVectY(elem, length))->hashcons();
+  case Op_VecZ:
+    return (TypeVect*)(new TypeVectZ(elem, length))->hashcons();
   }
  ShouldNotReachHere();
   return NULL;
@@ -2093,7 +2104,8 @@ const Type *TypeVect::xmeet( const Type *t ) const {
   case VectorS:
   case VectorD:
   case VectorX:
-  case VectorY: {                // Meeting 2 vectors?
+  case VectorY:
+  case VectorZ: {                // Meeting 2 vectors?
     const TypeVect* v = t->is_vect();
     assert(  base() == v->base(), "");
     assert(length() == v->length(), "");
@@ -2151,6 +2163,8 @@ void TypeVect::dump2(Dict &d, uint depth, outputStream *st) const {
     st->print("vectorx["); break;
   case VectorY:
     st->print("vectory["); break;
+  case VectorZ:
+    st->print("vectorz["); break;
   default:
     ShouldNotReachHere();
   }

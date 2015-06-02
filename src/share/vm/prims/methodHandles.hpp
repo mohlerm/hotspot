@@ -68,6 +68,12 @@ class MethodHandles: AllStatic {
   // bit values for suppress argument to expand_MemberName:
   enum { _suppress_defc = 1, _suppress_name = 2, _suppress_type = 4 };
 
+  // CallSite support
+  static void add_dependent_nmethod(oop call_site, nmethod* nm);
+  static void remove_dependent_nmethod(oop call_site, nmethod* nm);
+
+  static void flush_dependent_nmethods(Handle call_site, Handle target);
+
   // Generate MethodHandles adapters.
   static bool generate_adapters();
 
@@ -238,10 +244,8 @@ class MemberNameTable : public GrowableArray<jweak> {
 
 #if INCLUDE_JVMTI
   // RedefineClasses() API support:
-  // If a MemberName refers to old_method then update it
-  // to refer to new_method.
-  void adjust_method_entries(Method** old_methods, Method** new_methods,
-                             int methods_length, bool *trace_name_printed);
+  // If a MemberName refers to old_method then update it to refer to new_method.
+  void adjust_method_entries(InstanceKlass* holder, bool * trace_name_printed);
 #endif // INCLUDE_JVMTI
 };
 

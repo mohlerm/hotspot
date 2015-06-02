@@ -30,14 +30,14 @@
  *          java.compiler
  *          java.management
  *          jdk.jvmstat/sun.jvmstat.monitor
- * @build com.oracle.java.testlibrary.*
+ * @build jdk.test.lib.*
  * @run driver ProblematicFrameTest
  */
 
-import com.oracle.java.testlibrary.*;
+import jdk.test.lib.*;
 
 import sun.misc.Unsafe;
-import com.oracle.java.testlibrary.Utils;
+import jdk.test.lib.Utils;
 
 public class ProblematicFrameTest {
     private static class Crasher {
@@ -48,7 +48,7 @@ public class ProblematicFrameTest {
 
     public static void main(String[] args) throws Exception {
         ProcessBuilder pb = ProcessTools.createJavaProcessBuilder(
-            "-Xmx64m", "-XX:-TransmitErrorReport", "-XX:-CreateMinidumpOnCrash", Crasher.class.getName());
+            "-Xmx64m", "-XX:-TransmitErrorReport", "-XX:-CreateCoredumpOnCrash", Crasher.class.getName());
         OutputAnalyzer output = new OutputAnalyzer(pb.start());
         output.shouldNotMatch("error occurred during error reporting \\(printing problematic frame\\)");
     }

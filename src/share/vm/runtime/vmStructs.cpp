@@ -23,18 +23,18 @@
  */
 
 #include "precompiled.hpp"
+#include "ci/ciField.hpp"
+#include "ci/ciInstance.hpp"
+#include "ci/ciMethodData.hpp"
+#include "ci/ciObjArrayKlass.hpp"
+#include "ci/ciSymbol.hpp"
+#include "classfile/compactHashtable.hpp"
 #include "classfile/dictionary.hpp"
 #include "classfile/javaClasses.hpp"
 #include "classfile/loaderConstraints.hpp"
 #include "classfile/placeholders.hpp"
-#include "classfile/compactHashtable.hpp"
 #include "classfile/stringTable.hpp"
 #include "classfile/systemDictionary.hpp"
-#include "ci/ciField.hpp"
-#include "ci/ciInstance.hpp"
-#include "ci/ciObjArrayKlass.hpp"
-#include "ci/ciMethodData.hpp"
-#include "ci/ciSymbol.hpp"
 #include "code/codeBlob.hpp"
 #include "code/codeCache.hpp"
 #include "code/compressedStream.hpp"
@@ -43,29 +43,30 @@
 #include "code/pcDesc.hpp"
 #include "code/stubs.hpp"
 #include "code/vmreg.hpp"
-#include "compiler/oopMap.hpp"
 #include "compiler/compileBroker.hpp"
-#include "gc_implementation/shared/immutableSpace.hpp"
-#include "gc_implementation/shared/mutableSpace.hpp"
-#include "gc_interface/collectedHeap.hpp"
+#include "compiler/oopMap.hpp"
+#include "gc/parallel/immutableSpace.hpp"
+#include "gc/parallel/mutableSpace.hpp"
+#include "gc/serial/defNewGeneration.hpp"
+#include "gc/serial/tenuredGeneration.hpp"
+#include "gc/shared/cardTableRS.hpp"
+#include "gc/shared/collectedHeap.hpp"
+#include "gc/shared/genCollectedHeap.hpp"
+#include "gc/shared/generation.hpp"
+#include "gc/shared/generationSpec.hpp"
+#include "gc/shared/space.hpp"
+#include "gc/shared/watermark.hpp"
 #include "interpreter/bytecodeInterpreter.hpp"
 #include "interpreter/bytecodes.hpp"
 #include "interpreter/interpreter.hpp"
 #include "memory/allocation.hpp"
 #include "memory/allocation.inline.hpp"
-#include "memory/cardTableRS.hpp"
-#include "memory/defNewGeneration.hpp"
 #include "memory/freeBlockDictionary.hpp"
-#include "memory/genCollectedHeap.hpp"
-#include "memory/generation.hpp"
-#include "memory/generationSpec.hpp"
 #include "memory/heap.hpp"
 #include "memory/metachunk.hpp"
 #include "memory/referenceType.hpp"
-#include "memory/space.hpp"
-#include "memory/tenuredGeneration.hpp"
 #include "memory/universe.hpp"
-#include "memory/watermark.hpp"
+#include "memory/virtualspace.hpp"
 #include "oops/arrayKlass.hpp"
 #include "oops/arrayOop.hpp"
 #include "oops/compiledICHolder.hpp"
@@ -78,9 +79,9 @@
 #include "oops/instanceOop.hpp"
 #include "oops/klass.hpp"
 #include "oops/markOop.hpp"
-#include "oops/methodData.hpp"
-#include "oops/methodCounters.hpp"
 #include "oops/method.hpp"
+#include "oops/methodCounters.hpp"
+#include "oops/methodData.hpp"
 #include "oops/objArrayKlass.hpp"
 #include "oops/objArrayOop.hpp"
 #include "oops/oop.inline.hpp"
@@ -90,7 +91,6 @@
 #include "prims/jvmtiAgentThread.hpp"
 #include "runtime/arguments.hpp"
 #include "runtime/deoptimization.hpp"
-#include "runtime/vframeArray.hpp"
 #include "runtime/globals.hpp"
 #include "runtime/java.hpp"
 #include "runtime/javaCalls.hpp"
@@ -100,7 +100,7 @@
 #include "runtime/sharedRuntime.hpp"
 #include "runtime/stubRoutines.hpp"
 #include "runtime/thread.inline.hpp"
-#include "runtime/virtualspace.hpp"
+#include "runtime/vframeArray.hpp"
 #include "runtime/vmStructs.hpp"
 #include "utilities/array.hpp"
 #include "utilities/globalDefinitions.hpp"
@@ -162,20 +162,20 @@
 # include "vmStructs_bsd_zero.hpp"
 #endif
 #if INCLUDE_ALL_GCS
-#include "gc_implementation/concurrentMarkSweep/compactibleFreeListSpace.hpp"
-#include "gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.hpp"
-#include "gc_implementation/concurrentMarkSweep/concurrentMarkSweepThread.hpp"
-#include "gc_implementation/concurrentMarkSweep/vmStructs_cms.hpp"
-#include "gc_implementation/parNew/parNewGeneration.hpp"
-#include "gc_implementation/parNew/vmStructs_parNew.hpp"
-#include "gc_implementation/parallelScavenge/asPSOldGen.hpp"
-#include "gc_implementation/parallelScavenge/asPSYoungGen.hpp"
-#include "gc_implementation/parallelScavenge/parallelScavengeHeap.hpp"
-#include "gc_implementation/parallelScavenge/psOldGen.hpp"
-#include "gc_implementation/parallelScavenge/psVirtualspace.hpp"
-#include "gc_implementation/parallelScavenge/psYoungGen.hpp"
-#include "gc_implementation/parallelScavenge/vmStructs_parallelgc.hpp"
-#include "gc_implementation/g1/vmStructs_g1.hpp"
+#include "gc/cms/compactibleFreeListSpace.hpp"
+#include "gc/cms/concurrentMarkSweepGeneration.hpp"
+#include "gc/cms/concurrentMarkSweepThread.hpp"
+#include "gc/cms/parNewGeneration.hpp"
+#include "gc/cms/vmStructs_cms.hpp"
+#include "gc/cms/vmStructs_parNew.hpp"
+#include "gc/g1/vmStructs_g1.hpp"
+#include "gc/parallel/asPSOldGen.hpp"
+#include "gc/parallel/asPSYoungGen.hpp"
+#include "gc/parallel/parallelScavengeHeap.hpp"
+#include "gc/parallel/psOldGen.hpp"
+#include "gc/parallel/psVirtualspace.hpp"
+#include "gc/parallel/psYoungGen.hpp"
+#include "gc/parallel/vmStructs_parallelgc.hpp"
 #endif // INCLUDE_ALL_GCS
 
 #if INCLUDE_TRACE
@@ -197,13 +197,13 @@
 #include "opto/machnode.hpp"
 #include "opto/matcher.hpp"
 #include "opto/mathexactnode.hpp"
-#include "opto/mulnode.hpp"
 #include "opto/movenode.hpp"
+#include "opto/mulnode.hpp"
 #include "opto/narrowptrnode.hpp"
 #include "opto/opaquenode.hpp"
 #include "opto/optoreg.hpp"
-#include "opto/phaseX.hpp"
 #include "opto/parse.hpp"
+#include "opto/phaseX.hpp"
 #include "opto/regalloc.hpp"
 #include "opto/rootnode.hpp"
 #include "opto/subnode.hpp"
@@ -555,10 +555,8 @@ typedef CompactHashtable<Symbol*, char>       SymbolCompactHashTable;
   nonstatic_field(GenerationSpec,              _init_size,                                    size_t)                                \
   nonstatic_field(GenerationSpec,              _max_size,                                     size_t)                                \
                                                                                                                                      \
-    static_field(GenCollectedHeap,             _gch,                                          GenCollectedHeap*)                     \
   nonstatic_field(GenCollectedHeap,            _young_gen,                                    Generation*)                           \
   nonstatic_field(GenCollectedHeap,            _old_gen,                                      Generation*)                           \
- nonstatic_field(GenCollectedHeap,             _n_gens,                                       int)                                   \
                                                                                                                                      \
   nonstatic_field(GenCollectorPolicy,          _young_gen_spec,                               GenerationSpec*)                       \
   nonstatic_field(GenCollectorPolicy,          _old_gen_spec,                                 GenerationSpec*)                       \
@@ -862,7 +860,7 @@ typedef CompactHashtable<Symbol*, char>       SymbolCompactHashTable;
   nonstatic_field(CodeBlob,                    _frame_complete_offset,                        int)                                   \
   nonstatic_field(CodeBlob,                    _data_offset,                                  int)                                   \
   nonstatic_field(CodeBlob,                    _frame_size,                                   int)                                   \
-  nonstatic_field(CodeBlob,                    _oop_maps,                                     OopMapSet*)                            \
+  nonstatic_field(CodeBlob,                    _oop_maps,                                     ImmutableOopMapSet*)                   \
                                                                                                                                      \
   nonstatic_field(RuntimeStub,                 _caller_must_gc_arguments,                     bool)                                  \
                                                                                                                                      \
@@ -968,12 +966,18 @@ typedef CompactHashtable<Symbol*, char>       SymbolCompactHashTable;
                                                                                                                                      \
   nonstatic_field(OopMap,                      _pc_offset,                                    int)                                   \
   nonstatic_field(OopMap,                      _omv_count,                                    int)                                   \
-  nonstatic_field(OopMap,                      _omv_data_size,                                int)                                   \
-  nonstatic_field(OopMap,                      _omv_data,                                     unsigned char*)                        \
   nonstatic_field(OopMap,                      _write_stream,                                 CompressedWriteStream*)                \
   nonstatic_field(OopMapSet,                   _om_count,                                     int)                                   \
   nonstatic_field(OopMapSet,                   _om_size,                                      int)                                   \
   nonstatic_field(OopMapSet,                   _om_data,                                      OopMap**)                              \
+                                                                                                                                     \
+  nonstatic_field(ImmutableOopMapSet,          _count,                                        int)                                   \
+  nonstatic_field(ImmutableOopMapSet,          _size,                                         int)                                   \
+                                                                                                                                     \
+  nonstatic_field(ImmutableOopMapPair,         _pc_offset,                                    int)                                   \
+  nonstatic_field(ImmutableOopMapPair,         _oopmap_offset,                                int)                                   \
+                                                                                                                                     \
+  nonstatic_field(ImmutableOopMap,             _count,                                        int)                                   \
                                                                                                                                      \
   /*********************************/                                                                                                \
   /* JNIHandles and JNIHandleBlock */                                                                                                \
@@ -1501,8 +1505,7 @@ typedef CompactHashtable<Symbol*, char>       SymbolCompactHashTable;
   /******************************************/                            \
                                                                           \
   declare_toplevel_type(CollectedHeap)                                    \
-           declare_type(SharedHeap,                   CollectedHeap)      \
-           declare_type(GenCollectedHeap,             SharedHeap)         \
+           declare_type(GenCollectedHeap,             CollectedHeap)      \
   declare_toplevel_type(Generation)                                       \
            declare_type(DefNewGeneration,             Generation)         \
            declare_type(CardGeneration,               Generation)         \
@@ -1692,6 +1695,9 @@ typedef CompactHashtable<Symbol*, char>       SymbolCompactHashTable;
                                                                           \
   declare_toplevel_type(OopMap)                                           \
   declare_toplevel_type(OopMapSet)                                        \
+  declare_toplevel_type(ImmutableOopMapSet)                               \
+  declare_toplevel_type(ImmutableOopMapPair)                              \
+  declare_toplevel_type(ImmutableOopMap)                                  \
                                                                           \
   /********************/                                                  \
   /* CompressedStream */                                                  \
@@ -2004,6 +2010,8 @@ typedef CompactHashtable<Symbol*, char>       SymbolCompactHashTable;
   declare_c2_type(SubVFNode, VectorNode)                                  \
   declare_c2_type(SubVDNode, VectorNode)                                  \
   declare_c2_type(MulVSNode, VectorNode)                                  \
+  declare_c2_type(MulVLNode, VectorNode)                                  \
+  declare_c2_type(MulReductionVLNode, ReductionNode)                      \
   declare_c2_type(MulVINode, VectorNode)                                  \
   declare_c2_type(MulReductionVINode, ReductionNode)                      \
   declare_c2_type(MulVFNode, VectorNode)                                  \
@@ -2264,8 +2272,6 @@ typedef CompactHashtable<Symbol*, char>       SymbolCompactHashTable;
   declare_constant(CollectedHeap::GenCollectedHeap)                       \
   declare_constant(CollectedHeap::ParallelScavengeHeap)                   \
   declare_constant(CollectedHeap::G1CollectedHeap)                        \
-                                                                          \
-  declare_constant(GenCollectedHeap::max_gens)                            \
                                                                           \
   /* constants from Generation::Name enum */                              \
                                                                           \

@@ -25,8 +25,8 @@
 #ifndef SHARE_VM_RUNTIME_THREAD_HPP
 #define SHARE_VM_RUNTIME_THREAD_HPP
 
+#include "gc/shared/threadLocalAllocBuffer.hpp"
 #include "memory/allocation.hpp"
-#include "memory/threadLocalAllocBuffer.hpp"
 #include "oops/oop.hpp"
 #include "prims/jni.h"
 #include "prims/jvmtiExport.hpp"
@@ -48,13 +48,11 @@
 #include "utilities/macros.hpp"
 #include "utilities/top.hpp"
 #if INCLUDE_ALL_GCS
-#include "gc_implementation/g1/dirtyCardQueue.hpp"
-#include "gc_implementation/g1/satbQueue.hpp"
+#include "gc/g1/dirtyCardQueue.hpp"
+#include "gc/g1/satbQueue.hpp"
 #endif // INCLUDE_ALL_GCS
-#ifdef ZERO
 #ifdef TARGET_ARCH_zero
 # include "stack_zero.hpp"
-#endif
 #endif
 
 class ThreadSafepointState;
@@ -206,10 +204,24 @@ class Thread: public ThreadShadow {
  private:
   int _num_nested_signal;
 
+  DEBUG_ONLY(bool _suspendible_thread;)
+
  public:
   void enter_signal_handler() { _num_nested_signal++; }
   void leave_signal_handler() { _num_nested_signal--; }
   bool is_inside_signal_handler() const { return _num_nested_signal > 0; }
+
+#ifdef ASSERT
+  void set_suspendible_thread() {
+    _suspendible_thread = true;
+  }
+
+  void clear_suspendible_thread() {
+    _suspendible_thread = false;
+  }
+
+  bool is_suspendible_thread() { return _suspendible_thread; }
+#endif
 
  private:
   // Active_handles points to a block of handles
@@ -324,6 +336,8 @@ class Thread: public ThreadShadow {
 
   // Returns the current thread
   static inline Thread* current();
+  // ... without having to include thread.inline.hpp.
+  static Thread* current_noinline();
 
   // Common thread operations
   static void set_priority(Thread* thread, ThreadPriority priority);
@@ -1886,15 +1900,28 @@ class Threads: AllStatic {
   // Does not include JNI_VERSION_1_1
   static jboolean is_supported_jni_version(jint version);
 
+  // The "thread claim parity" provides a way for threads to be claimed
+  // by parallel worker tasks.
+  //
+  // Each thread contains a a "parity" field. A task will claim the
+  // thread only if its parity field is the same as the global parity,
+  // which is updated by calling change_thread_claim_parity().
+  //
+  // For this to work change_thread_claim_parity() needs to be called
+  // exactly once in sequential code before starting parallel tasks
+  // that should claim threads.
+  //
+  // New threads get their parity set to 0 and change_thread_claim_parity()
+  // never set the global parity to 0.
   static int thread_claim_parity() { return _thread_claim_parity; }
   static void change_thread_claim_parity();
+  static void assert_all_threads_claimed() NOT_DEBUG_RETURN;
 
-  static void assert_all_threads_claimed() PRODUCT_RETURN;
   // Apply "f->do_oop" to all root oops in all threads.
   // This version may only be called by sequential code.
   static void oops_do(OopClosure* f, CLDClosure* cld_f, CodeBlobClosure* cf);
   // This version may be called by sequential or parallel code.
-  static void possibly_parallel_oops_do(OopClosure* f, CLDClosure* cld_f, CodeBlobClosure* cf);
+  static void possibly_parallel_oops_do(bool is_par, OopClosure* f, CLDClosure* cld_f, CodeBlobClosure* cf);
   // This creates a list of GCTasks, one per thread.
   static void create_thread_roots_tasks(GCTaskQueue* q);
   // This creates a list of GCTasks, one per thread, for marking objects.

@@ -57,10 +57,12 @@
  * So, the expected heap size is page_size * 512.
  */
 
-import com.oracle.java.testlibrary.*;
-import static com.oracle.java.testlibrary.Asserts.*;
+import jdk.test.lib.*;
+import com.sun.management.HotSpotDiagnosticMXBean;
+import java.lang.management.ManagementFactory;
+import static jdk.test.lib.Asserts.*;
+
 import sun.hotspot.WhiteBox;
-import sun.management.ManagementFactoryHelper;
 
 public class TestSmallHeap {
 
@@ -69,7 +71,9 @@ public class TestSmallHeap {
         int pageSize = wb.getVMPageSize();
         int heapBytesPerCard = 512;
         long expectedMaxHeap = pageSize * heapBytesPerCard;
-        String maxHeap = ManagementFactoryHelper.getDiagnosticMXBean().getVMOption("MaxHeapSize").getValue();
+        String maxHeap
+            = ManagementFactory.getPlatformMXBean(HotSpotDiagnosticMXBean.class)
+                .getVMOption("MaxHeapSize").getValue();
         assertEQ(Long.parseLong(maxHeap), expectedMaxHeap);
     }
 }

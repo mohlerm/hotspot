@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2000, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2000, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -1210,6 +1210,16 @@ void PhaseIdealLoop::do_unroll( IdealLoopTree *loop, Node_List &old_new, bool ad
     }
     loop->dump_head();
   }
+
+  if (C->do_vector_loop() && (PrintOpto && VerifyLoopOptimizations || TraceLoopOpts)) {
+    Arena* arena = Thread::current()->resource_area();
+    Node_Stack stack(arena, C->unique() >> 2);
+    Node_List rpo_list;
+    VectorSet visited(arena);
+    visited.set(loop_head->_idx);
+    rpo( loop_head, stack, visited, rpo_list );
+    dump(loop, rpo_list.size(), rpo_list );
+  }
 #endif
 
   // Remember loop node count before unrolling to detect
@@ -1497,6 +1507,30 @@ void PhaseIdealLoop::do_unroll( IdealLoopTree *loop, Node_List &old_new, bool ad
   }
 
   loop->record_for_igvn();
+
+#ifndef PRODUCT
+  if (C->do_vector_loop() && (PrintOpto && VerifyLoopOptimizations || TraceLoopOpts)) {
+    tty->print("\nnew loop after unroll\n");       loop->dump_head();
+    for (uint i = 0; i < loop->_body.size(); i++) {
+      loop->_body.at(i)->dump();
+    }
+    if(C->clone_map().is_debug()) {
+      tty->print("\nCloneMap\n");
+      Dict* dict = C->clone_map().dict();
+      DictI i(dict);
+      tty->print_cr("Dict@%p[%d] = ", dict, dict->Size());
+      for (int ii = 0; i.test(); ++i, ++ii) {
+        NodeCloneInfo cl((uint64_t)dict->operator[]((void*)i._key));
+        tty->print("%d->%d:%d,", (int)(intptr_t)i._key, cl.idx(), cl.gen());
+        if (ii % 10 == 9) {
+          tty->print_cr(" ");
+        }
+      }
+      tty->print_cr(" ");
+    }
+  }
+#endif
+
 }
 
 //------------------------------do_maximally_unroll----------------------------
@@ -1548,12 +1582,35 @@ void PhaseIdealLoop::mark_reductions(IdealLoopTree *loop) {
           if (opc != ReductionNode::opcode(opc, def_node->bottom_type()->basic_type())) {
             if (!def_node->is_reduction()) { // Not marked yet
               // To be a reduction, the arithmetic node must have the phi as input and provide a def to it
+              bool ok = false;
               for (unsigned j = 1; j < def_node->req(); j++) {
                 Node* in = def_node->in(j);
                 if (in == phi) {
-                  def_node->add_flag(Node::Flag_is_reduction);
+                  ok = true;
                   break;
                 }
+              }
+
+              // do nothing if we did not match the initial criteria
+              if (ok == false) {
+                continue;
+              }
+
+              // The result of the reduction must not be used in the loop
+              for (DUIterator_Fast imax, i = def_node->fast_outs(imax); i < imax && ok; i++) {
+                Node* u = def_node->fast_out(i);
+                if (has_ctrl(u) && !loop->is_member(get_loop(get_ctrl(u)))) {
+                  continue;
+                }
+                if (u == phi) {
+                  continue;
+                }
+                ok = false;
+              }
+
+              // iff the uses conform
+              if (ok) {
+                def_node->add_flag(Node::Flag_is_reduction);
               }
             }
           }

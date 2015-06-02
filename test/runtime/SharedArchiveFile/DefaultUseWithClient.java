@@ -31,12 +31,12 @@
  * @bug 8032224
  */
 
-import com.oracle.java.testlibrary.*;
+import jdk.test.lib.*;
 import java.io.File;
 
 public class DefaultUseWithClient {
     public static void main(String[] args) throws Exception {
-        String fileName = "test.jsa";
+        String fileName = "DefaultUseWithClient.jsa";
 
         // On 32-bit windows CDS should be on by default in "-client" config
         // Skip this test on any other platform

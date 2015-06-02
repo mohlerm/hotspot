@@ -26,7 +26,7 @@
 #include "c1/c1_MacroAssembler.hpp"
 #include "c1/c1_Runtime1.hpp"
 #include "classfile/systemDictionary.hpp"
-#include "gc_interface/collectedHeap.hpp"
+#include "gc/shared/collectedHeap.hpp"
 #include "interpreter/interpreter.hpp"
 #include "oops/arrayOop.hpp"
 #include "oops/markOop.hpp"
@@ -360,6 +360,9 @@ void C1_MacroAssembler::build_frame(int frame_size_in_bytes, int bang_size_in_by
   generate_stack_overflow_check(bang_size_in_bytes);
 
   push(rbp);
+  if (PreserveFramePointer) {
+    mov(rbp, rsp);
+  }
 #ifdef TIERED
   // c2 leaves fpu stack dirty. Clean it on entry
   if (UseSSE < 2 ) {

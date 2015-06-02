@@ -28,6 +28,7 @@
 #include "memory/allocation.inline.hpp"
 #include "oops/objArrayKlass.hpp"
 #include "opto/addnode.hpp"
+#include "opto/arraycopynode.hpp"
 #include "opto/cfgnode.hpp"
 #include "opto/compile.hpp"
 #include "opto/connode.hpp"
@@ -107,6 +108,32 @@ extern void print_alias_types();
 
 #endif
 
+static bool membar_for_arraycopy_helper(const TypeOopPtr *t_oop, MergeMemNode* mm, PhaseTransform *phase) {
+  if (mm->memory_at(Compile::AliasIdxRaw)->is_Proj()) {
+    Node* n = mm->memory_at(Compile::AliasIdxRaw)->in(0);
+    if ((n->is_ArrayCopy() && n->as_ArrayCopy()->may_modify(t_oop, phase)) ||
+        (n->is_CallLeaf() && n->as_CallLeaf()->may_modify(t_oop, phase))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+static bool membar_for_arraycopy(const TypeOopPtr *t_oop, MemBarNode* mb, PhaseTransform *phase) {
+  Node* mem = mb->in(TypeFunc::Memory);
+  if (mem->is_MergeMem()) {
+    return membar_for_arraycopy_helper(t_oop, mem->as_MergeMem(), phase);
+  } else if (mem->is_Phi()) {
+    // after macro expansion of an ArrayCopyNode we may have a Phi
+    for (uint i = 1; i < mem->req(); i++) {
+      if (mem->in(i) != NULL && mem->in(i)->is_MergeMem() && membar_for_arraycopy_helper(t_oop, mem->in(i)->as_MergeMem(), phase)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 Node *MemNode::optimize_simple_memory_chain(Node *mchain, const TypeOopPtr *t_oop, Node *load, PhaseGVN *phase) {
   assert((t_oop != NULL), "sanity");
   bool is_instance = t_oop->is_known_instance_field();
@@ -129,6 +156,7 @@ Node *MemNode::optimize_simple_memory_chain(Node *mchain, const TypeOopPtr *t_oo
       if (proj_in->is_Allocate() && proj_in->_idx == instance_id) {
         break;  // hit one of our sentinels
       } else if (proj_in->is_Call()) {
+        // ArrayCopyNodes processed here as well
         CallNode *call = proj_in->as_Call();
         if (!call->may_modify(t_oop, phase)) { // returns false for instances
           result = call->in(TypeFunc::Memory);
@@ -136,7 +164,7 @@ Node *MemNode::optimize_simple_memory_chain(Node *mchain, const TypeOopPtr *t_oo
       } else if (proj_in->is_Initialize()) {
         AllocateNode* alloc = proj_in->as_Initialize()->allocation();
         // Stop if this is the initialization for the object instance which
-        // which contains this memory slice, otherwise skip over it.
+        // contains this memory slice, otherwise skip over it.
         if ((alloc == NULL) || (alloc->_idx == instance_id)) {
           break;
         }
@@ -150,6 +178,9 @@ Node *MemNode::optimize_simple_memory_chain(Node *mchain, const TypeOopPtr *t_oo
           }
         }
       } else if (proj_in->is_MemBar()) {
+        if (membar_for_arraycopy(t_oop, proj_in->as_MemBar(), phase)) {
+          break;
+        }
         result = proj_in->in(TypeFunc::Memory);
       } else {
         assert(false, "unexpected projection");
@@ -477,6 +508,75 @@ bool MemNode::detect_ptr_independence(Node* p1, AllocateNode* a1,
 }
 
 
+// Find an arraycopy that must have set (can_see_stored_value=true) or
+// could have set (can_see_stored_value=false) the value for this load
+Node* LoadNode::find_previous_arraycopy(PhaseTransform* phase, Node* ld_alloc, Node*& mem, bool can_see_stored_value) const {
+  if (mem->is_Proj() && mem->in(0) != NULL && (mem->in(0)->Opcode() == Op_MemBarStoreStore ||
+                                               mem->in(0)->Opcode() == Op_MemBarCPUOrder)) {
+    Node* mb = mem->in(0);
+    if (mb->in(0) != NULL && mb->in(0)->is_Proj() &&
+        mb->in(0)->in(0) != NULL && mb->in(0)->in(0)->is_ArrayCopy()) {
+      ArrayCopyNode* ac = mb->in(0)->in(0)->as_ArrayCopy();
+      if (ac->is_clonebasic()) {
+        intptr_t offset;
+        AllocateNode* alloc = AllocateNode::Ideal_allocation(ac->in(ArrayCopyNode::Dest), phase, offset);
+        assert(alloc != NULL && alloc->initialization()->is_complete_with_arraycopy(), "broken allocation");
+        if (alloc == ld_alloc) {
+          return ac;
+        }
+      }
+    }
+  } else if (mem->is_Proj() && mem->in(0) != NULL && mem->in(0)->is_ArrayCopy()) {
+    ArrayCopyNode* ac = mem->in(0)->as_ArrayCopy();
+
+    if (ac->is_arraycopy_validated() ||
+        ac->is_copyof_validated() ||
+        ac->is_copyofrange_validated()) {
+      Node* ld_addp = in(MemNode::Address);
+      if (ld_addp->is_AddP()) {
+        Node* ld_base = ld_addp->in(AddPNode::Address);
+        Node* ld_offs = ld_addp->in(AddPNode::Offset);
+
+        Node* dest = ac->in(ArrayCopyNode::Dest);
+
+        if (dest == ld_base) {
+          Node* src_pos = ac->in(ArrayCopyNode::SrcPos);
+          Node* dest_pos = ac->in(ArrayCopyNode::DestPos);
+          Node* len = ac->in(ArrayCopyNode::Length);
+
+          const TypeInt *dest_pos_t = phase->type(dest_pos)->isa_int();
+          const TypeX *ld_offs_t = phase->type(ld_offs)->isa_intptr_t();
+          const TypeInt *len_t = phase->type(len)->isa_int();
+          const TypeAryPtr* ary_t = phase->type(dest)->isa_aryptr();
+
+          if (dest_pos_t != NULL && ld_offs_t != NULL && len_t != NULL && ary_t != NULL) {
+            BasicType ary_elem  = ary_t->klass()->as_array_klass()->element_type()->basic_type();
+            uint header = arrayOopDesc::base_offset_in_bytes(ary_elem);
+            uint elemsize = type2aelembytes(ary_elem);
+
+            intptr_t dest_pos_plus_len_lo = (((intptr_t)dest_pos_t->_lo) + len_t->_lo) * elemsize + header;
+            intptr_t dest_pos_plus_len_hi = (((intptr_t)dest_pos_t->_hi) + len_t->_hi) * elemsize + header;
+            intptr_t dest_pos_lo = ((intptr_t)dest_pos_t->_lo) * elemsize + header;
+            intptr_t dest_pos_hi = ((intptr_t)dest_pos_t->_hi) * elemsize + header;
+
+            if (can_see_stored_value) {
+              if (ld_offs_t->_lo >= dest_pos_hi && ld_offs_t->_hi < dest_pos_plus_len_lo) {
+                return ac;
+              }
+            } else {
+              if (ld_offs_t->_hi < dest_pos_lo || ld_offs_t->_lo >= dest_pos_plus_len_hi) {
+                mem = ac->in(TypeFunc::Memory);
+              }
+              return ac;
+            }
+          }
+        }
+      }
+    }
+  }
+  return NULL;
+}
+
 // The logic for reordering loads and stores uses four steps:
 // (a) Walk carefully past stores and initializations which we
 //     can prove are independent of this load.
@@ -510,6 +610,7 @@ Node* MemNode::find_previous_store(PhaseTransform* phase) {
   for (;;) {                // While we can dance past unrelated stores...
     if (--cnt < 0)  break;  // Caught in cycle or a complicated dance?
 
+    Node* prev = mem;
     if (mem->is_Store()) {
       Node* st_adr = mem->in(MemNode::Address);
       intptr_t st_offset = 0;
@@ -580,15 +681,26 @@ Node* MemNode::find_previous_store(PhaseTransform* phase) {
         return mem;         // let caller handle steps (c), (d)
       }
 
+    } else if (find_previous_arraycopy(phase, alloc, mem, false) != NULL) {
+      if (prev != mem) {
+        // Found an arraycopy but it doesn't affect that load
+        continue;
+      }
+      // Found an arraycopy that may affect that load
+      return mem;
     } else if (addr_t != NULL && addr_t->is_known_instance_field()) {
       // Can't use optimize_simple_memory_chain() since it needs PhaseGVN.
       if (mem->is_Proj() && mem->in(0)->is_Call()) {
+        // ArrayCopyNodes processed here as well.
         CallNode *call = mem->in(0)->as_Call();
         if (!call->may_modify(addr_t, phase)) {
           mem = call->in(TypeFunc::Memory);
           continue;         // (a) advance through independent call memory
         }
       } else if (mem->is_Proj() && mem->in(0)->is_MemBar()) {
+        if (membar_for_arraycopy(addr_t, mem->in(0)->as_MemBar(), phase)) {
+          break;
+        }
         mem = mem->in(0)->in(TypeFunc::Memory);
         continue;           // (a) advance through independent MemBar memory
       } else if (mem->is_ClearArray()) {
@@ -652,216 +764,6 @@ const TypePtr* MemNode::calculate_adr_type(const Type* t, const TypePtr* cross_c
   }
 }
 
-//------------------------adr_phi_is_loop_invariant----------------------------
-// A helper function for Ideal_DU_postCCP to check if a Phi in a counted
-// loop is loop invariant. Make a quick traversal of Phi and associated
-// CastPP nodes, looking to see if they are a closed group within the loop.
-bool MemNode::adr_phi_is_loop_invariant(Node* adr_phi, Node* cast) {
-  // The idea is that the phi-nest must boil down to only CastPP nodes
-  // with the same data. This implies that any path into the loop already
-  // includes such a CastPP, and so the original cast, whatever its input,
-  // must be covered by an equivalent cast, with an earlier control input.
-  ResourceMark rm;
-
-  // The loop entry input of the phi should be the unique dominating
-  // node for every Phi/CastPP in the loop.
-  Unique_Node_List closure;
-  closure.push(adr_phi->in(LoopNode::EntryControl));
-
-  // Add the phi node and the cast to the worklist.
-  Unique_Node_List worklist;
-  worklist.push(adr_phi);
-  if( cast != NULL ){
-    if( !cast->is_ConstraintCast() ) return false;
-    worklist.push(cast);
-  }
-
-  // Begin recursive walk of phi nodes.
-  while( worklist.size() ){
-    // Take a node off the worklist
-    Node *n = worklist.pop();
-    if( !closure.member(n) ){
-      // Add it to the closure.
-      closure.push(n);
-      // Make a sanity check to ensure we don't waste too much time here.
-      if( closure.size() > 20) return false;
-      // This node is OK if:
-      //  - it is a cast of an identical value
-      //  - or it is a phi node (then we add its inputs to the worklist)
-      // Otherwise, the node is not OK, and we presume the cast is not invariant
-      if( n->is_ConstraintCast() ){
-        worklist.push(n->in(1));
-      } else if( n->is_Phi() ) {
-        for( uint i = 1; i < n->req(); i++ ) {
-          worklist.push(n->in(i));
-        }
-      } else {
-        return false;
-      }
-    }
-  }
-
-  // Quit when the worklist is empty, and we've found no offending nodes.
-  return true;
-}
-
-//------------------------------Ideal_DU_postCCP-------------------------------
-// Find any cast-away of null-ness and keep its control.  Null cast-aways are
-// going away in this pass and we need to make this memory op depend on the
-// gating null check.
-Node *MemNode::Ideal_DU_postCCP( PhaseCCP *ccp ) {
-  return Ideal_common_DU_postCCP(ccp, this, in(MemNode::Address));
-}
-
-// I tried to leave the CastPP's in.  This makes the graph more accurate in
-// some sense; we get to keep around the knowledge that an oop is not-null
-// after some test.  Alas, the CastPP's interfere with GVN (some values are
-// the regular oop, some are the CastPP of the oop, all merge at Phi's which
-// cannot collapse, etc).  This cost us 10% on SpecJVM, even when I removed
-// some of the more trivial cases in the optimizer.  Removing more useless
-// Phi's started allowing Loads to illegally float above null checks.  I gave
-// up on this approach.  CNC 10/20/2000
-// This static method may be called not from MemNode (EncodePNode calls it).
-// Only the control edge of the node 'n' might be updated.
-Node *MemNode::Ideal_common_DU_postCCP( PhaseCCP *ccp, Node* n, Node* adr ) {
-  Node *skipped_cast = NULL;
-  // Need a null check?  Regular static accesses do not because they are
-  // from constant addresses.  Array ops are gated by the range check (which
-  // always includes a NULL check).  Just check field ops.
-  if( n->in(MemNode::Control) == NULL ) {
-    // Scan upwards for the highest location we can place this memory op.
-    while( true ) {
-      switch( adr->Opcode() ) {
-
-      case Op_AddP:             // No change to NULL-ness, so peek thru AddP's
-        adr = adr->in(AddPNode::Base);
-        continue;
-
-      case Op_DecodeN:         // No change to NULL-ness, so peek thru
-      case Op_DecodeNKlass:
-        adr = adr->in(1);
-        continue;
-
-      case Op_EncodeP:
-      case Op_EncodePKlass:
-        // EncodeP node's control edge could be set by this method
-        // when EncodeP node depends on CastPP node.
-        //
-        // Use its control edge for memory op because EncodeP may go away
-        // later when it is folded with following or preceding DecodeN node.
-        if (adr->in(0) == NULL) {
-          // Keep looking for cast nodes.
-          adr = adr->in(1);
-          continue;
-        }
-        ccp->hash_delete(n);
-        n->set_req(MemNode::Control, adr->in(0));
-        ccp->hash_insert(n);
-        return n;
-
-      case Op_CastPP:
-        // If the CastPP is useless, just peek on through it.
-        if( ccp->type(adr) == ccp->type(adr->in(1)) ) {
-          // Remember the cast that we've peeked though. If we peek
-          // through more than one, then we end up remembering the highest
-          // one, that is, if in a loop, the one closest to the top.
-          skipped_cast = adr;
-          adr = adr->in(1);
-          continue;
-        }
-        // CastPP is going away in this pass!  We need this memory op to be
-        // control-dependent on the test that is guarding the CastPP.
-        ccp->hash_delete(n);
-        n->set_req(MemNode::Control, adr->in(0));
-        ccp->hash_insert(n);
-        return n;
-
-      case Op_Phi:
-        // Attempt to float above a Phi to some dominating point.
-        if (adr->in(0) != NULL && adr->in(0)->is_CountedLoop()) {
-          // If we've already peeked through a Cast (which could have set the
-          // control), we can't float above a Phi, because the skipped Cast
-          // may not be loop invariant.
-          if (adr_phi_is_loop_invariant(adr, skipped_cast)) {
-            adr = adr->in(1);
-            continue;
-          }
-        }
-
-        // Intentional fallthrough!
-
-        // No obvious dominating point.  The mem op is pinned below the Phi
-        // by the Phi itself.  If the Phi goes away (no true value is merged)
-        // then the mem op can float, but not indefinitely.  It must be pinned
-        // behind the controls leading to the Phi.
-      case Op_CheckCastPP:
-        // These usually stick around to change address type, however a
-        // useless one can be elided and we still need to pick up a control edge
-        if (adr->in(0) == NULL) {
-          // This CheckCastPP node has NO control and is likely useless. But we
-          // need check further up the ancestor chain for a control input to keep
-          // the node in place. 4959717.
-          skipped_cast = adr;
-          adr = adr->in(1);
-          continue;
-        }
-        ccp->hash_delete(n);
-        n->set_req(MemNode::Control, adr->in(0));
-        ccp->hash_insert(n);
-        return n;
-
-        // List of "safe" opcodes; those that implicitly block the memory
-        // op below any null check.
-      case Op_CastX2P:          // no null checks on native pointers
-      case Op_Parm:             // 'this' pointer is not null
-      case Op_LoadP:            // Loading from within a klass
-      case Op_LoadN:            // Loading from within a klass
-      case Op_LoadKlass:        // Loading from within a klass
-      case Op_LoadNKlass:       // Loading from within a klass
-      case Op_ConP:             // Loading from a klass
-      case Op_ConN:             // Loading from a klass
-      case Op_ConNKlass:        // Loading from a klass
-      case Op_CreateEx:         // Sucking up the guts of an exception oop
-      case Op_Con:              // Reading from TLS
-      case Op_CMoveP:           // CMoveP is pinned
-      case Op_CMoveN:           // CMoveN is pinned
-        break;                  // No progress
-
-      case Op_Proj:             // Direct call to an allocation routine
-      case Op_SCMemProj:        // Memory state from store conditional ops
-#ifdef ASSERT
-        {
-          assert(adr->as_Proj()->_con == TypeFunc::Parms, "must be return value");
-          const Node* call = adr->in(0);
-          if (call->is_CallJava()) {
-            const CallJavaNode* call_java = call->as_CallJava();
-            const TypeTuple *r = call_java->tf()->range();
-            assert(r->cnt() > TypeFunc::Parms, "must return value");
-            const Type* ret_type = r->field_at(TypeFunc::Parms);
-            assert(ret_type && ret_type->isa_ptr(), "must return pointer");
-            // We further presume that this is one of
-            // new_instance_Java, new_array_Java, or
-            // the like, but do not assert for this.
-          } else if (call->is_Allocate()) {
-            // similar case to new_instance_Java, etc.
-          } else if (!call->is_CallLeaf()) {
-            // Projections from fetch_oop (OSR) are allowed as well.
-            ShouldNotReachHere();
-          }
-        }
-#endif
-        break;
-      default:
-        ShouldNotReachHere();
-      }
-      break;
-    }
-  }
-
-  return  NULL;               // No progress
-}
-
-
 //=============================================================================
 // Should LoadNode::Ideal() attempt to remove control edges?
 bool LoadNode::can_remove_control() const {
@@ -882,6 +784,9 @@ void LoadNode::dump_spec(outputStream *st) const {
     // standard dump does this in Verbose and WizardMode
     st->print(" #"); _type->dump_on(st);
   }
+  if (!_depends_only_on_test) {
+    st->print(" (does not depend only on test)");
+  }
 }
 #endif
 
@@ -898,7 +803,7 @@ bool LoadNode::is_immutable_value(Node* adr) {
 
 //----------------------------LoadNode::make-----------------------------------
 // Polymorphic factory method:
-Node *LoadNode::make(PhaseGVN& gvn, Node *ctl, Node *mem, Node *adr, const TypePtr* adr_type, const Type *rt, BasicType bt, MemOrd mo) {
+Node *LoadNode::make(PhaseGVN& gvn, Node *ctl, Node *mem, Node *adr, const TypePtr* adr_type, const Type *rt, BasicType bt, MemOrd mo, ControlDependency control_dependency) {
   Compile* C = gvn.C;
 
   // sanity check the alias category against the created node type
@@ -914,39 +819,39 @@ Node *LoadNode::make(PhaseGVN& gvn, Node *ctl, Node *mem, Node *adr, const TypeP
           rt->isa_oopptr() || is_immutable_value(adr),
           "raw memory operations should have control edge");
   switch (bt) {
-  case T_BOOLEAN: return new LoadUBNode(ctl, mem, adr, adr_type, rt->is_int(),  mo);
-  case T_BYTE:    return new LoadBNode (ctl, mem, adr, adr_type, rt->is_int(),  mo);
-  case T_INT:     return new LoadINode (ctl, mem, adr, adr_type, rt->is_int(),  mo);
-  case T_CHAR:    return new LoadUSNode(ctl, mem, adr, adr_type, rt->is_int(),  mo);
-  case T_SHORT:   return new LoadSNode (ctl, mem, adr, adr_type, rt->is_int(),  mo);
-  case T_LONG:    return new LoadLNode (ctl, mem, adr, adr_type, rt->is_long(), mo);
-  case T_FLOAT:   return new LoadFNode (ctl, mem, adr, adr_type, rt,            mo);
-  case T_DOUBLE:  return new LoadDNode (ctl, mem, adr, adr_type, rt,            mo);
-  case T_ADDRESS: return new LoadPNode (ctl, mem, adr, adr_type, rt->is_ptr(),  mo);
+  case T_BOOLEAN: return new LoadUBNode(ctl, mem, adr, adr_type, rt->is_int(),  mo, control_dependency);
+  case T_BYTE:    return new LoadBNode (ctl, mem, adr, adr_type, rt->is_int(),  mo, control_dependency);
+  case T_INT:     return new LoadINode (ctl, mem, adr, adr_type, rt->is_int(),  mo, control_dependency);
+  case T_CHAR:    return new LoadUSNode(ctl, mem, adr, adr_type, rt->is_int(),  mo, control_dependency);
+  case T_SHORT:   return new LoadSNode (ctl, mem, adr, adr_type, rt->is_int(),  mo, control_dependency);
+  case T_LONG:    return new LoadLNode (ctl, mem, adr, adr_type, rt->is_long(), mo, control_dependency);
+  case T_FLOAT:   return new LoadFNode (ctl, mem, adr, adr_type, rt,            mo, control_dependency);
+  case T_DOUBLE:  return new LoadDNode (ctl, mem, adr, adr_type, rt,            mo, control_dependency);
+  case T_ADDRESS: return new LoadPNode (ctl, mem, adr, adr_type, rt->is_ptr(),  mo, control_dependency);
   case T_OBJECT:
 #ifdef _LP64
     if (adr->bottom_type()->is_ptr_to_narrowoop()) {
-      Node* load  = gvn.transform(new LoadNNode(ctl, mem, adr, adr_type, rt->make_narrowoop(), mo));
+      Node* load  = gvn.transform(new LoadNNode(ctl, mem, adr, adr_type, rt->make_narrowoop(), mo, control_dependency));
       return new DecodeNNode(load, load->bottom_type()->make_ptr());
     } else
 #endif
     {
       assert(!adr->bottom_type()->is_ptr_to_narrowoop() && !adr->bottom_type()->is_ptr_to_narrowklass(), "should have got back a narrow oop");
-      return new LoadPNode(ctl, mem, adr, adr_type, rt->is_oopptr(), mo);
+      return new LoadPNode(ctl, mem, adr, adr_type, rt->is_oopptr(), mo, control_dependency);
     }
   }
   ShouldNotReachHere();
   return (LoadNode*)NULL;
 }
 
-LoadLNode* LoadLNode::make_atomic(Node* ctl, Node* mem, Node* adr, const TypePtr* adr_type, const Type* rt, MemOrd mo) {
+LoadLNode* LoadLNode::make_atomic(Node* ctl, Node* mem, Node* adr, const TypePtr* adr_type, const Type* rt, MemOrd mo, ControlDependency control_dependency) {
   bool require_atomic = true;
-  return new LoadLNode(ctl, mem, adr, adr_type, rt->is_long(), mo, require_atomic);
+  return new LoadLNode(ctl, mem, adr, adr_type, rt->is_long(), mo, control_dependency, require_atomic);
 }
 
-LoadDNode* LoadDNode::make_atomic(Node* ctl, Node* mem, Node* adr, const TypePtr* adr_type, const Type* rt, MemOrd mo) {
+LoadDNode* LoadDNode::make_atomic(Node* ctl, Node* mem, Node* adr, const TypePtr* adr_type, const Type* rt, MemOrd mo, ControlDependency control_dependency) {
   bool require_atomic = true;
-  return new LoadDNode(ctl, mem, adr, adr_type, rt, mo, require_atomic);
+  return new LoadDNode(ctl, mem, adr, adr_type, rt, mo, control_dependency, require_atomic);
 }
 
 
@@ -969,6 +874,66 @@ static bool skip_through_membars(Compile::AliasType* atp, const TypeInstPtr* tp,
 
   return false;
 }
+
+// Is the value loaded previously stored by an arraycopy? If so return
+// a load node that reads from the source array so we may be able to
+// optimize out the ArrayCopy node later.
+Node* MemNode::can_see_arraycopy_value(Node* st, PhaseTransform* phase) const {
+  Node* ld_adr = in(MemNode::Address);
+  intptr_t ld_off = 0;
+  AllocateNode* ld_alloc = AllocateNode::Ideal_allocation(ld_adr, phase, ld_off);
+  Node* ac = find_previous_arraycopy(phase, ld_alloc, st, true);
+  if (ac != NULL) {
+    assert(ac->is_ArrayCopy(), "what kind of node can this be?");
+    assert(is_Load(), "only for loads");
+
+    if (ac->as_ArrayCopy()->is_clonebasic()) {
+      assert(ld_alloc != NULL, "need an alloc");
+      Node* ld = clone();
+      Node* addp = in(MemNode::Address)->clone();
+      assert(addp->is_AddP(), "address must be addp");
+      assert(addp->in(AddPNode::Base) == ac->in(ArrayCopyNode::Dest)->in(AddPNode::Base), "strange pattern");
+      assert(addp->in(AddPNode::Address) == ac->in(ArrayCopyNode::Dest)->in(AddPNode::Address), "strange pattern");
+      addp->set_req(AddPNode::Base, ac->in(ArrayCopyNode::Src)->in(AddPNode::Base));
+      addp->set_req(AddPNode::Address, ac->in(ArrayCopyNode::Src)->in(AddPNode::Address));
+      ld->set_req(MemNode::Address, phase->transform(addp));
+      if (in(0) != NULL) {
+        assert(ld_alloc->in(0) != NULL, "alloc must have control");
+        ld->set_req(0, ld_alloc->in(0));
+      }
+      return ld;
+    } else {
+      Node* ld = clone();
+      Node* addp = in(MemNode::Address)->clone();
+      assert(addp->in(AddPNode::Base) == addp->in(AddPNode::Address), "should be");
+      addp->set_req(AddPNode::Base, ac->in(ArrayCopyNode::Src));
+      addp->set_req(AddPNode::Address, ac->in(ArrayCopyNode::Src));
+
+      const TypeAryPtr* ary_t = phase->type(in(MemNode::Address))->isa_aryptr();
+      BasicType ary_elem  = ary_t->klass()->as_array_klass()->element_type()->basic_type();
+      uint header = arrayOopDesc::base_offset_in_bytes(ary_elem);
+      uint shift  = exact_log2(type2aelembytes(ary_elem));
+
+      Node* diff = phase->transform(new SubINode(ac->in(ArrayCopyNode::SrcPos), ac->in(ArrayCopyNode::DestPos)));
+#ifdef _LP64
+      diff = phase->transform(new ConvI2LNode(diff));
+#endif
+      diff = phase->transform(new LShiftXNode(diff, phase->intcon(shift)));
+
+      Node* offset = phase->transform(new AddXNode(addp->in(AddPNode::Offset), diff));
+      addp->set_req(AddPNode::Offset, offset);
+      ld->set_req(MemNode::Address, phase->transform(addp));
+
+      if (in(0) != NULL) {
+        assert(ac->in(0) != NULL, "alloc must have control");
+        ld->set_req(0, ac->in(0));
+      }
+      return ld;
+    }
+  }
+  return NULL;
+}
+
 
 //---------------------------can_see_stored_value------------------------------
 // This routine exists to make sure this set of tests is done the same
@@ -1003,6 +968,7 @@ Node* MemNode::can_see_stored_value(Node* st, PhaseTransform* phase) const {
           opc == Op_MemBarRelease ||
           opc == Op_StoreFence ||
           opc == Op_MemBarReleaseLock ||
+          opc == Op_MemBarStoreStore ||
           opc == Op_MemBarCPUOrder) {
         Node* mem = current->in(0)->in(TypeFunc::Memory);
         if (mem->is_MergeMem()) {
@@ -1073,8 +1039,9 @@ Node* MemNode::can_see_stored_value(Node* st, PhaseTransform* phase) const {
       if ((alloc != NULL) && (alloc == ld_alloc)) {
         // examine a captured store value
         st = init->find_captured_store(ld_off, memory_size(), phase);
-        if (st != NULL)
+        if (st != NULL) {
           continue;             // take one more trip around
+        }
       }
     }
 
@@ -1545,6 +1512,29 @@ Node *LoadNode::Ideal(PhaseGVN *phase, bool can_reshape) {
     }
   }
 
+  // Is there a dominating load that loads the same value?  Leave
+  // anything that is not a load of a field/array element (like
+  // barriers etc.) alone
+  if (in(0) != NULL && adr_type() != TypeRawPtr::BOTTOM && can_reshape) {
+    for (DUIterator_Fast imax, i = mem->fast_outs(imax); i < imax; i++) {
+      Node *use = mem->fast_out(i);
+      if (use != this &&
+          use->Opcode() == Opcode() &&
+          use->in(0) != NULL &&
+          use->in(0) != in(0) &&
+          use->in(Address) == in(Address)) {
+        Node* ctl = in(0);
+        for (int i = 0; i < 10 && ctl != NULL; i++) {
+          ctl = IfNode::up_one_dom(ctl);
+          if (ctl == use->in(0)) {
+            set_req(0, use->in(0));
+            return this;
+          }
+        }
+      }
+    }
+  }
+
   // Check for prior store with a different base or offset; make Load
   // independent.  Skip through any number of them.  Bail out if the stores
   // are in an endless dead cycle and report no progress.  This is a key
@@ -1558,6 +1548,12 @@ Node *LoadNode::Ideal(PhaseGVN *phase, bool can_reshape) {
   // the alias index stuff.  So instead, peek through Stores and IFF we can
   // fold up, do so.
   Node* prev_mem = find_previous_store(phase);
+  if (prev_mem != NULL) {
+    Node* value = can_see_arraycopy_value(prev_mem, phase);
+    if (value != NULL) {
+      return value;
+    }
+  }
   // Steps (a), (b):  Walk past independent stores to find an exact match.
   if (prev_mem != NULL && prev_mem != in(MemNode::Memory)) {
     // (c) See if we can fold up on the spot, but don't fold up here.
@@ -2739,7 +2735,6 @@ LoadStoreConditionalNode::LoadStoreConditionalNode( Node *c, Node *mem, Node *ad
 
 //=============================================================================
 //-------------------------------adr_type--------------------------------------
-// Do we Match on this edge index or not?  Do not match memory
 const TypePtr* ClearArrayNode::adr_type() const {
   Node *adr = in(3);
   if (adr == NULL)  return NULL; // node is dead

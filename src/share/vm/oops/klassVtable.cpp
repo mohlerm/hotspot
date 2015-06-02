@@ -25,7 +25,7 @@
 #include "precompiled.hpp"
 #include "classfile/systemDictionary.hpp"
 #include "classfile/vmSymbols.hpp"
-#include "memory/gcLocker.hpp"
+#include "gc/shared/gcLocker.hpp"
 #include "memory/resourceArea.hpp"
 #include "memory/universe.inline.hpp"
 #include "oops/instanceKlass.hpp"
@@ -404,13 +404,15 @@ bool klassVtable::update_inherited_vtable(InstanceKlass* klass, methodHandle tar
       // get super_klass for method_holder for the found method
       InstanceKlass* super_klass =  super_method->method_holder();
 
-      if (is_default
+      // private methods are also never overridden
+      if (!super_method->is_private() &&
+          (is_default
           || ((super_klass->is_override(super_method, target_loader, target_classname, THREAD))
           || ((klass->major_version() >= VTABLE_TRANSITIVE_OVERRIDE_VERSION)
           && ((super_klass = find_transitive_override(super_klass,
                              target_method, i, target_loader,
                              target_classname, THREAD))
-                             != (InstanceKlass*)NULL))))
+                             != (InstanceKlass*)NULL)))))
         {
         // Package private methods always need a new entry to root their own
         // overriding. They may also override other methods.
@@ -692,9 +694,15 @@ bool klassVtable::is_miranda_entry_at(int i) {
 // check if a method is a miranda method, given a class's methods table,
 // its default_method table  and its super
 // Miranda methods are calculated twice:
-// first: before vtable size calculation: including abstract and default
+// first: before vtable size calculation: including abstract and superinterface default
+// We include potential default methods to give them space in the vtable.
+// During the first run, the default_methods list is empty
 // This is seen by default method creation
-// Second: recalculated during vtable initialization: only abstract
+// Second: recalculated during vtable initialization: only include abstract methods.
+// During the second run, default_methods is set up, so concrete methods from
+// superinterfaces with matching names/signatures to default_methods are already
+// in the default_methods list and do not need to be appended to the vtable
+// as mirandas
 // This is seen by link resolution and selection.
 // "miranda" means not static, not defined by this class.
 // private methods in interfaces do not belong in the miranda list.
@@ -709,8 +717,9 @@ bool klassVtable::is_miranda(Method* m, Array<Method*>* class_methods,
   }
   Symbol* name = m->name();
   Symbol* signature = m->signature();
+  Method* mo;
 
-  if (InstanceKlass::find_instance_method(class_methods, name, signature) == NULL) {
+  if ((mo = InstanceKlass::find_instance_method(class_methods, name, signature)) == NULL) {
     // did not find it in the method table of the current class
     if ((default_methods == NULL) ||
         InstanceKlass::find_method(default_methods, name, signature) == NULL) {
@@ -719,7 +728,7 @@ bool klassVtable::is_miranda(Method* m, Array<Method*>* class_methods,
         return true;
       }
 
-      Method* mo = InstanceKlass::cast(super)->lookup_method(name, signature);
+      mo = InstanceKlass::cast(super)->lookup_method(name, signature);
       while (mo != NULL && mo->access_flags().is_static()
              && mo->method_holder() != NULL
              && mo->method_holder()->super() != NULL)
@@ -730,6 +739,18 @@ bool klassVtable::is_miranda(Method* m, Array<Method*>* class_methods,
         // super class hierarchy does not implement it or protection is different
         return true;
       }
+    }
+  } else {
+     // if the local class has a private method, the miranda will not
+     // override it, so a vtable slot is needed
+     if (mo->access_flags().is_private()) {
+
+       // Second round, weed out any superinterface methods that turned
+       // into default methods, i.e. were concrete not abstract in the end
+       if ((default_methods == NULL) ||
+         InstanceKlass::find_method(default_methods, name, signature) == NULL) {
+         return true;
+       }
     }
   }
 
@@ -1033,7 +1054,7 @@ inline bool interface_method_needs_itable_index(Method* m) {
 
 int klassItable::assign_itable_indices_for_interface(Klass* klass) {
   // an interface does not have an itable, but its methods need to be numbered
-  if (TraceItables) tty->print_cr("%3d: Initializing itable for interface %s", ++initialize_count,
+  if (TraceItables) tty->print_cr("%3d: Initializing itable indices for interface %s", ++initialize_count,
                                   klass->name()->as_C_string());
   Array<Method*>* methods = InstanceKlass::cast(klass)->methods();
   int nof_methods = methods->length();
@@ -1047,7 +1068,7 @@ int klassItable::assign_itable_indices_for_interface(Klass* klass) {
         ResourceMark rm;
         const char* sig = (m != NULL) ? m->name_and_sig_as_C_string() : "<NULL>";
         if (m->has_vtable_index()) {
-          tty->print("itable index %d for method: %s, flags: ", m->vtable_index(), sig);
+          tty->print("vtable index %d for method: %s, flags: ", m->vtable_index(), sig);
         } else {
           tty->print("itable index %d for method: %s, flags: ", ime_num, sig);
         }
@@ -1079,22 +1100,25 @@ int klassItable::method_count_for_interface(Klass* interf) {
   assert(interf->is_interface(), "must be");
   Array<Method*>* methods = InstanceKlass::cast(interf)->methods();
   int nof_methods = methods->length();
+  int length = 0;
   while (nof_methods > 0) {
     Method* m = methods->at(nof_methods-1);
     if (m->has_itable_index()) {
-      int length = m->itable_index() + 1;
-#ifdef ASSERT
-      while (nof_methods = 0) {
-        m = methods->at(--nof_methods);
-        assert(!m->has_itable_index() || m->itable_index() < length, "");
-      }
-#endif //ASSERT
-      return length;  // return the rightmost itable index, plus one
+      length = m->itable_index() + 1;
+      break;
     }
     nof_methods -= 1;
   }
-  // no methods have itable indices
-  return 0;
+#ifdef ASSERT
+  int nof_methods_copy = nof_methods;
+  while (nof_methods_copy > 0) {
+    Method* mm = methods->at(--nof_methods_copy);
+    assert(!mm->has_itable_index() || mm->itable_index() < length, "");
+  }
+#endif //ASSERT
+  // return the rightmost itable index, plus one; or 0 if no methods have
+  // itable indices
+  return length;
 }
 
 

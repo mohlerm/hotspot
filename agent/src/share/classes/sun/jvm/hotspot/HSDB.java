@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2000, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2000, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,16 +27,14 @@ package sun.jvm.hotspot;
 import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.math.*;
 import javax.swing.*;
-import javax.swing.tree.*;
 import java.util.*;
 
 import sun.jvm.hotspot.code.*;
 import sun.jvm.hotspot.compiler.*;
 import sun.jvm.hotspot.debugger.*;
-import sun.jvm.hotspot.gc_implementation.parallelScavenge.*;
-import sun.jvm.hotspot.gc_interface.*;
+import sun.jvm.hotspot.gc.parallel.*;
+import sun.jvm.hotspot.gc.shared.*;
 import sun.jvm.hotspot.interpreter.*;
 import sun.jvm.hotspot.memory.*;
 import sun.jvm.hotspot.oops.*;
@@ -928,8 +926,8 @@ public class HSDB implements ObjectHistogramPanel.Listener, SAListener {
             boolean shouldSkipOopMaps = false;
             if (curVFrame.isCompiledFrame()) {
               CodeBlob cb = VM.getVM().getCodeCache().findBlob(curFrame.getPC());
-              OopMapSet maps = cb.getOopMaps();
-              if ((maps == null) || (maps.getSize() == 0)) {
+              ImmutableOopMapSet maps = cb.getOopMaps();
+              if ((maps == null) || (maps.getCount() == 0)) {
                 shouldSkipOopMaps = true;
               }
             }
@@ -977,7 +975,7 @@ public class HSDB implements ObjectHistogramPanel.Listener, SAListener {
             } while (nextVFrame != null && nextFrame.equals(curFrame));
 
             if (shouldSkipOopMaps) {
-              anno = anno + "\nNOTE: null or empty OopMapSet found for this CodeBlob";
+              anno = anno + "\nNOTE: null or empty ImmutableOopMapSet found for this CodeBlob";
             }
 
             if (curFrame.getFP() != null) {

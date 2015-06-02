@@ -31,8 +31,8 @@
 *          java.management
 */
 
-import com.oracle.java.testlibrary.OutputAnalyzer;
-import com.oracle.java.testlibrary.ProcessTools;
+import jdk.test.lib.OutputAnalyzer;
+import jdk.test.lib.ProcessTools;
 
 
 public class TestParNewSerialOld {
@@ -40,7 +40,7 @@ public class TestParNewSerialOld {
   public static void main(String args[]) throws Exception {
     ProcessBuilder pb = ProcessTools.createJavaProcessBuilder("-XX:+UseParNewGC", "-version");
     OutputAnalyzer output = new OutputAnalyzer(pb.start());
-    output.shouldContain("It is not possible to combine the ParNew young collector with the Serial old collector.");
+    output.shouldContain("It is not possible to combine the ParNew young collector with any collector other than CMS.");
     output.shouldContain("Error");
     output.shouldHaveExitValue(1);
   }

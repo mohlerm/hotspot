@@ -96,7 +96,7 @@
   product(intx, MaxLoopPad, (OptoLoopAlignment-1),                          \
           "Align a loop if padding size in bytes is less or equal to this value") \
                                                                             \
-  product(intx, MaxVectorSize, 32,                                          \
+  product(intx, MaxVectorSize, 64,                                          \
           "Max vector size in bytes, "                                      \
           "actual size could be less depending on elements type")           \
                                                                             \
@@ -317,6 +317,9 @@
                                                                             \
   notproduct(bool, TraceLoopUnswitching, false,                             \
           "Trace loop unswitching")                                         \
+                                                                            \
+  product(bool, AllowVectorizeOnDemand, true,                               \
+          "Globally supress vectorization set in VectorizeMethod")          \
                                                                             \
   product(bool, UseSuperWord, true,                                         \
           "Transform scalar operations into superword operations")          \
@@ -592,9 +595,6 @@
                                                                             \
   develop(bool, PoisonOSREntry, true,                                       \
            "Detect abnormal calls to OSR code")                             \
-                                                                            \
-  product(bool, UseCondCardMark, false,                                     \
-          "Check for already marked card before updating card table")       \
                                                                             \
   develop(bool, SoftMatchFailure, trueInProduct,                            \
           "If the DFA fails to match a node, print a message and bail out") \

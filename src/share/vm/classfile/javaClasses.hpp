@@ -485,8 +485,9 @@ class java_lang_Throwable: AllStatic {
     trace_methods_offset = 0,
     trace_bcis_offset    = 1,
     trace_mirrors_offset = 2,
-    trace_next_offset    = 3,
-    trace_size           = 4,
+    trace_cprefs_offset  = 3,
+    trace_next_offset    = 4,
+    trace_size           = 5,
     trace_chunk_size     = 32
   };
 
@@ -497,7 +498,7 @@ class java_lang_Throwable: AllStatic {
   static int static_unassigned_stacktrace_offset;
 
   // Printing
-  static char* print_stack_element_to_buffer(Handle mirror, int method, int version, int bci);
+  static char* print_stack_element_to_buffer(Handle mirror, int method, int version, int bci, int cpref);
   // StackTrace (programmatic access, new since 1.4)
   static void clear_stacktrace(oop throwable);
   // No stack trace available
@@ -519,7 +520,7 @@ class java_lang_Throwable: AllStatic {
   static void set_message(oop throwable, oop value);
   static Symbol* detail_message(oop throwable);
   static void print_stack_element(outputStream *st, Handle mirror, int method,
-                                  int version, int bci);
+                                  int version, int bci, int cpref);
   static void print_stack_element(outputStream *st, methodHandle method, int bci);
   static void print_stack_usage(Handle stream);
 
@@ -961,7 +962,6 @@ class java_lang_ref_SoftReference: public java_lang_ref_Reference {
   static void set_clock(jlong value);
 };
 
-
 // Interface to java.lang.invoke.MethodHandle objects
 
 class MethodHandleEntry;
@@ -1091,10 +1091,6 @@ class java_lang_invoke_MemberName: AllStatic {
 
   static Metadata*      vmtarget(oop mname);
   static void       set_vmtarget(oop mname, Metadata* target);
-#if INCLUDE_JVMTI
-  static void       adjust_vmtarget(oop mname, Method* old_method, Method* new_method,
-                                    bool* trace_name_printed);
-#endif // INCLUDE_JVMTI
 
   static intptr_t       vmindex(oop mname);
   static void       set_vmindex(oop mname, intptr_t index);
@@ -1173,16 +1169,17 @@ class java_lang_invoke_CallSite: AllStatic {
 
 private:
   static int _target_offset;
+  static int _context_offset;
 
   static void compute_offsets();
 
 public:
   // Accessors
-  static oop              target(         oop site);
-  static void         set_target(         oop site, oop target);
+  static oop              target(          oop site);
+  static void         set_target(          oop site, oop target);
+  static void         set_target_volatile( oop site, oop target);
 
-  static volatile oop     target_volatile(oop site);
-  static void         set_target_volatile(oop site, oop target);
+  static oop              context(oop site);
 
   // Testers
   static bool is_subclass(Klass* klass) {
@@ -1194,6 +1191,30 @@ public:
   static int target_offset_in_bytes()           { return _target_offset; }
 };
 
+// Interface to java.lang.invoke.MethodHandleNatives$CallSiteContext objects
+
+#define CALLSITECONTEXT_INJECTED_FIELDS(macro) \
+  macro(java_lang_invoke_MethodHandleNatives_CallSiteContext, vmdependencies, intptr_signature, false)
+
+class java_lang_invoke_MethodHandleNatives_CallSiteContext : AllStatic {
+  friend class JavaClasses;
+
+private:
+  static int _vmdependencies_offset;
+
+  static void compute_offsets();
+
+public:
+  // Accessors
+  static nmethodBucket* vmdependencies(oop context);
+  static void       set_vmdependencies(oop context, nmethodBucket* bucket);
+
+  // Testers
+  static bool is_subclass(Klass* klass) {
+    return klass->is_subclass_of(SystemDictionary::Context_klass());
+  }
+  static bool is_instance(oop obj);
+};
 
 // Interface to java.security.AccessControlContext objects
 
@@ -1314,7 +1335,7 @@ class java_lang_StackTraceElement: AllStatic {
   static void set_lineNumber(oop element, int value);
 
   // Create an instance of StackTraceElement
-  static oop create(Handle mirror, int method, int version, int bci, TRAPS);
+  static oop create(Handle mirror, int method, int version, int bci, int cpref, TRAPS);
   static oop create(methodHandle method, int bci, TRAPS);
 
   // Debugging
@@ -1404,7 +1425,8 @@ class InjectedField {
 #define ALL_INJECTED_FIELDS(macro)          \
   CLASS_INJECTED_FIELDS(macro)              \
   CLASSLOADER_INJECTED_FIELDS(macro)        \
-  MEMBERNAME_INJECTED_FIELDS(macro)
+  MEMBERNAME_INJECTED_FIELDS(macro)         \
+  CALLSITECONTEXT_INJECTED_FIELDS(macro)
 
 // Interface to hard-coded offset checking
 

@@ -1,1 +1,14 @@
+This chapter describes the implementation of the cached profiles implementation for Hotspot, written as part of this thesis.
+\\\\
+Most of the work is included in two new classes \texttt{/share/vm/ci/ciCacheProfiles.cpp} and \\\texttt{/share/vm/ci/ciCacheProfilesBroker.cpp} as well as modifications to \texttt{/share/vm/ci/ciEnv.cpp} and \texttt{/share/vm/compiler/compileBroker.cpp}. A full list of modified files and the changes can be seen in the webrev or appendix TODO.
+\\\\
+The changes are provided in form of a patch for Hotspot version 8182 TODO. This original version is referred to as \textit{Baseline}.
+\\\\
+I will describe and explain the functionality and the implementation design decision in the following sections, ordered by the appearance in execution.
 
+
+\section{Creating Profiles}
+The baseline version of Hotspot already offered a functionality to replay a compilation based on dumped profiling information.
+This is mainly used in case the JVM crashes during JIT compilation to replay the compilation again and help finding the cause of this crash.
+Dumping the data needed for the replay is either be done automatically in case of a crash or can be invoked manually by specifying the \texttt{DumpReplay} compile command option per method.
+I introduce method option called \texttt{DumpProfile} as well as a compiler flag \texttt{-XX:+DumpProfiles} that appends profiling information to a file as soon as the method gets compiled. The first option can be specified as part of the \texttt{-XX:CompileCommand} or \texttt{-XX:CompileCommandFile} flag

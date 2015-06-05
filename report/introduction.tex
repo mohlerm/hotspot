@@ -11,5 +11,5 @@ At program startup, all methods are interpreted by the VM (execution at Tier-0).
 One of the drawbacks of this setup is that for all programs, all methods start in Tier 0, with interpretation and profiling by the VM. However, for many programs the set of “hot” methods does not change from one execution to another and there is no reason to gather again and again the profiling information. 
 
 The main idea of this thesis is to cache these profiles from a prior execution to be used in further runs of the same program. 
-This would allow the JIT compiler to use more sophisticated profiles early in program execution and avoid gathering the same profiling as well as prevent further compilations when more information about the method is available.
+This would allow the JIT compiler to use more sophisticated profiles early in program execution and avoid gathering the same profiling as well as prevent further compilations when more information about the method is available. While this will not influence the peak performance of the program, the hope is to decrease the time it's needed to achieve it.
 I present an implementation on top of the Java Hotspot Virtual Machine as well as profound performance analysis using state-of-the-art benchmarks.

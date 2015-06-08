@@ -1,0 +1,87 @@
+Baseline
+
+dco-node156-mgt.dco.ethz.ch: Score (version 9): 327
+dco-node156-mgt.dco.ethz.ch: >>> DEOPT COUNTER: 53322 <<<
+dco-node157-mgt.dco.ethz.ch: Typescript: 756
+dco-node157-mgt.dco.ethz.ch: ----
+dco-node157-mgt.dco.ethz.ch: Score (version 9): 339
+dco-node157-mgt.dco.ethz.ch: >>> DEOPT COUNTER: 42666 <<<
+dco-node160-mgt.dco.ethz.ch: Typescript: 706
+dco-node160-mgt.dco.ethz.ch: ----
+dco-node160-mgt.dco.ethz.ch: Score (version 9): 300
+dco-node160-mgt.dco.ethz.ch: >>> DEOPT COUNTER: 3077 <<<
+dco-node158-mgt.dco.ethz.ch: Typescript: 726
+dco-node158-mgt.dco.ethz.ch: ----
+dco-node158-mgt.dco.ethz.ch: Score (version 9): 288
+dco-node158-mgt.dco.ethz.ch: >>> DEOPT COUNTER: 28427 <<<
+dco-node159-mgt.dco.ethz.ch: Typescript: 699
+dco-node159-mgt.dco.ethz.ch: ----
+dco-node159-mgt.dco.ethz.ch: Score (version 9): 341
+dco-node159-mgt.dco.ethz.ch: >>> DEOPT COUNTER: 48277 <<<
+dco-node155-mgt.dco.ethz.ch: Typescript: 691
+dco-node155-mgt.dco.ethz.ch: ----
+dco-node155-mgt.dco.ethz.ch: Score (version 9): 276
+dco-node155-mgt.dco.ethz.ch: >>> DEOPT COUNTER: 52301 <<<
+dco-node154-mgt.dco.ethz.ch: Typescript: 713
+dco-node154-mgt.dco.ethz.ch: ----
+dco-node154-mgt.dco.ethz.ch: Score (version 9): 299
+dco-node154-mgt.dco.ethz.ch: >>> DEOPT COUNTER: 33574 <<<
+dco-node153-mgt.dco.ethz.ch: Typescript: 693
+dco-node153-mgt.dco.ethz.ch: ----
+dco-node153-mgt.dco.ethz.ch: Score (version 9): 267
+dco-node153-mgt.dco.ethz.ch: >>> DEOPT COUNTER: 17870 <<<
+
+Use
+
+dco-node154-mgt.dco.ethz.ch: Score (version 9): 293
+dco-node154-mgt.dco.ethz.ch: >>> DEOPT COUNTER: 41403 <<<
+dco-node160-mgt.dco.ethz.ch: Typescript: 721
+dco-node160-mgt.dco.ethz.ch: ----
+dco-node160-mgt.dco.ethz.ch: Score (version 9): 308
+dco-node160-mgt.dco.ethz.ch: >>> DEOPT COUNTER: 32224 <<<
+dco-node158-mgt.dco.ethz.ch: Typescript: 682
+dco-node158-mgt.dco.ethz.ch: ----
+dco-node158-mgt.dco.ethz.ch: Score (version 9): 276
+dco-node158-mgt.dco.ethz.ch: >>> DEOPT COUNTER: 4813 <<<
+dco-node153-mgt.dco.ethz.ch: Typescript: 659
+dco-node153-mgt.dco.ethz.ch: ----
+dco-node153-mgt.dco.ethz.ch: Score (version 9): 275
+dco-node153-mgt.dco.ethz.ch: >>> DEOPT COUNTER: 150829 <<<
+dco-node157-mgt.dco.ethz.ch: Typescript: 704
+dco-node157-mgt.dco.ethz.ch: ----
+dco-node157-mgt.dco.ethz.ch: Score (version 9): 321
+dco-node157-mgt.dco.ethz.ch: >>> DEOPT COUNTER: 25827 <<<
+dco-node159-mgt.dco.ethz.ch: Typescript: 727
+dco-node159-mgt.dco.ethz.ch: ----
+dco-node159-mgt.dco.ethz.ch: Score (version 9): 343
+dco-node159-mgt.dco.ethz.ch: >>> DEOPT COUNTER: 29377 <<<
+dco-node156-mgt.dco.ethz.ch: Typescript: 355
+dco-node156-mgt.dco.ethz.ch: ----
+dco-node156-mgt.dco.ethz.ch: Score (version 9): 248
+dco-node156-mgt.dco.ethz.ch: >>> DEOPT COUNTER: 8438727 <<<
+
+dco-node157-mgt.dco.ethz.ch: Typescript: 492
+dco-node157-mgt.dco.ethz.ch: ----
+dco-node157-mgt.dco.ethz.ch: Score (version 9): 241
+dco-node155-mgt.dco.ethz.ch: Typescript: 488
+dco-node155-mgt.dco.ethz.ch: ----
+dco-node155-mgt.dco.ethz.ch: Score (version 9): 236
+dco-node158-mgt.dco.ethz.ch: Typescript: 470
+dco-node158-mgt.dco.ethz.ch: ----
+dco-node158-mgt.dco.ethz.ch: Score (version 9): 228
+dco-node159-mgt.dco.ethz.ch: Typescript: 475
+dco-node159-mgt.dco.ethz.ch: ----
+dco-node159-mgt.dco.ethz.ch: Score (version 9): 248
+dco-node160-mgt.dco.ethz.ch: Typescript: 484
+dco-node160-mgt.dco.ethz.ch: ----
+dco-node160-mgt.dco.ethz.ch: Score (version 9): 259
+dco-node154-mgt.dco.ethz.ch: Typescript: 466
+dco-node154-mgt.dco.ethz.ch: ----
+dco-node154-mgt.dco.ethz.ch: Score (version 9): 237
+dco-node153-mgt.dco.ethz.ch: Typescript: 470
+dco-node153-mgt.dco.ethz.ch: ----
+dco-node153-mgt.dco.ethz.ch: Score (version 9): 249
+dco-node156-mgt.dco.ethz.ch: Typescript: 465
+dco-node156-mgt.dco.ethz.ch: ----
+dco-node156-mgt.dco.ethz.ch: Score (version 9): 243
+

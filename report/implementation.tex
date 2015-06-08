@@ -20,14 +20,14 @@ This is mainly used in case the JVM crashes during JIT compilation to replay the
 Dumping the data needed for the replay is either be done automatically in case of a crash or can be invoked manually by specifying the \texttt{DumpReplay} compile command option per method.
 I introduce method option called \texttt{DumpProfile} as well as a compiler flag \texttt{-XX:+DumpProfiles} that appends profiling information to a file as soon as the method gets compiled. The first option can be specified as part of the \texttt{-XX:CompileCommand} or \texttt{-XX:CompileCommandFile} flag and allows one to force single methods to dump their profile. The second commands dumps all profiles of all compiled methods into a single file called \textit{cached\_profiles.dat}.
 \\\\
-As soon as a method gets compiled all information about the methods used in the compiled method as well as their profiling information get converted to a string and written on disk. Since method often get compiled multiple times this can result in dumping compilation information about the same method multiple times. How this will be taken care of is described in Section \ref{s:initializingprofiles}
+As soon as a method gets compiled all information about the methods used in the compiled method as well as their profiling information get converted to a string and written to disk. Since method often get compiled multiple times this can result in dumping compilation information about the same method multiple times. How this will be taken care of is described in Section \ref{s:initializingprofiles}
 Together with some additional information about the compilation itself, for example the bytecode index of the compiled method in case of OSR, the compiler will be able to redo the same compilation on a future run of the java virtual machine.  
 \section{Initializing cached profiles}
 \label{s:initializingprofiles}
 I introduce a new compiler flag \texttt{-XX:+CacheProfiles} that enables the use of profiles that have been written to disk in a previous run of the Java Virtual Machine. Per default it reads from a file called \textit{cached\_profiles.dat} but a different file can be specified using \\\texttt{-XX:CacheProfilesFile=other\_file.dat}.
 \\\\
 Before any cached profiles can be used the virtual machine has to parse that file and organize the profiles and compile information in a simple datastructure. This datastructure is kept in memory during the whole execution of the JVM to avoid multiple scans of the file.
-The parsing process gets invoked during boot up of the JVM, directly after the CompileBroker gets initialized. This happens before any methods get executed and blocks the JVM until finished.
+The parsing process gets invoked during boot up of the JVM, directly after the compileBroker gets initialized. This happens before any methods get executed and blocks the JVM until finished.
 As mentioned in Section \ref{s:creatingprofiles} the file consists of method informations, method profiles and additional compile information. The parser scans the file once and creates a so called \texttt{CompileRecord} for each of the methods that include compilation information in the file. This compile record also includes the list of method information and their profiling information.
 A method's compile information could have been dumped multiple times, so it can happen that there are multiple CompileRecords for the same method. In this case, Hotspot will only keep the CompileRecords that are created based on the data written to the file last.
 Since profiling information only grow, the compilation that happened last contains the richest profile and is considered the best to avoid deoptimizations.
@@ -36,6 +36,7 @@ The CompileRecord as well as the lists of methods information and profiles are i
 They get initialized with a length of 8 and grow when needed. The choice has been done for simplicity and leaves up room for further optimizations.
 
 \section{Using cached profiles}
+\label{s:usingprofiles}
 The idea is to use cached profiles whenever possible and if none are available continue as usual.
 A graphical, simplified overview of the program flow for compiling a method with the changes introduced in this thesis can be found in Figure \ref{f:programflow}.
 \begin{figure}[h]
@@ -46,8 +47,13 @@ A graphical, simplified overview of the program flow for compiling a method with
     \label{f:programflow}
   \end{center}
 \end{figure}
-\label{s:usingprofiles}
+As mentioned before once certain thresholds are exceeded a method gets scheduled for compilation. This means that the JVM will invoke a method called \texttt{compile\_method()} located in the \texttt{compileBroker} class. This method for example checks if the compile queue isn't full or if there is already another compilation of that particular method running.
+I extended this method with a call to \texttt{ciCacheProfiles::is\_cached(Method* method)} which either returns 0 if the method is not cached or returns an integer value, reflecting the compile level, in case that method has a cached profile available.
+In case the method is not cached the execution continues as in the baseline.
+Otherwise the compileBroker will call into \texttt{ciCacheProfilesBroker} to replay the compilation, based on the saved profile.
+
 \section{Different usage modes for cached profiles}
+The implementation of cached profiles offers 3 different modes how
 \label{s:cacheprofilesmode}
 \subsection{Compile Thresholds lowered (mode 0)}
 \label{s:mode0}

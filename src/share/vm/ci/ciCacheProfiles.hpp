@@ -57,11 +57,13 @@
 // One can also specify a profiles file with -XX:CacheProfilesFile=foo.txt
 //
 // CacheProfiles can be used in 3 different modes:
-// with flag =XX:CacheProfilesMode={0,1,2}
+// with flag -XX:CacheProfilesMode={0,1,2}
 //
 // Mode 0: lower the compilation threshold scaling of cached methods automatically
 //         to 0.01 of cached methods automatically so they get compiled
 //         earlier and with the highest available profile (usually C2)
+//         One can use a different value than 0.01 by using the flag
+//         -XX:CacheProfilesMode0ThresholdScaling=x.xx
 // Mode 1: do not lower the thresholds but once a compilation is triggered
 //         use highest available profile (usually C2)
 // Mode 2: do not lower the thresholds but use compile level 2 (limited profiles)

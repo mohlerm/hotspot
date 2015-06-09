@@ -1141,7 +1141,7 @@ void MethodData::init() {
 
   if(CacheProfiles && ciCacheProfiles::is_initialized()) {
     if(CacheProfilesMode==0 && ciCacheProfiles::is_cached(_method)) {
-      scale = 0.01;
+      scale = CacheProfilesMode0ThresholdScaling;
     }
   }
   CompilerOracle::has_option_value(_method, "CompileThresholdScaling", scale);

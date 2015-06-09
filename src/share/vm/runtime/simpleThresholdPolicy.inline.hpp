@@ -34,7 +34,7 @@ bool SimpleThresholdPolicy::call_predicate_helper(int i, int b, double scale, Me
 
   if(CacheProfiles && ciCacheProfiles::is_initialized()) {
     if(CacheProfilesMode==0 && ciCacheProfiles::is_cached(method)) {
-      threshold_scaling = 0.01;
+      threshold_scaling = CacheProfilesMode0ThresholdScaling;
       scale *= threshold_scaling;
     }
   }
@@ -59,7 +59,7 @@ bool SimpleThresholdPolicy::loop_predicate_helper(int i, int b, double scale, Me
 
   if(CacheProfiles && ciCacheProfiles::is_initialized()) {
     if(CacheProfilesMode==0 && ciCacheProfiles::is_cached(method)) {
-      threshold_scaling = 0.01;
+      threshold_scaling = CacheProfilesMode0ThresholdScaling;
       scale *= threshold_scaling;
     }
   }

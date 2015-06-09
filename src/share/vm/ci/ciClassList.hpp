@@ -109,7 +109,7 @@ friend class ciArray;                  \
 friend class ciObjArray;               \
 friend class ciMetadata;               \
 friend class ciReplay;                 \
-friend class ciCacheProfiles;		       \
+friend class ciCacheProfiles;		   \
 friend class ciCacheProfilesBroker;    \
 friend class ciTypeArray;              \
 friend class ciType;                   \

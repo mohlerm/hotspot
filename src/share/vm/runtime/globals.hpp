@@ -3393,7 +3393,7 @@ class CommandLineFlags {
           "2 - skip C1 profiling phase and"                                 \
           "    keep everything else as standard; ")                         \
                                                                             \
-  experimental(double, CacheProfilesMode0ThresholdScaling, 0.01,               \
+  experimental(double, CacheProfilesMode0ThresholdScaling, 0.01,            \
           "CompileThresholdScaling in case of mode0")                       \
                                                                             \
   experimental(ccstr, CacheProfilesFile, NULL,                              \

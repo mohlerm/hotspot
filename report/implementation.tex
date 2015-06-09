@@ -53,7 +53,16 @@ In case the method is not cached the execution continues as in the baseline.
 Otherwise the compileBroker will call into \texttt{ciCacheProfilesBroker} to replay the compilation, based on the saved profile.
 
 \section{Different usage modes for cached profiles}
-The implementation of cached profiles offers 3 different modes how
+The implementation of cached profiles offers 3 different modes which differ 
+\begin{figure}[h]
+  \begin{center}
+    \centering
+    \includegraphics{figures/hs_tiers_threshold.png}
+    \caption{Overview over compilation tiers with different modes}
+    \label{f:hs_tiers_thresholds}
+  \end{center}
+\end{figure}
+
 \label{s:cacheprofilesmode}
 \subsection{Compile Thresholds lowered (mode 0)}
 \label{s:mode0}
@@ -62,10 +71,24 @@ The implementation of cached profiles offers 3 different modes how
 \subsection{Modified C1 stage (mode 2)}
 \label{s:mode2}
 
-\section{Debug outout}
+\section{Debug output}
 \label{s:debugoutput}
 For debugging and benchmarking purposes I implemented four debug flags that can be used along with \texttt{-XX:+CacheProfiles}.
--XX:+PrintCacheProfiles
--XX:+PrintDeoptimizationCount
--XX:+PrintDeoptimizationCountVerbose
--XX:+PrintCompileQueue
+\begin{table}[ht]
+  \centering
+ % \caption{}
+  \label{t:debugflags}
+  \begin{center}
+    \begin{tabular}{| l | p{9.0cm} |}
+       \hline
+       \textbf{flag} & \textbf{description} \\ \hline\hline
+       -XX:+PrintCacheProfiles & enable command line debug output for cached profiles\\ \hline
+       -XX:+PrintDeoptimizationCount & prints amount of deoptimizations when the JVM gets shut down\\ \hline
+       -XX:+PrintDeoptimizationCountVerbose & prints total the amount of deoptimizations on each deoptimization\\ \hline
+       -XX:+PrintCompileQueue & prints the total amount of methods in the compile queue each time a method gets added \\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+
+

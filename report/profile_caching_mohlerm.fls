@@ -192,6 +192,9 @@ INPUT implementation.tex
 INPUT figures/program_flow.png
 INPUT ./figures/program_flow.png
 INPUT ./figures/program_flow.png
+INPUT figures/hs_tiers_threshold.png
+INPUT ./figures/hs_tiers_threshold.png
+INPUT ./figures/hs_tiers_threshold.png
 INPUT performance.tex
 INPUT performance.tex
 INPUT improvements.tex

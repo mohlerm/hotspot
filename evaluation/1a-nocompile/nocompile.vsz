@@ -1,5 +1,5 @@
 # Veusz saved document (version 1.22)
-# Saved at 2015-06-05T10:47:14.567333
+# Saved at 2015-06-10T09:06:57.356195
 
 AddImportPath(u'/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/1a-nocompile')
 ImportFileCSV(u'nocompile.csv', linked=True)
@@ -18,8 +18,8 @@ Set('direction', 'vertical')
 To('..')
 Add('bar', name='bar1', autoadd=False)
 To('bar1')
-Set('lengths', (u'noosr', u'osr'))
-Set('keys', (u'without OSR', u'with OSR'))
+Set('lengths', (u'Baseline', u'Use Profiles'))
+Set('keys', (u'Baseline', u'with Profiles'))
 Set('labels', u'descriptor')
 Set('errorstyle', u'barends')
 Set('BarFill/fills', [('solid', '#729fcf', False), ('solid', '#cfe7f5', False)])

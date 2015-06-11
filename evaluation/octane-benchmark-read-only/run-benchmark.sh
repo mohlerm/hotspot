@@ -22,5 +22,5 @@ then
 else
   echo "use profiles"
 #  /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/jjs -J-XX:+UnlockDiagnosticVMOptions -J-XX:+UseOnStackReplacement -J-XX:+UnlockExperimentalVMOptions -J-XX:-PrintCompilation -J-XX:-TraceDeoptimization -J-XX:+PrintCacheProfiles -J-XX:+CacheProfiles run.js
-  /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-XX:+UnlockExperimentalVMOptions -J-XX:+PrintDeoptimizationCount -J-XX:+CacheProfiles -J-XX:CacheProfilesMode=2 -J-XX:-PrintCompileQueueSize -J-XX:-PrintCacheProfiles run.js
+  /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-XX:+UnlockExperimentalVMOptions -J-XX:+PrintDeoptimizationCount -J-XX:+CacheProfiles -J-XX:CacheProfilesMode=0 -J-XX:-PrintCompileQueueSize -J-XX:-PrintCacheProfiles run.js
 fi

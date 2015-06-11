@@ -1,3 +1,2 @@
-descriptor, osr,+-
-"Baseline",   204.397, 1.1967698688
-"Use Profiles", 189.009, 0.4059611049
+descriptor, Baseline,+-,Use Profiles,+-
+"with OSR",   204.397, 1.1967698688, 189.009, 0.4059611049

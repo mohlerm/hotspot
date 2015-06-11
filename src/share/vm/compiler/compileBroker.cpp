@@ -1319,9 +1319,14 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
     // we only use cached profiles for Level 3 or 4
     // because 1 and 2 are used in special cases (i.e. compile queue full)
     // and we don't want to mess with that
-    if(cached_comp_level > CompLevel_limited_profile && comp_level > CompLevel_limited_profile) {
+    // also check if decompile count is less than 10 since we don't want to
+    // recompile a lot using a bad profile
+    if(cached_comp_level > CompLevel_limited_profile && comp_level > CompLevel_limited_profile &&
+        (method->method_data() == NULL || (method->method_data() != NULL && method->method_data()->decompile_count() < 10)))
+    {
+      // if we're in cacheprofilemode 2 set compilelevel to 2 always
       if(CacheProfilesMode==2 && (cached_comp_level == CompLevel_full_optimization && comp_level == CompLevel_full_profile)) {
-        // if we're in cacheprofilemode 2 set compilelevel to 2 always
+
         if(PrintCacheProfiles) {
           tty->print(">>>>>> FORCE COMPLEVEL %d, Hotcount: %d, OSR_BCI: %d :: ", CompLevel_limited_profile,hot_count,osr_bci);
           method->print_name(tty);
@@ -1437,8 +1442,13 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
     if(CacheProfiles && ciCacheProfiles::is_initialized()) {
       // if it's set trigger replayCompilation in case it's a cached method
       int cached_comp_level = ciCacheProfiles::is_cached(method());
-      // continue if method is cached AND (either we're in mode 1 or 2 OR we're in mode 2 but want to use our profile)
-      if(cached_comp_level > CompLevel_limited_profile && comp_level > CompLevel_limited_profile && (CacheProfilesMode < 2 || (CacheProfilesMode == 2 && comp_level == CompLevel_full_optimization))) {
+      // continue if method is cached and of level 3 or 4
+      // AND either we're in mode 1 or 2 OR we're in mode 2 but want to use our profile
+      // AND finally check if method has not been compiled more than 10 time already (using the cached profile)
+      if(cached_comp_level > CompLevel_limited_profile && comp_level > CompLevel_limited_profile &&
+          (CacheProfilesMode < 2 || (CacheProfilesMode == 2 && comp_level == CompLevel_full_optimization)) &&
+          (method->method_data() == NULL || (method->method_data() != NULL && method->method_data()->decompile_count() < 10)))
+      {
         ciCacheProfilesBroker::replay(THREAD,method(),osr_bci);
         return osr_bci  == InvocationEntryBci ? method->code() : method->lookup_osr_nmethod_for(osr_bci, comp_level, false);
       }

@@ -66,15 +66,8 @@ Since the implementation is basically an extension of the static class \texttt{c
 
 \section{Different usage modes for cached profiles}
 The implementation of cached profiles offers 3 different modes which differ in the transitions between the compilation tiers.
-While \texttt{mode0} and \texttt{mode1} are similar except for the compile thresholds, \texttt{mode2} consists of a few changes will be described in detail in the following section.
-\begin{figure}[h]
-  \begin{center}
-    \centering
-    \includegraphics{figures/hs_tiers_threshold2.png}
-    \caption{Overview over compilation tiers with different modes}
-    \label{f:hs_tiers_thresholds}
-  \end{center}
-\end{figure}
+The motivation as well as the advantages and disadvantages of each mode are described in the following three subsections.
+While \texttt{mode0} and \texttt{mode1} are similar except for the compile thresholds, \texttt{mode2} differs significantly.
 
 \label{s:cacheprofilesmode}
 \subsection{Compile Thresholds lowered (mode 0)}
@@ -88,9 +81,23 @@ On the downside this increases the load on the C2 compiler and fill the compile 
 Mode 0 is the default mode and used if not further specified.
 \subsection{Unmodified Compile Thresholds (mode 1)}
 \label{s:mode1}
-This is doing exactly the same as mode 1 but does not scale the compilation thresholds.
+Mode 1 is doing exactly the same as mode 1 but does not scale the compilation thresholds automatically.
+This is done to decrease the load increase on C2 as mentioned in Subsection \ref{s:mode0}.
+Apart from this change mode 1 has the same behaviour as mode 0.
 \subsection{Modified C1 stage (mode 2)}
 \label{s:mode2}
+Both modes mentioned before use cached profiles as soon as a compilation of level 3 and 4 are triggered. Since the thresholds for level 3 are smaller than the level 4 thresholds (see Appendix \ref{a:compilethresholds}) a method reaching a level 3 threshold could actually trigger a level 4 compilation, if the cached profile is one of level 4. So even if mode 1 is used and the thresholds are untouched C2 might get overloaded since compilations occur earlier.
+\\\\
+Mode 2 has been designed to prevent C2 being more used than usual. Instead it TODO CONTINUE
+\begin{figure}[h]
+  \begin{center}
+    \centering
+    \includegraphics{figures/hs_tiers_threshold.png}
+    \caption{Tier transitions of different modes}
+    \label{f:hs_tiers_thresholds}
+  \end{center}
+\end{figure}
+
 
 \section{Issues}
 \label{s:issues}

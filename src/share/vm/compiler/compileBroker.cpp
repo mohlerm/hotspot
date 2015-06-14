@@ -1338,11 +1338,10 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
       // as long as we're not in mode 2
       // OR in mode 2 but then we only want the combinations:
       // - compile level 3 and cache level 3
-      // - compile level 4 and cache level 3
       // - compile level 4 and cache level 4
       // since both are >=3 the following check suffices
       } else if (CacheProfilesMode < 2
-          || (CacheProfilesMode==2 && comp_level >= cached_comp_level));
+          || (CacheProfilesMode==2 && comp_level == cached_comp_level));
       {
         if(PrintCacheProfiles) {
           tty->print(">>>>>> USE PROFILE FOR LVL: %d, Complevel: %d, Hotcount: %d, OSR_BCI: %d :: ",cached_comp_level, comp_level, hot_count,osr_bci);
@@ -1455,7 +1454,7 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
       // AND either we're in mode 0 or 1 OR we're in mode 2 but want to use our profile (also see line 1338)
       // AND finally check if method has not been compiled more than 10 time already (using the cached profile)
       if(cached_comp_level > CompLevel_limited_profile && comp_level > CompLevel_limited_profile &&
-          (CacheProfilesMode < 2 || (CacheProfilesMode == 2 && comp_level >= cached_comp_level)) &&
+          (CacheProfilesMode < 2 || (CacheProfilesMode == 2 && comp_level == cached_comp_level)) &&
           (method->method_data() == NULL || (method->method_data() != NULL && method->method_data()->decompile_count() < 10)))
       {
         ciCacheProfilesBroker::replay(THREAD,method(),osr_bci);

@@ -88,12 +88,14 @@ Apart from this change mode 1 has the same behaviour as mode 0.
 \label{s:mode2}
 Both modes mentioned before use cached profiles as soon as a compilation of level 3 and 4 are triggered. Since the thresholds for level 3 are smaller than the level 4 thresholds (see Appendix \ref{a:compilethresholds}) a method reaching a level 3 threshold could actually trigger a level 4 compilation, if the cached profile is one of level 4. So even if mode 1 is used and the thresholds are untouched C2 might get overloaded since compilations occur earlier.
 \\\\
-Mode 2 has been designed to prevent C2 being more used than usual. It does so by keeping the original tiered compilation steps and compilation thresholds and compiles methods with C1 prior to C2. But since there are already profiles available there is no need to run at Tier 3 to generate full profiles but instead it uses Tier 2.
+Mode 2 has been designed to make as little changes as possible to the tiered compilation. and prevent C2 being more used than usual. It does so by keeping the original tiered compilation steps and compilation thresholds and compiles methods with C1 prior to C2. But since there are already profiles available there is no need to run at Tier 3 to generate full profiles but instead it uses Tier 2.
 Tier 2 does the same optimizations but offers only limited profiles like method invocation and backbranch counters. They are needed to know when to trigger the C2 compilation and therefore we can not use Tier 1. Tier 2 generally is considered about 30\% faster than Tier 3 \cite{code_atp_hpp}.
 \\\\
 If then the Tier4 thresholds are reached the method is compiled using C2 and the cached profiles.
 \\\\
-The above only makes sense if there is a C2 profile available. 
+The above only makes sense if there is a C2 profile available.
+If only a C1 profile is available, mode 2 will only use the profile during the C1 compilation and then use the new profiles.
+
 \begin{figure}[h]
   \begin{center}
     \centering

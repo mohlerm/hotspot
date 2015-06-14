@@ -21,7 +21,7 @@ NROFRUNS = 1
 # Use slowdebug instead of relase mode
 DEBUG = False
 # Choose cacheProfiles mode
-CACHE_MODE = 0
+CACHE_MODE = 1
 # Enable debug output (only works in debug mode)
 VERBOSE = False
 # Print CacheProfiles output
@@ -37,7 +37,7 @@ JAVAPATH_DEBUG = '../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/ja
 JAVACPATH_DEBUG = '../../../build/linux-x86_64-normal-server-slowdebug/jdk/bin/javac'
 #JAVAARGS_USE = ['-agentlib:hprof=cpu=times','-XX:+UnlockDiagnosticVMOptions', '-XX:+PrintCompilation', '-XX:-UseOnStackReplacement', '-XX:+UnlockExperimentalVMOptions', '-XX:+TraceDeoptimization', '-Xbatch', '-XX:+CacheProfiles', '-XX:CacheProfilesFile=cached_profiles.log', '-XX:CompileCommandFile=useCommands.txt']
 
-JAVAARGS = ['-agentlib:hprof=cpu=times','-XX:+UnlockDiagnosticVMOptions', '-XX:+UseOnStackReplacement', '-XX:+UnlockExperimentalVMOptions']
+JAVAARGS = ['-agentlib:hprof=cpu=times','-XX:+UnlockDiagnosticVMOptions', '-XX:-UseOnStackReplacement', '-XX:+UnlockExperimentalVMOptions']
 JAVAARGS_VERBOSE = ['-XX:+PrintCompilation', '-XX:+TraceDeoptimization']
 JAVAARGS_PRINT = ['-XX:+PrintCacheProfiles']
 JAVAARGS_DEOPT = ['-XX:+PrintDeoptimizationCount']

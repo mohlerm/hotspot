@@ -3,11 +3,11 @@
 array = ['compress', 'crypto.aes', 'crypto.rsa', 'crypto.signverify', 'derby', 'mpegaudio', 'scimark.fft.large', 'scimark.lu.large', 'scimark.sor.large', 'scimark.sparse.large', 'scimark.fft.small', 'scimark.lu.small', 'scimark.sor.small', 'scimark.sparse.small', 'scimark.monte_carlo', 'serial', 'sunflow']
 oldsum = 0
 for bench in array:
-    #for i in range(1,61):
-        #if i<10:
-            #print('sh run-benchmark.sh baseline '+ bench + ' | tee withfix/'+ bench + '.baseline.0'+str(i))
-        #else:
-            #print('sh run-benchmark.sh baseline '+ bench + ' | tee withfix/'+ bench + '.baseline.'+str(i))
+    for i in range(1,61):
+        if i<10:
+            print('sh run-benchmark.sh baseline '+ bench + ' | tee baseline/'+ bench + '.baseline.0'+str(i))
+        else:
+            print('sh run-benchmark.sh baseline '+ bench + ' | tee baseline/'+ bench + '.baseline.'+str(i))
     print('sh run-benchmark.sh create '+ bench + ' | tee '+ bench + '.create')
     for i in range(1,61):
         if i<10:

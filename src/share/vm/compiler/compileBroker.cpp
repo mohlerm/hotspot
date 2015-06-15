@@ -1344,9 +1344,11 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
           tty->print_cr(" <<<<<<<");
         }
         // fix compile level to the one of the cached profile
-        // this can result in promotion/demotion of the compile level
-        // if that is bad it will be catched by the max10 deopt. count
-        comp_level = cached_comp_level;
+        // this can result in promotion of level 3 compilations to level 4
+        // (not the other way around)
+        if(comp_level < cached_comp_level) {
+          comp_level = cached_comp_level;
+        }
       }
     }
   }

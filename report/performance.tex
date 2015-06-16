@@ -1,5 +1,24 @@
-\section{General peformance}
+This section evaluates the performance of the cached profile implementation. 
+\section{Setup}
+\label{s:perf_setup}
+To provide reliable and comparable results all tests were done on a single node of the Data Center Observatory provided by ETH \cite{ethdco}.
+A node features 2 8-Core AMD Opteron 6212 CPUs running at 2600 MHz with 128 GB of DDR3 RAM.
+The node is running Fedora 19 and GCC 4.8.3. All JDK builds got created on the node itself.
+\\\\
+To compare performance the following benchmarks were used:
+\begin{enumerate}
+  \item \textbf{SPECjvm 2008:} A benchmark suite developed by Standard Performance Evaluation Corporation for measuring the performance of the Java Runtime Environment \cite{specjvm}.  I use version 2008 and I run a subset of 17 out of a total of 21 benchmarks. 4 are omitted due to incompatibility with openJDK 1.9.0.
+  \\
+  Once finished, SPECjvm prints out the number of operations per minute. This is used to compare the performance and higher is better.
+  \item \textbf{Octane 2.0:} A benchmark developed by Google to measure the performance of JavaScript code found in large, real-world applications \cite{octane}. Octane runs on Nashorn, a JavaScript Engine on top of Hotspot. The version used is 2.0 and consists of 17 individual benchmarks of which 16 are used.
+  \\
+  Octane gives each benchmark a score reflecting the performance, the higher the score, the better the performance.
+\end{enumerate}
+The benchmarking process was automated using a number of self-written python scripts. The graphs in this chapter always show the arithmetic mean of 50 runs and the error bars display the 95\% confidence intervals.
+
+\section{Startup performance}
 \label{s:perf_general}
+The main goal of cached profiles is to improve the startup performance of the JVM. Having a rich profile from an earlier execution will allow the JIT compiler to use a highly optimized version right from the beginning.
 
 \section{Deoptimizations}
 \label{s:perf_deoptimizations}

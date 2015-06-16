@@ -176,8 +176,8 @@ INPUT profile_caching_mohlerm.toc
 INPUT profile_caching_mohlerm.toc
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
 OUTPUT profile_caching_mohlerm.toc
-INPUT motivation.tex
-INPUT motivation.tex
+INPUT overview.tex
+INPUT overview.tex
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmtt10.tfm
@@ -189,6 +189,8 @@ INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmcsc10.tfm
 INPUT figures/osr.png
 INPUT ./figures/osr.png
 INPUT ./figures/osr.png
+INPUT motivation.tex
+INPUT motivation.tex
 INPUT /usr/share/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/amsfonts/euler/eurm5.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmtt8.tfm

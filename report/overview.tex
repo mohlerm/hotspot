@@ -65,11 +65,11 @@ $$b > TierXBackEdgeThreshold * s$$
 
 Please note that there are further conditions influencing the compilation like the load on the compiler which will not be discussed.
 
-\section{On Stack Replacement}
+\section{On-Stack Replacement}
 \label{s:onstackreplacement}
 Since the JVM does not only count method invocations but also loop back branches (see also Section \ref{s:compilethresholds}) it can happen that a method gets compiled while it is still running and the compiled method is ready before the method has finished.
-Instead of waiting for the next method invocation Hotspot can replace the method directly on the stack (see Figure \ref{f:osr}) and is called \textit{on stack replacement}.
-An example would be a simple method consisting of a very long running loop.
+Instead of waiting for the next method invocation Hotspot can replace the method directly on the program stack. This process is called \textit{on-stack replacement} and usually shortened to OSR. The Figure \ref{f:osr} presented in a talk by T. Rodriguez and K. Russel \cite{client_compiler_talk} gives a graphical representation.
+The benefits of OSR will become more obvious when looking at the first example in Chapter \ref{c:motivation}.
 \begin{figure}[ht]
   \begin{center}
     \centering

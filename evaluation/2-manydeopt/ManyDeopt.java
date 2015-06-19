@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.ArrayList;
 class ManyDeopt {
 
-  static boolean VERBOSE = false;
+  static boolean VERBOSE = true;
   public static List<Long> measurements = new ArrayList<Long>();
   public static void main(String argv[]) {
     if(VERBOSE) System.out.println("> START EXECUTION OF ManyDeopt.main() <");
@@ -332,7 +332,7 @@ class ManyDeopt {
       } else if (count < 50500000000l) {
         if(VERBOSE && count==49500000000l) System.out.println("> Taking branch: " + 100+ " <");
         count = count + 100;
-      } 
+      }
     }
     end = System.nanoTime();
     if(VERBOSE) System.out.println("> TIME:"+Long.toString((end-start)/1000000)+" ms for " + Long.toString(count) + " <");

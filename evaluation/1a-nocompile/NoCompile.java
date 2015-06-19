@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.ArrayList;
 class NoCompile {
 
-  static boolean VERBOSE = false;
+  static boolean VERBOSE = true;
   public static List<Long> measurements = new ArrayList<Long>();
   public static void main(String argv[]) {
     if(VERBOSE) System.out.println("> START EXECUTION OF NoCompile.main() <");

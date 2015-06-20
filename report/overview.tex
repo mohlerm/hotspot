@@ -60,7 +60,7 @@ The standard transitions from Level 0 to 3 and 3 to 4 happen when the following 
 where $X$ is the next compile level (3 or 4), $i$ the number of method invocations, $b$ the number of backedges and $s$ a scaling coefficient (default = 1).
 The thresholds are relative and individual for interpreter and compiler.
 \\\\
-On Stack Replacement uses a simpler predicate:
+On-stack replacement uses a simpler predicate:
 $$b > TierXBackEdgeThreshold * s$$
 
 Please note that there are further conditions influencing the compilation like the load on the compiler which will not be discussed.

@@ -19,7 +19,7 @@ The benchmarking process was automated using a number of self-written python scr
 \section{Startup performance}
 \label{s:perf_general}
 The main goal of cached profiles is to improve the startup performance of the JVM. Having a rich profile from an earlier execution will allow the JIT compiler to use a highly optimized version right from the beginning.
-I will start by looking at SPECjvm since it offers ways to focus on the warmup. An individual description of each benchmark being used can be found in Appendix \ref{a:specjvm_benchmarks}.
+I will start by looking at SPECjvm since it offers ways to focus on the warmup. An individual description of each benchmark being used can be found in Appendix \ref{a:specjvm_benchmark}.
 \\\\
 The longer a program is running the less impact a faster warmup has. Considering most benchmarks include a warmup phase which does not count towards the final score simply running the complete benchmark suite is not an option.
 Instead I limited SPECjvm to 1 single operation which, depending on the benchmark take around 10 to 20 seconds.

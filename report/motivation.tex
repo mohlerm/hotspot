@@ -18,11 +18,11 @@ Ideally, being able to reuse the profiles from previous runs should result in tw
 Figure \ref{f:baseline_vs_usage} gives a schematic visualization of the expected effect on performance of a single method when using cached profiles compared to the current state without such a system and standard tiered compilation.
 The blue bars roughly represent method invocations and higher bars equal higher compilation levels and therefore higher performance. The x-axis represents time since the start of the JVM. The figure shows the ideal case and abstracts away many details and other possible cases. However, it provides a good visualization for the examples provided in this chapter. A more detailed performance analysis, also considering worse cases is done in Chapter \ref{c:performance}.
 \\\\
-I'm using my implementation described in Chapter \ref{c:implementation} in CachedProfileMode 0 (see \ref{s:mode0}) on top of openJDK 1.9.0.
+I'm using my implementation described in Chapter \ref{c:implementation} in CachedProfileMode 0 (see \ref{s:mode0}) built into openJDK 1.9.0.
 All measurements in this chapter are done on a Dual-Core machine running at 2 GHz with 8GB of RAM. To measure the method invocation time I use hprof \cite{hprof} and the average of 10 runs. The evaluation process has been automated using a couple of python scripts. The error bars show the 95\% confidence interval.
 \section{Example 1}
 \label{s:ex1}
-For this very first example, On-stack replacement has been disabled to keep the system simple and easy to understand.
+For this very first example, on-stack replacement has been disabled to keep the system simple and easy to understand.
 \\
 Example one is a simple class that invokes a method one hundred times. The method itself consists of a long running loop. The source code is shown in Listing \ref{l:nocompile}.
 Since OSR is disabled and a compilation to level 3 is triggered after 200 invocations this method never leaves the interpreter. I call this run the \textit{Baseline}.

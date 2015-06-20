@@ -31,8 +31,8 @@
   \end{center}
 \end{table}
 
-\section{SPECjvm Benchmarks}
-\label{a:specjvm_benchmarks}
+\section{SPECjvm Benchmark}
+\label{a:specjvm_benchmark}
 This list gives a short description of the benchmarks that are part of the SPECjvm 2008 Benchmark Suite.
 The list is directly taken from \url{https://www.spec.org/jvm2008/docs/benchmarks/index.html} and put in as a reference.
 \begin{itemize}
@@ -40,18 +40,98 @@ The list is directly taken from \url{https://www.spec.org/jvm2008/docs/benchmark
 
 This is a Java port of the 129.compress benchmark from CPU95, but improves upon that benchmark in that it compresses real data from files instead of synthetically generated data as in 129.compress. 
  \item \texttt{Crypto: } This benchmark focuses on different areas of crypto and are split in three different sub-benchmarks. The different benchmarks use the implementation inside the product and will therefore focus on both the vendor implementation of the protocol as well as how it is executed.
-
-    aes encrypt and decrypt using the AES and DES protocols, using CBC/PKCS5Padding and CBC/NoPadding. Input data size is 100 bytes and 713 kB.
-    rsa encrypt and decrypt using the RSA protocol, using input data of size 100 bytes and 16 kB.
-    signverify sign and verify using MD5withRSA, SHA1withRSA, SHA1withDSA and SHA256withRSA protocols. Input data size of 1 kB, 65 kB and 1 MB.
+  \begin{itemize}
+    \item \texttt{aes} encrypt and decrypt using the AES and DES protocols, using CBC/PKCS5Padding and CBC/NoPadding. Input data size is 100 bytes and 713 kB.
+    \item \texttt{rsa} encrypt and decrypt using the RSA protocol, using input data of size 100 bytes and 16 kB.
+    \item \texttt{signverify} sign and verify using MD5withRSA, SHA1withRSA, SHA1withDSA and SHA256withRSA protocols. Input data size of 1 kB, 65 kB and 1 MB.
+  \end{itemize}
 \item \texttt{Derby: } This benchmark uses an open-source database written in pure Java. It is synthesized with business logic to stress the BigDecimal library. It is a direct replacement to the SPECjvm98 db benchmark but is more capable and represents as close to a "real" application. The focus of this benchmark is on BigDecimal computations (based on telco benchmark) and database logic, especially, on locks behavior. BigDecimal computations are trying to be outside 64-bit to examine not only 'simple' BigDecimal, where 'long' is used often for internal representation. 
 \item \texttt{MPEGaudio: } This benchmark is very similar to the SPECjvm98 mpegaudio. The mp3 library has been replaced with JLayer, an LGPL mp3 library. Its floating-point heavy and a good test of mp3 decoding. Input data were taken from SPECjvm98.
-\item \texttt{Scimark: } This benchmark was developed by NIST and is widely used by the industry as a floating point benchmark. Each of the subtests (fft, lu, monte\_carlo, sor, sparse) were incorporated into SPECjvm2008. There are two versions of this test, one with a \"large\" dataset (32Mbytes) which stresses the memory subsystem and a \"small\" dataset which stresses the JVMs (512Kbytes).
+\item \texttt{Scimark: } This benchmark was developed by NIST and is widely used by the industry as a floating point benchmark. Each of the subtests (\texttt{fft, lu, monte\_carlo, sor, sparse}) were incorporated into SPECjvm2008. There are two versions of this test, one with a \"large\" dataset (32Mbytes) which stresses the memory subsystem and a \"small\" dataset which stresses the JVMs (512Kbytes).
 \item \texttt{Serial: } This benchmark serializes and deserializes primitives and objects, using data from the JBoss benchmark. The benchmark has a producer-consumer scenario where serialized objects are sent via sockets and deserialized by a consumer on the same system. The benchmark heavily stress the Object.equals() test.
 \item \texttt{Sunflow: } This benchmark tests graphics visualization using an open source, internally multi-threaded global illumination rendering system. The sunflow library is threaded internally, i.e. it's possible to run several bundles of dependent threads to render an image. The number of internal sunflow threads is required to be 4 for a compliant run. It is however possible to configure in property specjvm.benchmark.sunflow.threads.per.instance, but no more than 16, per sunflow design. Per default, the benchmark harness will use half the number of benchmark threads, i.e. will run as many sunflow benchmark instances in parallel as half the number of hardware threads. This can be configured in specjvm.benchmark.threads.sunflow.
-\item \texttt{XML: } This benchmark has two sub-benchmarks: XML.transform and XML.validation. XML.transform exercises the JRE's implementation of javax.xml.transform (and associated APIs) by applying style sheets (.xsl files) to XML documents. The style sheets and XML documents are several real life examples that vary in size (3KB to 156KB) and in the style sheet features that are used most heavily. One "operation" of XML.transform consists of processing each style sheet / document pair, accessing the XML document as a DOM source, a SAX source, and a Stream source. In order that each style sheet / document pair contribute about equally to the time taken for a single operation, some of the input pairs are processed multiple times during one operation.
+\item \texttt{XML: } This benchmark has two sub-benchmarks: XML.transform and XML.validation.
+\\XML.transform exercises the JRE's implementation of javax.xml.transform (and associated APIs) by applying style sheets (.xsl files) to XML documents. The style sheets and XML documents are several real life examples that vary in size (3KB to 156KB) and in the style sheet features that are used most heavily. One "operation" of XML.transform consists of processing each style sheet / document pair, accessing the XML document as a DOM source, a SAX source, and a Stream source. In order that each style sheet / document pair contribute about equally to the time taken for a single operation, some of the input pairs are processed multiple times during one operation.
 
 Result verification for XML.transform is somewhat more complex than for other of the benchmarks because different XML style sheet processors can produce results that are slightly different from each other, but all still correct. In brief, the process used is this. First, before the measurement interval begins the workload is run once and the output is collected, canonicalized (per the specification of canonical XML form) and compared with the expected canonicalized output. Output from transforms that produce HTML is converted to XML before canonicalization. Also, a checksum is generated from this output. Inside the measurement interval the output from each operation is only checked using the checksum.
 
 XML.validation exercises the JRE's implementation of javax.xml.validation (and associated APIs) by validating XML instance documents against XML schemata (.xsd files). The schemata and XML documents are several real life examples that vary in size (1KB to 607KB) and in the XML schema features that are used most heavily. One "operation" of XML.validation consists of processing each style sheet / document pair, accessing the XML document as a DOM source and a SAX source. As in XML.transform, some of the input pairs are processed multiple times during one operation so that each input pair contributes about equally to the time taken for a single operation. 
+\end{itemize}
+
+\section{Octane Benchmark}
+\label{a:octane_benchmark}
+What follows is an overview of the benchmarks Octane consists of.
+The original list can be found on \url{https://developers.google.com/octane/benchmark}.
+\begin{itemize}
+\item \texttt{Richards: }OS kernel simulation benchmark, originally written in BCPL by Martin Richards (539 lines).
+  \begin{itemize}
+    \item Main focus: \textit{property load/store, function/method calls}
+    \item Secondary focus: \textit{code optimization, elimination of redundant code}
+  \end{itemize}
+\item \texttt{Deltablue: }One-way constraint solver, originally written in Smalltalk by John Maloney and Mario Wolczko (880 lines).
+  \begin{itemize}
+    \item Main focus: \textit{polymorphism}
+    \item Secondary focus: \textit{OO-style programming}
+  \end{itemize}
+\item \texttt{Raytrace: }Ray tracer benchmark based on code by Adam Burmister (904 lines).
+  \begin{itemize}
+    \item Main focus: \textit{argument object, apply}
+    \item Secondary focus: \textit{prototype library object, creation pattern}
+  \end{itemize}
+\item \texttt{Regexp: }Regular expression benchmark generated by extracting regular expression operations from 50 of the most popular web pages (1761 lines).
+  \begin{itemize}
+    \item Main focus: \textit{Regular expressions}
+  \end{itemize}
+  \item \texttt{NavierStokes: }2D NavierStokes equations solver, heavily manipulates double precision arrays. Based on Oliver Hunt's code (387 lines).
+  \begin{itemize}
+    \item Main focus: \textit{reading and writing numeric arrays.}
+    \item Secondary focus: \textit{floating point math.}
+  \end{itemize}
+  \item \texttt{Crypto: }Encryption and decryption benchmark based on code by Tom Wu (1698 lines).
+  \begin{itemize}
+    \item Main focus: \textit{bit operations}
+  \end{itemize}
+  \item \texttt{Splay: }Data manipulation benchmark that deals with splay trees and exercises the automatic memory management subsystem (394 lines).
+  \begin{itemize}
+    \item Main focus: \textit{Fast object creation, destruction}
+  \end{itemize}
+ \item \texttt{SplayLatency: }The Splay test stresses the Garbage Collection subsystem of a VM. SplayLatency instruments the existing Splay code with frequent measurement checkpoints. A long pause between checkpoints is an indication of high latency in the GC. This test measures the frequency of latency pauses, classifies them into buckets and penalizes frequent long pauses with a low score.
+  \begin{itemize}
+    \item Main focus: \textit{Garbage Collection latency}
+  \end{itemize}
+  \item \texttt{EarleyBoyer: }Classic Scheme benchmarks, translated to JavaScript by Florian Loitsch's Scheme2Js compiler (4684 lines).
+  \begin{itemize}
+    \item Main focus: \textit{Fast object creation, destruction}
+    \item Secondary focus: \textit{closures, arguments object}
+  \end{itemize}
+  \item \texttt{pdf.js: }Mozilla's PDF Reader implemented in JavaScript. It measures decoding and interpretation time (33,056 lines).
+  \begin{itemize}
+    \item Main focus: \textit{array and typed arrays manipulations.}
+    \item Secondary focus: \textit{math and bit operations, support for future language features (e.g. promises)}
+  \end{itemize}
+  \item \texttt{Mandreel: }Runs the 3D Bullet Physics Engine ported from C++ to JavaScript via Mandreel (277,377 lines).
+  \begin{itemize}
+    \item Main focus: \textit{emulation}
+  \end{itemize}
+  \item \texttt{MandreelLatency: }Similar to the SplayLatency test, this test instruments the Mandreel benchmark with frequent time measurement checkpoints. Since Mandreel stresses the VM's compiler, this test provides an indication of the latency introduced by the compiler. Long pauses between measurement checkpoints lower the final score.
+  \begin{itemize}
+    \item Main focus: \textit{Compiler latency}
+  \end{itemize}
+  \item \texttt{GB Emulator: }Emulates the portable console's architecture and runs a demanding 3D simulation, all in JavaScript (11,097 lines).
+  \begin{itemize}
+    \item Main focus: \textit{emulation}
+  \end{itemize}
+    \item \texttt{Code loading: }Measures how quickly a JavaScript engine can start executing code after loading a large JavaScript program, social widget being a common example. The source for this test is derived from open source libraries (Closure, jQuery) (1,530 lines).
+  \begin{itemize}
+    \item Main focus: \textit{JavaScript parsing and compilation}
+  \end{itemize}
+    \item \texttt{Box2DWeb: }Based on Box2DWeb, the popular 2D physics engine originally written by Erin Catto, ported to JavaScript. (560 lines, 9000+ de-minified)
+  \begin{itemize}
+    \item Main focus: \textit{floating point math.}
+    \item Secondary focus: \textit{properties containing doubles, accessor properties.}
+  \end{itemize}
+    \item \texttt{Typescript: }Microsoft's TypeScript compiler is a complex application. This test measures the time TypeScript takes to compile itself and is a proxy of how well a VM handles complex and sizable Javascript applications (25,918 lines).
+  \begin{itemize}
+    \item Main focus: \textit{run complex, heavy applications}
+  \end{itemize}
 \end{itemize}

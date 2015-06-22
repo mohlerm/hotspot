@@ -622,7 +622,7 @@ void CompileQueue::add(CompileTask* task) {
     print_tty();
   }
   if (PrintCompileQueueSize) {
-    tty->print_cr("Size of %s: %d", name(),_size);
+    tty->print_cr("%d - Size of %s: %d", (int) tty->time_stamp().milliseconds(), name(),_size);
   }
 
   if (LogCompilation && xtty != NULL) {

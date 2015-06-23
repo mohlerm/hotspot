@@ -53,7 +53,7 @@ class NoCompile {
     \label{f:nocompile}
   \end{center}
 \end{figure}
-\\\\
+\\
 Enabling OSR again and the difference between with and without cached profiles vanishes.
 This happens because Hotspot quickly realizes the hotness of the method and the JIT compiler produces perfectly optimized code during the first method invocation already. 
 Even the OSR compiled code never triggers any deoptimization due to the simplicity of the loop.
@@ -101,5 +101,14 @@ class ManyDeopts {
 \section{Similar systems}
 \label{s:similarsystems}
 In commercially available JVMs the idea of caching profiles is not new.
-In fact the JVM published and distributed by Azul Systems® called Zing® \cite{zing} already offers a similar functionality.
-Zing includes a system called ReadyNow!™ \cite{readynow}.
+In fact the JVM developed and sold by Azul Systems\textregistered\ called Zing\textregistered\ \cite{zing} already offers a similar functionality.
+Zing\textregistered\ includes a feature set they call ReadyNow!\texttrademark\ \cite{readynow} that aims to increase warmup performance of Java applications.
+Their system has been designed with financial markets in mind and to overcome the issue of slow performance in the beginning and performance drops during execution.
+Azul Systems clients reported that their production code usually experiences a significant performance drop as soon as the market goes live and the clients start trading.
+The reasons are deoptimizations that occur because due to changed situation uncommon branch paths are taken or yet unused methods are invoked.
+In the past their clients used techniques to warm up the JVM, for example doing fake trades. However this does not solve the problem since the JVM optimizes for these fake trades and still runs into deoptimizations once actual trades are meant to happen.
+\\\\
+ReadyNow!\texttrademark\  is a rich set of improvements how a JVM can overcome this issues. It includes attempts to reduce the number of deoptimizations in general and other not further specified optimizations.
+As one of the core features Azul Systems\textregistered\ implemented the ability to log optimization statistics and decisions and reuse this logs in future runs. This is similar to the approach presented in this thesis. However they do not record the actual optimization but the learning and the reasons why certain optimizations happen. This gives them the ability to give feedback to the user of the JVM whether or not certain optimizations have been applied. They also provide APIs for developers to interact with the system and allow further fine-grained custom-designed optimizations.
+\\\\
+Unfortunately, they do not provide any numbers how their system actually improves performance.

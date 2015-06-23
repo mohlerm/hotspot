@@ -54,21 +54,63 @@ The
   \begin{center}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/all_warmup_variation.png}
-    \caption{}
+    \caption{Variation from baseline of all SPECjvm benchmarks}
     \label{f:all_warmup_variation}
   \end{center}
 \end{figure}
 
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/octane.png}
+    \caption{Octane benchmarks on all different modes}
+    \label{f:octane}
+  \end{center}
+\end{figure}
+
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/octane_variation.png}
+    \caption{Variation from baseline of all Octane benchmarks}
+    \label{f:octane_variation}
+  \end{center}
+\end{figure}
+
+
+\section{Without Intrinsics}
+\label{s:without_intrinsics}
+
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/others_warmup_nointrinsics.png}
+    \caption{SPECjvm benchmarks on all different modes without intrinsified methods}
+    \label{f:others_warmup_nointrinsics}
+  \end{center}
+\end{figure}
+
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/scimark_warmup_nointrinsics.png}
+    \caption{SPECjvm scimark benchmarks on all different modes without intrinsified methods}
+    \label{f:scimark_warmup_nointrinsics}
+  \end{center}
+\end{figure}
 
 
 \begin{figure}[ht]
   \begin{center}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/all_warmup_nointrinsics_variation.png}
-    \caption{}
+    \caption{Variation from baseline of all SPECjvm benchmarks without intrinsified methods}
     \label{f:all_warmup_nointrinsics_variation}
   \end{center}
 \end{figure}
+
+
+
 
 \section{Deoptimizations}
 \label{s:perf_deoptimizations}
@@ -77,7 +119,7 @@ The
   \begin{center}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/others_warmup_deopt.png}
-    \caption{}
+    \caption{SPECjvm deoptimizations of all modes}
     \label{f:others_warmup_deopt}
   \end{center}
 \end{figure}
@@ -86,11 +128,39 @@ The
   \begin{center}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/scimark_warmup_deopt.png}
-    \caption{}
+    \caption{SPECjvm scimark deoptimizations of all modes}
     \label{f:scimark_warmup_deopt}
   \end{center}
 \end{figure}
 
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/all_warmup_variation_deopt.png}
+    \caption{Deoptimization variation from baseline of all SPECjvm benchmarks}
+    \label{f:all_warmup_variation_deopt}
+  \end{center}
+\end{figure}
+
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/octane_deopt.png}
+    \caption{Octane deoptimizations of all modes} 
+    \label{f:octane_deopt}
+  \end{center}
+\end{figure}
+
+
+
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/octane_variation_deopt.png}
+    \caption{Deoptimization variation from baseline of all Octane benchmarks}
+    \label{f:octane_variation_deopt}
+  \end{center}
+\end{figure}
 
 
 \section{Effect on compile queue}

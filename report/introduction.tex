@@ -1,15 +1,17 @@
 Virtual Machines like the Java Virtual Machine (JVM) are used as the execution environment of choice for many modern programming languages. 
-The VMs interpret a suitable intermediate language (e.g., Java Byte Code for the JVM) and provide the runtime system for application programs and usually include a garbage collector, a thread scheduler, interfaces to the host operating system. 
-As interpretation of intermediate code is time-consuming, VMs include usually a Just-in-Time (JIT) compiler that translates frequently-executed functions or methods to “native” code (e.g., x86 instructions).
-
-The JIT compiler executes in parallel to a program’s interpretation by the VM, and as a result, compilation speed is a critical issue in the design of a JIT compiler.
-Unfortunately, it is difficult to design a compiler such that the compiler produces good (or excellent) code while limiting the resource demands of this compiler (the compiler requires storage and cycles – and even on a multi-core processor, compilation may slow down the execution of the application program). 
-Consequently, most VMs adopt a multi-tier compilation system.
+The VMs interpret a suitable intermediate language (e.g., Java Byte Code for the JVM) and provide the runtime system for application programs and usually include a garbage collector, a thread scheduler and interfaces to the host operating system. 
+As interpretation of intermediate code is time-consuming, VMs usually include a \textit{Just-in-time} (JIT) compiler that translates frequently-executed functions or methods to \textit{native} code (e.g., x86 instructions).
+\\\\
+The JIT compiler executes in parallel to a program's interpretation by the VM and, as a result, compilation speed is a critical issue in the design of a JIT compiler.
+Unfortunately, it is difficult to design a compiler such that the compiler produces good (or excellent) code while limiting the resource demands of this compiler. The compiler requires storage, CPU cycles and even on a multi-core processor, compilation may slow down the execution of the application program.
+\\\\
+Consequently, most VMs adopt a multi-tier compilation system.\\
 %The first tier usually is the interpretation of a method. If this method is executed frequently, the Tier-1 compiler translates this method into native code.
 %The Tier-1 compiler implements only a small set of the know optimization techniques and as result, it had good compilation speed but the generated code is far from the output of an optimizing compiler. Such a compiler is usually the Tier-2 compiler, which takes a longer amount of time and produces optimized native code. To determine which methods should be compiled by the Tier-1 (or Tier-2) compiler, the VM profiles the execution of all application programs to identify “hot” methods.
-At program startup, all methods are interpreted by the VM (execution at Tier 0). The interpreter performs profiling, and if a method is determined to be “hot”, this method is then compiled by the Tier 1 compiler. Methods compiled to Tier 1 are then profiled further and based on these profiling information, some methods are eventually compiled at Tier 2.
-One of the drawbacks of this setup is that for all programs, all methods start in Tier 0, with interpretation and profiling by the VM. However, for many programs the set of “hot” methods does not change from one execution to another and there is no reason to gather again and again the profiling information. 
-
+At program startup, all methods are interpreted by the virtual machine (execution at Tier 0). The interpreter gathers execution statistics called profiling and if a method is determined to be executed frequently, this method is then compiled by the Tier 1 compiler. Methods compiled to Tier 1 are then profiled further and based on these profiling information, some methods are eventually compiled at higher tiers.
+One of the drawbacks of this setup is that for all programs, all methods start in Tier 0, with interpretation and profiling by the VM. However, for many programs the set of the most used methods does not change from one execution to another and there is no reason to gather profiling information again. 
+\\\\
 The main idea of this thesis is to cache these profiles from a prior execution to be used in further runs of the same program. 
-This would allow the JIT compiler to use more sophisticated profiles early in program execution and avoid gathering the same profiling as well as prevent further compilations when more information about the method is available. While this will not influence the peak performance of the program, the hope is to decrease the time it's needed to achieve it.
-I present an implementation on top of the Java Hotspot Virtual Machine as well as profound performance analysis using state-of-the-art benchmarks.
+Having these \textit{cached profiles} available would avoid the JIT compiler to gather the same profiling information again as well as allow it to use more sophisticated profiles early in program execution and prevent recompilations when more information about the method is available. While this in general should influence the peak performance of the program, the hope is to decrease the time the JVM needs to achieve it.
+\\\\
+I present an implementation for the latest version of the Java Hotspot Virtual Machine as well as a profound performance analysis using state-of-the-art benchmarks.

@@ -34,8 +34,8 @@ public static void m(int i) {
     }
 }
 // ---------------------------------------------
-// since based on profiling information,
-// branch (a) is taken all the time,
+// If the JVM realizes based on profiling information,
+// that branch (a) is taken all the time:
 // compiler could compile the method as follows:
 // ---------------------------------------------
 public static void m(int i) {
@@ -83,7 +83,7 @@ The thresholds are relative and individual for interpreter and compiler.
 \\\\
 On-stack replacement uses a simpler predicate:
 $$b > TierXBackEdgeThreshold * s$$
-
+\\\\
 Please note that there are further conditions influencing the compilation like the load on the compiler which will not be discussed.
 
 \section{On-Stack Replacement}

@@ -54,7 +54,7 @@ The
   \begin{center}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/all_warmup_variation.png}
-    \caption{Variation from baseline of all SPECjvm benchmarks}
+    \caption{Relative performance from baseline for all SPECjvm benchmarks}
     \label{f:all_warmup_variation}
   \end{center}
 \end{figure}
@@ -72,7 +72,7 @@ The
   \begin{center}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/octane_variation.png}
-    \caption{Variation from baseline of all Octane benchmarks}
+    \caption{Relative performance from baseline for all Octane benchmarks}
     \label{f:octane_variation}
   \end{center}
 \end{figure}
@@ -104,7 +104,7 @@ The
   \begin{center}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/all_warmup_nointrinsics_variation.png}
-    \caption{Variation from baseline of all SPECjvm benchmarks without intrinsified methods}
+    \caption{Relative performance from baseline for all SPECjvm benchmarks without intrinsified methods}
     \label{f:all_warmup_nointrinsics_variation}
   \end{center}
 \end{figure}
@@ -137,7 +137,7 @@ The
   \begin{center}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/all_warmup_variation_deopt.png}
-    \caption{Deoptimization variation from baseline of all SPECjvm benchmarks}
+    \caption{Relative deoptimizations from baseline for all SPECjvm benchmarks}
     \label{f:all_warmup_variation_deopt}
   \end{center}
 \end{figure}
@@ -157,7 +157,7 @@ The
   \begin{center}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/octane_variation_deopt.png}
-    \caption{Deoptimization variation from baseline of all Octane benchmarks}
+    \caption{Relative deoptimizations from baseline for all Octane benchmarks}
     \label{f:octane_variation_deopt}
   \end{center}
 \end{figure}
@@ -165,3 +165,36 @@ The
 
 \section{Effect on compile queue}
 \label{s:perf_compilequeue}
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/octane_queue_richards.png}
+    \caption{Compile queue size over time Octane Richards benchmark}
+    \label{f:octane_queue_richards}
+  \end{center}
+\end{figure}
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/octane_queue_earleybogey.png}
+    \caption{Compile queue size over time Octane EarleyBogey benchmark}
+    \label{f:octane_queue_earleybogey}
+  \end{center}
+\end{figure}
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/octane_queue_navierstokes.png}
+    \caption{Compile queue size over time Octane NavierStokes benchmark}
+    \label{f:octane_queue_navierstokes}
+  \end{center}
+\end{figure}
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/octane_queue_delta.png}
+    \caption{Compile queue size over time Octane DeltaBlue benchmark}
+    \label{f:octane_queue_delta}
+  \end{center}
+\end{figure}
+

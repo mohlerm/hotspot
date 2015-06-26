@@ -1,5 +1,5 @@
 # Veusz saved document (version 1.22)
-# Saved at 2015-06-20T16:35:03.724397
+# Saved at 2015-06-21T12:57:11.305971
 
 AddImportPath(u'/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/specvm/warmup_withoutintrinsics')
 ImportFileCSV(u'results_warmup_nointrinsics.csv', delimiter=';', linked=True)
@@ -70,6 +70,13 @@ Set('horzPosn', u'right')
 Set('vertPosn', 'top')
 Set('horzManual', 0.0)
 Set('vertManual', 0.0)
+To('..')
+Add('line', name='line1', autoadd=False)
+To('line1')
+Set('xPos', [0.4])
+Set('yPos', [0.9856])
+Set('length', [0.533])
+Set('angle', [90.0])
 To('..')
 To('..')
 To('..')

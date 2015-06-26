@@ -1,26 +1,62 @@
 #!/bin/sh
-#-agentlib:hprof=cpu=times
+#-agentlib:hproff=cpu=times
 #CREATE
-if [ "$1" = "create" ] 
+if [ "$1" = "hpcreate" ]
 then
   echo "creating profiles"
-#  /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/jjs -J-XX:+UnlockDiagnosticVMOptions -J-XX:+UseOnStackReplacement -J-XX:+UnlockExperimentalVMOptions -XX:-PrintCompilation -XX:+TraceDeoptimization -XX:+DumpProfiles run.js
-  /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-XX:+UnlockExperimentalVMOptions -J-XX:+PrintDeoptimizationCount -J-XX:+DumpProfiles run.js
+  ../hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-agentlib:hprof=cpu=times -J-XX:+UnlockExperimentalVMOptions -J-XX:+PrintDeoptimizationCount -J-XX:+DumpProfiles $2
+elif [ "$1" = "hpbaseline_noosr" ]
+then
+  echo "baseline no OSR"
+  /disk2/hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-agentlib:hprof=cpu=times -J-XX:+UnlockDiagnosticVMOptions -J-XX:-UseOnStackReplacement $2
+elif [ "$1" = "hpbaseline_jdk8" ]
+then
+  echo "baseline official jdk8"
+  /usr/lib/jvm/java-openjdk/bin/jjs -J-agentlib:hprof=cpu=times $2
+elif [ "$1" = "hpbaseline" ]
+then
+  echo "baseline"
+  ../../../../hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-agentpath:/home/marcel/bin/yjp-2015-build-15062/bin/linux-x86-64/libyjpagent.so -J-XX:+UnlockExperimentalVMOptions -J-XX:+PrintDeoptimizationCount -J-XX:-PrintCompileQueueSize $2
+#RUN
+elif [ "$1" = "hpuse1" ]
+then
+  echo "use profiles with mode 1"
+  ../hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-agentlib:hprof=cpu=times -J-XX:+UnlockExperimentalVMOptions -J-XX:+CacheProfiles -J-XX:CacheProfilesMode=1 -J-XX:-PrintCompileQueueSize -J-XX:+PrintDeoptimizationCount -J-XX:-PrintCacheProfiles $2
+elif [ "$1" = "hpuse2" ]
+then
+  echo "use profiles with mode 2"
+  ../../../../hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-agentpath:/home/marcel/bin/yjp-2015-build-15062/bin/linux-x86-64/libyjpagent.so -J-XX:+UnlockExperimentalVMOptions -J-XX:+CacheProfiles -J-XX:CacheProfilesMode=2 -J-XX:-PrintCompileQueueSize -J-XX:+PrintDeoptimizationCount -J-XX:-PrintCacheProfiles $2
+elif [ "$1" = "hpuse0" ]
+then
+  echo "use profiles with mode 0"
+  ../hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-agentlib:hprof=cpu=times -J-XX:+UnlockExperimentalVMOptions -J-XX:+CacheProfiles -J-XX:CacheProfilesMode=0 -J-XX:-PrintCompileQueueSize -J-XX:+PrintDeoptimizationCount -J-XX:-PrintCacheProfiles $2
+i
+elif [ "$1" = "create" ]
+then
+  echo "creating profiles"
+  ../../../../hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-XX:+UnlockExperimentalVMOptions -J-XX:+PrintDeoptimizationCount -J-XX:+DumpProfiles $2
 elif [ "$1" = "baseline_noosr" ]
 then
   echo "baseline no OSR"
-  /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-XX:+UnlockDiagnosticVMOptions -J-XX:-UseOnStackReplacement run.js
-elif [ "$1" = "baseline_jdk9" ]
+  /disk2/hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-XX:+UnlockDiagnosticVMOptions -J-XX:-UseOnStackReplacement $2
+elif [ "$1" = "baseline_jdk8" ]
 then
-  echo "baseline official jdk9"
-  /home/marcel/bin/jdk1.9.0/bin/jjs run.js
+  echo "baseline official jdk8"
+  /usr/lib/jvm/java-openjdk/bin/jjs $2
 elif [ "$1" = "baseline" ]
 then
   echo "baseline"
-  /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-XX:+UnlockExperimentalVMOptions -J-XX:+PrintDeoptimizationCount run.js
+  ../../../../hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-XX:+UnlockExperimentalVMOptions -J-XX:+PrintDeoptimizationCount -J-XX:-PrintCompileQueueSize $2
 #RUN
+elif [ "$1" = "use1" ]
+then
+  echo "use profiles with mode 1"
+  ../hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-XX:+UnlockExperimentalVMOptions -J-XX:+CacheProfiles -J-XX:CacheProfilesMode=1 -J-XX:-PrintCompileQueueSize -J-XX:+PrintDeoptimizationCount -J-XX:-PrintCacheProfiles $2
+elif [ "$1" = "use2" ]
+then
+  echo "use profiles with mode 2"
+  ../../../../hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-XX:+UnlockExperimentalVMOptions -J-XX:+CacheProfiles -J-XX:CacheProfilesMode=2 -J-XX:-PrintCompileQueueSize -J-XX:+PrintDeoptimizationCount -J-XX:-PrintCacheProfiles $2
 else
-  echo "use profiles"
-#  /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-slowdebug/jdk/bin/jjs -J-XX:+UnlockDiagnosticVMOptions -J-XX:+UseOnStackReplacement -J-XX:+UnlockExperimentalVMOptions -J-XX:-PrintCompilation -J-XX:-TraceDeoptimization -J-XX:+PrintCacheProfiles -J-XX:+CacheProfiles run.js
-  /home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-XX:+UnlockExperimentalVMOptions -J-XX:+PrintDeoptimizationCount -J-XX:+CacheProfiles -J-XX:CacheProfilesMode=0 -J-XX:-PrintCompileQueueSize -J-XX:-PrintCacheProfiles run.js
+  echo "use profiles with mode 0"
+  ../hs-comp/build/linux-x86_64-normal-server-release/jdk/bin/jjs -J-XX:+UnlockExperimentalVMOptions -J-XX:+CacheProfiles -J-XX:CacheProfilesMode=0 -J-XX:-PrintCompileQueueSize -J-XX:+PrintDeoptimizationCount -J-XX:-PrintCacheProfiles $2
 fi

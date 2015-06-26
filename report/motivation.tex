@@ -5,7 +5,7 @@ I will omit any implementation details on purpose as they will be discussed in C
 Ideally, being able to reuse the profiles from previous runs should result in two main advantages:
 \begin{enumerate}
   \item \textbf{Lower start-up time of the JVM:} Having information about the program flow already, the compiler can avoid gathering profiles and compile methods earlier and directly at higher compilation levels.
-  \item \textbf{Less Deoptimizations:} Since cache profiles get dumped at the end of a compilation, when using these profiles the compiler can already include all optimizations for all different method executions. Less uncommon traps need to be placed and less deoptimizations occur.
+  \item \textbf{Less Deoptimizations:} Since cache profiles get dumped at the end of a compilation, when using these profiles the compiler can already include all optimizations for all different method executions. The compiled code includes less uncommon traps and therefore less deoptimizations occur.
 \end{enumerate}
 \begin{figure}[ht]
   \begin{center}
@@ -16,7 +16,7 @@ Ideally, being able to reuse the profiles from previous runs should result in tw
   \end{center}
 \end{figure}
 Figure \ref{f:baseline_vs_usage} gives a schematic visualization of the expected effect on performance of a single method when using cached profiles compared to the current state without such a system and standard tiered compilation.
-The blue bars roughly represent method invocations and higher bars equal higher compilation levels and therefore higher performance. The x-axis represents time since the start of the JVM. The figure shows the ideal case and abstracts away many details and other possible cases. However, it provides a good visualization for the examples provided in this chapter. A more detailed performance analysis, also considering worse cases is done in Chapter \ref{c:performance}.
+The blue bars roughly represent method invocations and higher bars equal higher compilation levels and therefore higher performance. The x-axis represents time since the start of the JVM. The figure shows the ideal case and abstracts away many details and other possible cases. However, it provides a good visualization for the examples provided in this chapter. A more detailed performance analysis, also considering possible performance regressions is done in Chapter \ref{c:performance}.
 \\\\
 I'm using my implementation described in Chapter \ref{c:implementation} in CachedProfileMode 0 (see \ref{s:mode0}) built into openJDK 1.9.0.
 All measurements in this chapter are done on a Dual-Core machine running at 2 GHz with 8GB of RAM. To measure the method invocation time I use hprof \cite{hprof} and the average of 10 runs. The evaluation process has been automated using a couple of python scripts. The error bars show the 95\% confidence interval.
@@ -29,8 +29,8 @@ Since OSR is disabled and a compilation to level 3 is triggered after 200 invoca
 To show the influence of cached profiles I use a compiler flag to lower the compile threshold explicitly and, using the functionality written for this thesis, tell Hotspot to cache the profile.
 In a next execution I use these profiles and achieve significantly better performance as one can see in Figure \ref{f:nocompile}.
 This increase comes mainly from the fact that having a cached profile available allows the JVM to compile highly optimized code for hot methods earlier (at a lower threshold) since there is no need to gather the profiling information first.
-\\
-Since the example is rather simple neither the baseline nor the profile usage run trigger any deoptimization. This makes sense because after the first invocation, all the code paths of the method have been taken already and are therefore known to the interpreter and saved in the profile.
+\\\\
+Since the example is rather simple neither the baseline nor the profile usage run trigger any deoptimizations. This makes sense because after the first invocation, all the code paths of the method have been taken already and are therefore known to the interpreter and saved in the profile.
 \begin{lstlisting}[float,caption=Simple method that does not get compiled,label=l:nocompile,language=Java]
 class NoCompile {
     double result = 0.0;
@@ -53,7 +53,7 @@ class NoCompile {
     \label{f:nocompile}
   \end{center}
 \end{figure}
-\\
+\\\\
 Enabling OSR again and the difference between with and without cached profiles vanishes.
 This happens because Hotspot quickly realizes the hotness of the method and the JIT compiler produces perfectly optimized code during the first method invocation already. 
 Even the OSR compiled code never triggers any deoptimization due to the simplicity of the loop.
@@ -106,10 +106,10 @@ In fact the JVM developed and sold by Azul Systems\textregistered\ called Zing\t
 Zing\textregistered\ includes a feature set they call ReadyNow!\texttrademark\ \cite{readynow} that aims to increase warmup performance of Java applications.
 Their system has been designed with financial markets in mind and to overcome the issue of slow performance in the beginning and performance drops during execution.
 Azul Systems clients reported that their production code usually experiences a significant performance drop as soon as the market goes live and the clients start trading.
-The reasons are deoptimizations that occur because due to changed situation uncommon branch paths are taken or yet unused methods are invoked.
-In the past their clients used techniques to warm up the JVM, for example doing fake trades. However this does not solve the problem since the JVM optimizes for these fake trades and still runs into deoptimizations once actual trades are meant to happen.
+The reasons are deoptimizations that occur because due to changed situations uncommon branch paths are taken or yet unused methods are invoked.
+In the past their clients used techniques to warm up the JVM, for example doing fake trades prior to market opening. However this does not solve the problem since the JVM optimizes for these fake trades and still runs into deoptimizations once actual trades are meant to happen.
 \\\\
 ReadyNow!\texttrademark\  is a rich set of improvements how a JVM can overcome this issues. It includes attempts to reduce the number of deoptimizations in general and other not further specified optimizations.
 As one of the core features Azul Systems\textregistered\ implemented the ability to log optimization statistics and decisions and reuse this logs in future runs. This is similar to the approach presented in this thesis. However they do not record the actual optimization but the learning and the reasons why certain optimizations happen. This gives them the ability to give feedback to the user of the JVM whether or not certain optimizations have been applied. They also provide APIs for developers to interact with the system and allow further fine-grained custom-designed optimizations.
 \\\\
-Unfortunately, they do not provide any numbers how their system actually improves performance.
+Unfortunately, they do not provide any numbers how their system actually improves performance applied to a real system..

@@ -162,39 +162,84 @@ The
   \end{center}
 \end{figure}
 
-
+\clearpage
 \section{Effect on compile queue}
 \label{s:perf_compilequeue}
-\begin{figure}[ht]
-  \begin{center}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/octane_queue_richards.png}
-    \caption{Compile queue size over time Octane Richards benchmark}
-    \label{f:octane_queue_richards}
-  \end{center}
-\end{figure}
-\begin{figure}[ht]
-  \begin{center}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/octane_queue_earleybogey.png}
-    \caption{Compile queue size over time Octane EarleyBogey benchmark}
-    \label{f:octane_queue_earleybogey}
-  \end{center}
-\end{figure}
-\begin{figure}[ht]
-  \begin{center}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/octane_queue_navierstokes.png}
-    \caption{Compile queue size over time Octane NavierStokes benchmark}
-    \label{f:octane_queue_navierstokes}
-  \end{center}
-\end{figure}
-\begin{figure}[ht]
-  \begin{center}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/octane_queue_delta.png}
-    \caption{Compile queue size over time Octane DeltaBlue benchmark}
-    \label{f:octane_queue_delta}
-  \end{center}
-\end{figure}
 
+% --------------------------- Octane Richards Queue ------------------
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/octane_queue_richards_separate_c1.png}
+    \caption{C1 Compile queue size over time Octane Richards benchmark}
+    \label{f:octane_queue_richards_separate_c1}
+  \end{center}
+\end{figure}
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/octane_queue_richards_separate_c2.png}
+    \caption{C2 Compile queue size over time Octane Richards benchmark}
+    \label{f:octane_queue_richards_separate_c2}
+  \end{center}
+\end{figure}
+% --------------------------- Octane EarleyBoyer Queue ------------------
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/octane_queue_earleyboyer_separate_c1.png}
+    \caption{C1 Compile queue size over time Octane EarleyBoyer benchmark}
+    \label{f:octane_queue_earleyboyer_separate_c1}
+  \end{center}
+\end{figure}
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/octane_queue_earleyboyer_separate_c2.png}
+    \caption{C2 Compile queue size over time Octane EarleyBoyer benchmark}
+    \label{f:octane_queue_earleyboyer_separate_c2}
+  \end{center}
+\end{figure}
+% --------------------------- Octane NavierStokes Queue ------------------
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/octane_queue_navierstokes_separate_c1.png}
+    \caption{C1 Compile queue size over time Octane NavierStokes benchmark}
+    \label{f:octane_queue_navierstokes_separate_c1}
+  \end{center}
+\end{figure}
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/octane_queue_navierstokes_separate_c2.png}
+    \caption{C2 Compile queue size over time Octane NavierStokes benchmark}
+    \label{f:octane_queue_navierstokes_separate_c2}
+  \end{center}
+\end{figure}
+% --------------------------- Octane DeltaBlue Queue ------------------
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/octane_queue_deltablue_separate_c1.png}
+    \caption{C1 Compile queue size over time Octane DeltaBlue benchmark}
+    \label{f:octane_queue_deltablue_separate_c1}
+  \end{center}
+\end{figure}
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/octane_queue_deltablue_separate_c2.png}
+    \caption{C2 Compile queue size over time Octane DeltaBlue benchmark}
+    \label{f:octane_queue_deltablue_separate_c2}
+  \end{center}
+\end{figure}
+% --------------------------- Octane Queue Total ------------------
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/queue_total.png}
+    \caption{Number of compilations}
+    \label{f:queue_total}
+  \end{center}
+\end{figure}

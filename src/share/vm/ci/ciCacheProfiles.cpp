@@ -648,6 +648,7 @@ MethodRecord* ciCacheProfiles::new_methodRecord(char* klass_name, char* method_n
     }
     _method_records[_method_records_pos] = rec;
     _method_records_pos++;
+    FREE_C_HEAP_OBJ(old_method_records);
   }
   return rec;
 }
@@ -671,6 +672,7 @@ MethodDataRecord* ciCacheProfiles::new_methodDataRecord(char* klass_name, char* 
     }
     _method_data_records[_method_data_records_pos] = rec;
     _method_data_records_pos++;
+    FREE_C_HEAP_OBJ(old_method_data_records);
   }
   return rec;
 }
@@ -697,6 +699,7 @@ CompileRecord* ciCacheProfiles::new_compileRecord(char* klass_name, char* method
       }
       _compile_records[_compile_records_pos] = rec;
       _compile_records_pos++;
+      FREE_C_HEAP_OBJ(old_compile_records);
     }
   } else {
 //     we already have a record, so we should free the old datastructure

@@ -1,27 +1,27 @@
-This chapter describes the implementation of the cached profiles functionality for Hotspot, written as part of this thesis.
+This chapter describes the implementation of the cached profiles functionality for Hotspot, written for this thesis.
 \\\\
-Hotspot is an Java virtual machine maintained by Oracle Corporation. It is part of the open source project \texttt{OpenJDK} and the source code is available at \url{http://openjdk.java.net/}.
+Hotspot is a Java virtual machine maintained by Oracle Corporation. It is part of the open source project \texttt{OpenJDK} and the source code is available at \url{http://openjdk.java.net/}.
 \\\\
-Most of the work is included in two new classes \texttt{/share/vm/ci/ciCacheProfiles.cpp} and \\\texttt{/share/vm/ci/ciCacheProfilesBroker.cpp} as well as modifications to \texttt{/share/vm/ci/ciEnv.cpp} and \texttt{/share/vm/compiler/compileBroker.cpp}.
+Most of the work is included in two new classes \texttt{/share/vm/ci/ciCacheProfiles.cpp} and \\\texttt{/share/vm/ci/ciCacheProfilesBroker.cpp} as well as additions to \texttt{/share/vm/ci/ciEnv.cpp} and \texttt{/share/vm/compiler/compileBroker.cpp}.
 \\
-Most of the code is located in \texttt{/share/vm/ci/ciCacheProfiles.cpp}, a class that takes care of setting up a datastructure for the cached profiles as well as providing public methods to check if a method is cached or not. The class \texttt{/share/vm/ci/ciCacheProfilesBroker.cpp} gets called before a method that has a profile available gets compiled. It is responsible for setting up the compilation environment so the JIT compiler can use the cached profiles.
+The core functionality is located in \texttt{/share/vm/ci/ciCacheProfiles.cpp}, a class that takes care of setting up a datastructure for the cached profiles as well as providing public methods to check if a method is cached or not. The class \texttt{/share/vm/ci/ciCacheProfilesBroker.cpp} gets called before a cached method gets compiled. It is responsible for setting up the compilation environment so the JIT compiler can use the cached profiles.
 \\\\
 A full list of modified files and the changes can be seen in the webrev or appendix TODO.
 \\\\
-The changes are provided in form of a patch for Hotspot version 8182 TODO. This original version is referred to as \textit{Baseline}.
+The changes are provided in form of a patch for Hotspot version 1aef080fd28d. This original version is referred to as \textit{baseline}.
 \\\\
-I will describe and explain the functionality and the implementation design decision in the following sections, ordered by the appearance in execution.
-
+I will describe and explain the functionality and the implementation design decision in the following sections, ordered by their execution order.
 
 \section{Creating cached profiles}
 \label{s:creatingprofiles}
 The baseline version of Hotspot already offered a functionality to replay a compilation based on dumped profiling information.
-This is mainly used in case the JVM crashes during JIT compilation to replay the compilation again and help finding the cause of this crash.
-Dumping the data needed for the replay is either be done automatically in case of a crash or can be invoked manually by specifying the \texttt{DumpReplay} compile command option per method.
-I introduce method option called \texttt{DumpProfile} as well as a compiler flag \texttt{-XX:+DumpProfiles} that appends profiling information to a file as soon as a method gets compiled. The first option can be specified as part of the \texttt{-XX:CompileCommand} or \texttt{-XX:CompileCommandFile} flag and allows one to select single methods to dump their profile. The second commands dumps profiles of all compiled methods into a single file.
-The file can be opened with any text editor and is called \textit{cached\_profiles.dat}.
+This is mainly used in case the JVM crashes during JIT compilation to replay the compilation again and allow the JVM developer to further investigate in the cause of this crash.
+In the baseline dumping the replay data is either done automatically in case of a crash or can be invoked manually by specifying the \texttt{DumpReplay} compile command option per method.
 \\\\
-As soon as a method gets compiled on level 3 or level 4 all information about the methods used in the compiled method as well as their profiling information get converted to a string and written to disk. Methods compiled with level 1 and 2 will not be considered. Both are rarely used in practice and do only include none respectively little profiling information.
+I introduce a new method option called \texttt{DumpProfile} as well as a new compiler flag \texttt{-XX:+DumpProfiles} that appends profiling information to a file as soon as a method gets compiled. The first option can be specified as part of the \texttt{-XX:CompileCommand} or \texttt{-XX:CompileCommandFile} flag and allows one to select single methods to dump their profile. The second commands dumps profiles of all compiled methods into a single file.
+The file is a simple text file and is called \textit{cached\_profiles.dat}.
+\\\\
+As soon as a method gets compiled on level 3 or level 4 all information about the methods used in the compiled method as well as their profiling information get converted to a string and written to disk. Methods compiled with level 1 and 2 will not be considered. Both are rarely used in practice and do only include none or little profiling information.
 \\\\
 Since method often get compiled multiple times and at different tier, this can result in dumping compilation information about the same method multiple times. How this will be taken care of is described in Section \ref{s:initializingprofiles}.
 Together with some additional information about the compilation itself, for example the bytecode index of the compiled method in case of OSR, the compiler will be able to redo the same compilation on a future run of the java virtual machine.  

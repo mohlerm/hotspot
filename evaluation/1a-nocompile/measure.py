@@ -14,14 +14,14 @@ from subprocess import call, check_call, check_output, CalledProcessError
 #-------------------
 # Select benchmarks to run
 RUN_BASELINE = True
-RUN_CREATE = False
+RUN_CREATE = True
 RUN_USE = True
 # Nr of runs each
 NROFRUNS = 1
 # Use slowdebug instead of relase mode
 DEBUG = False
 # Choose cacheProfiles mode
-CACHE_MODE = 1
+CACHE_MODE = 0
 # Enable debug output (only works in debug mode)
 VERBOSE = False
 # Print CacheProfiles output

@@ -1,5 +1,5 @@
-Virtual Machines like the Java Virtual Machine (JVM) are used as the execution environment of choice for many modern programming languages. 
-The VMs interpret a suitable intermediate language (e.g., Java Byte Code for the JVM) and provide the runtime system for application programs and usually include a garbage collector, a thread scheduler and interfaces to the host operating system. 
+Virtual machines (VMs) like the Java Virtual Machine (JVM) are used as the execution environment of choice for many modern programming languages. 
+VMs interpret a suitable intermediate language (e.g., Java Byte Code for the JVM) and provide the runtime system for application programs. VMs usually include a garbage collector, a thread scheduler, and interfaces to the host operating system. 
 As interpretation of intermediate code is time-consuming, VMs usually include a \textit{Just-in-time} (JIT) compiler that translates frequently-executed functions or methods to \textit{native} machine code.
 \\\\
 The JIT compiler executes in parallel to a program's interpretation by the VM and, as a result, compilation speed is a critical issue in the design of a JIT compiler.
@@ -12,6 +12,6 @@ At program startup, all methods are interpreted by the virtual machine (executio
 One of the drawbacks of this setup is that for all programs, all methods start in Tier 0, with interpretation and profiling by the VM. However, for many programs the set of the most used methods does not change from one execution to another and there is no reason to gather profiling information again. 
 \\\\
 The main idea of this thesis is to cache these profiles from a prior execution to be used in further runs of the same program. 
-Having these \textit{cached profiles} available avoids the JIT compiler to gather the same profiling information again. As well as allow it to use more sophisticated profiles early in program execution and prevent recompilations when more information about the method is available. While this in general should not significantly influence the peak performance of the program, the hope is to decrease the time the JVM needs to achieve it, the so called \textit{warmup}.
+Having these \textit{cached profiles} available avoids the JIT compiler to gather the same profiling information again. As well as allow the compiler to use more sophisticated profiles early in program execution and prevent recompilations when more information about the method is available. While this in general should not significantly influence the peak performance of the program, the hope is to decrease the time the JVM needs to achieve it, the so called \textit{warmup}.
 \\\\
-This thesis proposes a design and an implementation of a profile caching feature for \textit{Hotspot}, an open source Java virtual machine maintained and distributed by Oracle Corporation. As well as a profound performance analysis using state-of-the-art benchmarks.
+This thesis proposes a design and an implementation of a profile caching feature for \textit{HotSpot}, an open source Java virtual machine maintained and distributed by Oracle Corporation as well as a profound performance analysis using state-of-the-art benchmarks.

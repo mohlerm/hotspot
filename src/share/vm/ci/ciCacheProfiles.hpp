@@ -309,7 +309,8 @@ class ciCacheProfiles : AllStatic {
   static MethodDataRecord* new_methodDataRecord(char* klass_name, char* method_name, char* signature);
 
   // Create and initialize a record for a ciCompile
-  static CompileRecord* new_compileRecord(char* klass_name, char* method_name, char* signature);
+  // returns NULL if we should keep existing record
+  static CompileRecord* new_compileRecord(char* klass_name, char* method_name, char* signature, int comp_level);
 
   // Lookup data for a ciMethod
   static CompileRecord* find_compileRecord(Method* method);

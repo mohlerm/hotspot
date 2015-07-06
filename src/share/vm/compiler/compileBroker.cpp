@@ -1313,9 +1313,10 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
 
   //marcel:
   // start by figuring out the new compile level in case the method is cached
+  int cached_comp_level;
   if(CacheProfiles && ciCacheProfiles::is_initialized()) {
     // if it's set trigger replayCompilation in case it's a cached method
-    int cached_comp_level = ciCacheProfiles::is_cached(method());
+    cached_comp_level = ciCacheProfiles::is_cached(method());
     // we only use cached profiles for Level 3 or 4
     // because 1 and 2 are used in special cases (i.e. compile queue full)
     // and we don't want to mess with that
@@ -1338,15 +1339,15 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
       // as long as we're not in mode 2
       // OR in mode 2 and a level 3 (with no level 4 profile available) or level 4 compilation (with either profiles)
       } else {
-        if(PrintCacheProfiles) {
-          tty->print(">>>>>> USE PROFILE FOR LVL: %d, Complevel: %d, Hotcount: %d, OSR_BCI: %d :: ",cached_comp_level, comp_level, hot_count,osr_bci);
-          method->print_name(tty);
-          tty->print_cr(" <<<<<<<");
-        }
         // fix compile level to the one of the cached profile
         // this can result in promotion of level 3 compilations to level 4
         // (not the other way around)
         if(comp_level < cached_comp_level) {
+          if(PrintCacheProfiles) {
+            tty->print(">>>>>> PROMOTE COMPILE LVL: from %d to %d, Hotcount: %d, OSR_BCI: %d :: ",comp_level, cached_comp_level, hot_count,osr_bci);
+            method->print_name(tty);
+            tty->print_cr(" <<<<<<<");
+          }
           comp_level = cached_comp_level;
         }
       }
@@ -1449,7 +1450,6 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
     // first, check whether the CacheProfiles flag is set, if not continue as usual
     if(CacheProfiles && ciCacheProfiles::is_initialized()) {
       // if it's set trigger replayCompilation in case it's a cached method
-      int cached_comp_level = ciCacheProfiles::is_cached(method());
       // continue if method is cached and of level 3 or 4
       // AND our compile level actually matches cache level (should always be the case, since we override that above)
       // AND finally check if method has not been compiled more than 10 time already (using the cached profile)
@@ -1459,6 +1459,11 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
           && comp_level == cached_comp_level
           && (method->method_data() == NULL || (method->method_data() != NULL && method->method_data()->decompile_count() < 10)))
       {
+        if(PrintCacheProfiles) {
+          tty->print(">>>>>> USE PROFILE FOR LVL: %d, Complevel: %d, Hotcount: %d, OSR_BCI: %d :: ",cached_comp_level, comp_level, hot_count,osr_bci);
+          method->print_name(tty);
+          tty->print_cr(" <<<<<<<");
+        }
         ciCacheProfilesBroker::replay(THREAD,method(),osr_bci);
         return osr_bci  == InvocationEntryBci ? method->code() : method->lookup_osr_nmethod_for(osr_bci, comp_level, false);
       }

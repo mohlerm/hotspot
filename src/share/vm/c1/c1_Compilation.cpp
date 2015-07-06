@@ -580,6 +580,26 @@ Compilation::Compilation(AbstractCompiler* compiler, ciEnv* env, ciMethod* metho
       md->set_would_profile(_would_profile);
     }
   }
+  // Dump profile to allow profile caching
+  if(_env->comp_level()>CompLevel_limited_profile) {
+    if ((DumpProfiles || _method->has_option("DumpProfile")) && (!_method->has_option("IgnoreDumpProfile"))) {
+  // marcel: ugly workaround to make Octane work...
+      const char* klassmethod = _method->holder()->name()->as_utf8();
+      int length = strlen(klassmethod);
+      if(length > 49) {
+        length = 49;
+      }
+      char* subbuff = NEW_RESOURCE_ARRAY(char,length+1);
+      memcpy( subbuff, klassmethod, length );
+      subbuff[length] = '\0';
+      if(strcmp(subbuff,"jdk/nashorn/internal/scripts/Script$Recompilation")==0 || strcmp(subbuff,"java/lang/invoke/LambdaForm$MH")==0 || strcmp(subbuff,"java/lang/invoke/LambdaForm$BMH")==0 || strcmp(subbuff,"java/lang/invoke/LambdaForm$DMH")==0 || strcmp(subbuff,"jdk/nashorn/internal/runtime/ScriptObject")==0) {
+        //tty->print("###Avoided: %s\n",method()->holder()->name()->as_utf8());
+      } else {
+        //tty->print("###Dump: %s\n",method()->holder()->name()->as_utf8());
+        _env->dump_cache_profiles(0, _method->name()->as_utf8());
+      }
+    }
+  }
 }
 
 Compilation::~Compilation() {

@@ -423,31 +423,36 @@ void ciCacheProfiles::process_compile(TRAPS) {
   char* klass_name = parse_string();
   char* method_name = parse_string();
   char* signature = parse_string();
-  CompileRecord* rec = new_compileRecord(klass_name, method_name, signature);
-
-  ResourceMark rm;
-
-  rec->_entry_bci = parse_int("entry_bci");
-  const char* comp_level_label = "comp_level";
-  rec->_comp_level = parse_int(comp_level_label);
-  if (had_error() && (error_message() == comp_level_label)) {
-    rec->_comp_level = CompLevel_full_optimization;
+  int entry_bci = parse_int("entry_bci");
+  int comp_level = parse_int("comp_level");
+  // old version w/o comp_level
+  if (had_error() && (error_message() == "comp_level")) {
+    comp_level = CompLevel_full_optimization;
   }
-  int inline_count = 0;
-  if (parse_tag_and_count("inline", inline_count)) {
-    // Record inlining data
-    rec->_inline_records = new GrowableArray<InlineRecord*>();
-    for (int i = 0; i < inline_count; i++) {
-      int depth = parse_int("inline_depth");
-      int bci = parse_int("inline_bci");
-      if (had_error()) {
-        break;
+
+  CompileRecord* rec = new_compileRecord(klass_name, method_name, signature, comp_level);
+  // new_compileRecord will return NULL if we should not overwrite an existing profile
+  if(rec != NULL) {
+    ResourceMark rm;
+
+    rec->_entry_bci = entry_bci;
+    rec->_comp_level = comp_level;
+    int inline_count = 0;
+    if (parse_tag_and_count("inline", inline_count)) {
+      // Record inlining data
+      rec->_inline_records = new GrowableArray<InlineRecord*>();
+      for (int i = 0; i < inline_count; i++) {
+        int depth = parse_int("inline_depth");
+        int bci = parse_int("inline_bci");
+        if (had_error()) {
+          break;
+        }
+        Method* inl_method = parse_method(CHECK);
+        if (had_error()) {
+          break;
+        }
+        rec->new_inlineRecord(inl_method, bci, depth);
       }
-      Method* inl_method = parse_method(CHECK);
-      if (had_error()) {
-        break;
-      }
-      rec->new_inlineRecord(inl_method, bci, depth);
     }
   }
 }
@@ -678,7 +683,7 @@ MethodDataRecord* ciCacheProfiles::new_methodDataRecord(char* klass_name, char* 
 }
 
 // Create and initialize a record for a ciCompile
-CompileRecord* ciCacheProfiles::new_compileRecord(char* klass_name, char* method_name, char* signature) {
+CompileRecord* ciCacheProfiles::new_compileRecord(char* klass_name, char* method_name, char* signature, int comp_level) {
   CompileRecord* rec = find_compileRecord(klass_name, method_name, signature);
   // if we don't have a record yet, save to compile record array
   if(rec == NULL) {
@@ -701,8 +706,9 @@ CompileRecord* ciCacheProfiles::new_compileRecord(char* klass_name, char* method
       _compile_records_pos++;
       FREE_C_HEAP_OBJ(old_compile_records);
     }
-  } else {
-//     we already have a record, so we should free the old datastructure
+  // only save if our profile is from a higher compiler tier
+  } else if (comp_level >= rec->_comp_level) {
+    // we already have a record, so we should free the old datastructure
     rec->_iklass = NULL;
     rec->_imethod = NULL;
     for(int i = 0;i<rec->_method_records_pos;i++) {
@@ -712,6 +718,19 @@ CompileRecord* ciCacheProfiles::new_compileRecord(char* klass_name, char* method
       FREE_C_HEAP_OBJ(rec->_method_data_records[i]);
     }
     rec->setupCompileRecord(klass_name, method_name, signature);
+  // this means our compile level is smaller than the cached one
+  // and we don't want to overwrite the profile in this case
+  // free temporary datastructure
+  } else {
+    _iklass = NULL;
+    _imethod = NULL;
+    for(int i = 0;i<_method_records_pos;i++) {
+      FREE_C_HEAP_OBJ(_method_records[i]);
+    }
+    for(int i = 0;i<_method_data_records_pos;i++) {
+      FREE_C_HEAP_OBJ(_method_data_records[i]);
+    }
+    return NULL;
   }
   // save temporary datastructures to the found or newly created CompileRecord
   rec->_iklass = _iklass;

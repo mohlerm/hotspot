@@ -231,15 +231,6 @@ INPUT ./figures/octane.png
 INPUT figures/octane_variation.png
 INPUT ./figures/octane_variation.png
 INPUT ./figures/octane_variation.png
-INPUT figures/others_warmup_nointrinsics.png
-INPUT ./figures/others_warmup_nointrinsics.png
-INPUT ./figures/others_warmup_nointrinsics.png
-INPUT figures/scimark_warmup_nointrinsics.png
-INPUT ./figures/scimark_warmup_nointrinsics.png
-INPUT ./figures/scimark_warmup_nointrinsics.png
-INPUT figures/all_warmup_nointrinsics_variation.png
-INPUT ./figures/all_warmup_nointrinsics_variation.png
-INPUT ./figures/all_warmup_nointrinsics_variation.png
 INPUT figures/others_warmup_deopt.png
 INPUT ./figures/others_warmup_deopt.png
 INPUT ./figures/others_warmup_deopt.png

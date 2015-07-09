@@ -1,28 +1,28 @@
-This chapter describes the implementation of the cached profiles functionality for Hotspot, written for this thesis.
-Hotspot is a Java virtual machine maintained by Oracle Corporation. It is part of the open source project \texttt{OpenJDK} and the source code is available at \url{http://openjdk.java.net/}.
+This chapter describes the implementation of the cached profiles functionality for HotSpot, written as part of this thesis.
+HotSpot is vital part of the open source project \texttt{OpenJDK} and the source code is available at \url{http://openjdk.java.net/}.
 \\\\
-Most of the work is included in two new classes \texttt{/share/vm/ci/ciCacheProfiles.cpp} and \\\texttt{/share/vm/ci/ciCacheProfilesBroker.cpp} as well as additions to \texttt{/share/vm/ci/ciEnv.cpp} and \texttt{/share/vm/compiler/compileBroker.cpp}.
+Most of the code additions are included in two new classes \texttt{/share/vm/ci/ciCacheProfiles.cpp} and \\\texttt{/share/vm/ci/ciCacheProfilesBroker.cpp} as well as significant changes to \texttt{/share/vm/ci/ciEnv.cpp} and \texttt{/share/vm/compiler/compileBroker.cpp}.
 \\
-The core functionality is located in \texttt{/share/vm/ci/ciCacheProfiles.cpp}, a class that takes care of setting up a datastructure for the cached profiles as well as providing public methods to check if a method is cached or not. The class \texttt{/share/vm/ci/ciCacheProfilesBroker.cpp} is used before a cached method gets compiled. It is responsible for setting up the compilation environment so the JIT compiler can use the cached profiles.
+The core functionality is located in \texttt{/share/vm/ci/ciCacheProfiles.cpp}, a class that takes care of setting up the cached profile datastructure as well as providing public methods to check if a method is cached or not. The class \texttt{/share/vm/ci/ciCacheProfilesBroker.cpp} is used before a cached method gets compiled. It is responsible for setting up the compilation environment, so the JIT compiler can use the cached profiles.
 \\\\
 A full list of modified files and the changes can be seen in the webrev at \url{http://mohlerm.ch/b/webrev.01/} or Appendix \ref{a:codechanges}.
-The changes are provided in form of a patch for Hotspot version 1aef080fd28d. In the following, the original version is referred to as \textit{baseline}.
+The changes are provided in form of a patch for HotSpot version 1aef080fd28d. In the following, the original version is referred to as \textit{baseline}.
 \\\\
 I will describe and explain the functionality and the implementation design decision in the following sections, ordered by their execution order.
 
 \section{Creating cached profiles}
 \label{s:creatingprofiles}
-The baseline version of Hotspot already offers a functionality to replay a compilation based on previously saved profiling information.
+The baseline version of HotSpot already offers a functionality to replay a compilation based on previously saved profiling information.
 This is mainly used in case the JVM crashes during a JIT compilation to replay the compilation process and allow the JVM developer to further investigate the cause of this incident.
-Apart from this automatic process there is also the possibility to invoke the profile saving manually by specifying the \texttt{DumpReplay} compile command option per method.
+Apart from this automatic process there exists the possibility to invoke the profile saving manually by specifying the \texttt{DumpReplay} compile command option per method.
 \\\\
-I introduce a new method option called \texttt{DumpProfile} as well as a new compiler flag \newline\texttt{-XX:+DumpProfiles} that appends profiling information to a file as soon as a method gets compiled. The first option can be specified as part of the \texttt{-XX:CompileCommand} or \texttt{-XX:CompileCommandFile} flag and allows one to select single methods to dump their profile. The second commands dumps profiles of all compiled methods into a single file.
-The file is a simple text file and is called \textit{cached\_profiles.dat}.
+I introduce a new method option called \texttt{DumpProfile} as well as a new compiler flag \newline\texttt{-XX:+DumpProfiles} that appends profiling information to a file as soon as a method gets compiled. The first option can be specified as part of the \texttt{-XX:CompileCommand} or \texttt{-XX:CompileCommandFile} flag and allows the user to select single methods to dump their profile. The second commands dumps profiles of all compiled methods.
+The profile get converted to a string and saved in a simple text file, which is called \textit{cached\_profiles.dat}.
 \\\\
-As soon as a method gets compiled on level 3 or level 4 information about the methods used in the compiled method as well as their profiling information get converted to a string and written to disk. Methods compiled with level 1 and 2 will not be considered. Both are rarely used in practice and do only include none or little profiling information.
+The system will only consider compilations of Level 3 or Level 4. Level 1 and Level 2 are rarely used in practice and do only include none or little profiling information.
 \\\\
-Each of these dumped strings of compilation data consists of multiple ciMethod entries, ciMethodData entries and one compile entry. They are separated by linebreaks and keywords make sure the data can be parsed correctly. A shortened example of a cached profile can be found in Appendix \ref{a:cacheprofileexample}. The ciMethod entries contain information about the methods used in the compilation and Table \ref{t:cimethod} describes it in more detail. The ciMethodData (see Table \ref{t:cimethoddata}) includes all profiling data about the methods itself to be able to redo the compilation.
-Terminatory, the compile entry saves the bytecode index in case of OSR, the level of the compilation and lists all inlining decisions (Table \ref{t:compile}).
+Each of these dumped strings of compilation data consists of multiple \texttt{ciMethod} entries, \texttt{ciMethodData} entries and one compile entry. They are separated by linebreaks and keywords make sure the data can be parsed correctly. A shortened example of a cached profile can be found in Appendix \ref{a:cacheprofileexample}. The \texttt{ciMethod} entries contain information about the methods used in the compilation and Table \ref{t:cimethod} describes it in more detail. The \texttt{ciMethodData} (see Table \ref{t:cimethoddata}) includes all profiling data about the methods itself to be able to redo the compilation.
+The compile entry saves the bytecode index in case of OSR, the level of the compilation and lists all inlining decisions (Table \ref{t:compile}).
 \\\\
 Since method often get compiled multiple times and at different tier, this results in dumping compilation information about the same method multiple times. This is intentional and is taken care of when loading the profiles (also see Section \ref{s:initializingprofiles}).
 \begin{table}[ht!]
@@ -85,12 +85,12 @@ To specify that profiles are available, I introduce a new compiler flag \texttt{
 Before any cached profiles can be used the virtual machine has to parse that file and organize the profiles and compile information in a datastructure. This datastructure is kept in memory completely during the whole execution of the JVM to avoid multiple disk accesses.
 The parsing process gets invoked during boot up of the JVM, directly after the compileBroker gets initialized. This happens before any methods get executed and blocks the JVM until finished.
 \\\\
-As mentioned in Section \ref{s:creatingprofiles} the file consists of method informations, method profiles and additional compile information. The parser scans the file once and creates a so called \texttt{CompileRecord} for each of the methods that include compilation information in the file. This compile record also includes the list of method information (ciMethod) and their profiling information (ciMethodData).
-As mentioned previously, a method's compile information could have been dumped multiple times, so it can happen that there are multiple CompileRecords for the same method. In this case, Hotspot will only keep the CompileRecords that are created based on the last data written to the file.
+As mentioned in Section \ref{s:creatingprofiles} the file consists of method informations, method profiles and additional compile information. The parser scans the file once and creates a so called \texttt{CompileRecord} for each of the methods that include compilation information in the file. This compile record also includes the list of method information (\texttt{ciMethod}) and their profiling information (\texttt{ciMethodData}).
+As mentioned previously, a method's compile information could have been dumped multiple times, so it can happen that there are multiple \texttt{CompileRecords} for the same method. In this case, HotSpot will only keep the \texttt{CompileRecords} that are created based on the last data written to the file.
 Since profiling information only grow, the compilation that happened last contains the richest profile and is considered the best.
 This is based on the fact that the richer the profile the more information about the method execution is known and influences the compiled version of that method. For example, a profile for a method might include data for all its branches and can therefore avoid running into uncommon traps and trigger deoptimizations.
 \\\\
-The CompileRecord as well as the lists of methods information and profiles are implemented as an array located in Hotspot's heap space.
+The \texttt{CompileRecord} as well as the lists of methods information and profiles are implemented as an array located in HotSpot's heap space.
 They get initialized with a length of 8 and grow when needed. This implementation choice has been done for simplicity and leaves up room for further optimizations.
 
 \section{Using cached profiles}
@@ -110,7 +110,7 @@ A graphical, simplified overview of the program flow for compiling a method with
 \end{figure}
 As mentioned before, once certain thresholds are exceeded a method gets scheduled for compilation. This means that the JVM will invoke a method called \texttt{compile\_method()} located in the \texttt{compileBroker} class. This method tests if certain conditions hold, for example checks if the compile queue isn't full or if there is already another compilation of that particular method running.
 I extended this method with a call to \texttt{ciCacheProfiles::is\_cached(Method* method)} which either returns 0 if the method is not cached or returns an integer value, reflecting the compile level, in case that method has a cached profile available. Because only methods compiled with level 3 or 4 get cached, this call only gets executed if the compilation request is also of level 3 or higher.
-Note that this also means that if a method compilation of level 3 is initiated and a CompileRecord of level 4 is available that the highest level profile will be used. Therefore the method gets immediately compiled with C2 instead of C1.
+Note that this also means that if a method compilation of level 3 is initiated and a \texttt{CompileRecord} of level 4 is available that the highest level profile will be used. Therefore the method gets immediately compiled with C2 instead of C1.
 In case the method is not cached the execution continues like in the baseline version.
 Otherwise, the \texttt{compileBroker} calls into \texttt{ciCacheProfilesBroker} to replay the compilation, based on the saved profile.
 The \texttt{ciCacheProfilesBroker} class then initializes the replay environment and retrieves the compile record from \texttt{ciCacheProfiles}. Subsequently the needed cached profiles get loaded to make sure they get used by a following compilation. ciCacheProfilesBroker then returns the execution to the compileBroker which continues with the steps needed to compile the method. Again some constraints are checked (e.g. if there is another compilation of the same method finished in the meantime) and a new compile job is added to the compile queue. Eventually the the method is going to be compiled using the cached profiles.
@@ -131,7 +131,6 @@ Since the interpreter also handles class loading this decision has been made to 
 As mentioned before the triggered compilation will use the latest available compile record. Eventually, most hot methods get compiled by C2 and therefore the used compiled record is usually a C2 one. In this case the JVM will jump directly from compile level 0 to compile level 4 and avoid a costly C1 compilation as well as gathering profiling information during level 0 and level 3.
 It will directly use the highly optimized version generated by C2 and ideally result in a lower time to reach peak performance.
 On the downside this increases the load on the C2 compiler and fill the compile queue more quickly.
-\texttt{Mode 0} is the default mode and used if not further specified.
 \subsection{Unmodified Compile Thresholds (mode 1)}
 \label{s:mode1}
 \texttt{Mode 1} is doing exactly the same as \texttt{mode 0} but does not scale the compilation thresholds automatically.
@@ -142,13 +141,15 @@ Apart from this change \texttt{mode 1} has the same behaviour as \texttt{mode 0}
 Both modes mentioned before use cached profiles as soon as a compilation of level 3 and 4 are triggered. Since the thresholds for level 3 are smaller than the level 4 thresholds (see Appendix \ref{a:compilethresholds}) a method reaching a level 3 threshold could actually trigger a level 4 compilation, if the cached profile is one of level 4. So even if \texttt{mode 1} is used and the thresholds are untouched C2 might get overloaded since compilations occur earlier.
 \\\\
 \texttt{Mode 2} has been designed to make as little changes as possible to the tiered compilation. and prevent C2 being more used than usual. It does so by keeping the original tiered compilation steps and compilation thresholds and compiles methods with C1 prior to C2. But since there are already profiles available there is no need to run at Tier 3 to generate full profiles but instead it uses Tier 2.
-Tier 2 does the same optimizations but offers only limited profiles like method invocation and backbranch counters. They are needed to know when to trigger the C2 compilation and therefore we can not use Tier 1. Tier 2 generally is considered about 30\% faster than Tier 3 \cite{code_atp_hpp}.
+Tier 2 does the same optimizations but offers only limited profiles like method invocation and backbranch counters. They are needed to know when to trigger the C2 compilation and therefore we can not use Tier 1. Tier 2 is considered about 30\% faster on average than Tier 3 \cite{code_atp_hpp}.
 \\\\
 If then the Tier 4 thresholds are reached the method is compiled using C2 and the cached profiles.
 \\\\
 The above only makes sense if there is a C2 profile available.
-If only a C1 profile is available, C1 should run generating full profiles since they might be needed in C2 later. Hotspot will then only use the cached profile during the C1 compilation and then use the new profiles.
+If only a C1 profile is available, C1 should run generating full profiles since they might be needed in C2 later. HotSpot will then only use the cached profile during the C1 compilation and then use the new profiles.
 In theory this transition is considered rare, because if a method has not been compiled with C2 when creating the profile it is unlikely to get compiled with C2 in the future.
+\\\\
+\texttt{Mode 2} is the default mode and used if not further specified.
 
 \begin{figure}[h]
   \begin{center}

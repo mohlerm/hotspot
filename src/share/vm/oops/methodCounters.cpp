@@ -47,7 +47,8 @@ void MethodCounters::clear_counters() {
 
 
 bool MethodCounters::scale_if_cached(methodHandle mh, double& scale) {
-   //marcel: check if method is cached and lower threshold automatically
+   // in case the CacheProfile functionality is used:
+   // in mode0, check if method is cached and lower threshold automatically
     if(CacheProfiles && ciCacheProfiles::is_initialized()) {
       if(CacheProfilesMode==0 && ciCacheProfiles::is_cached(mh)) {
         scale = CacheProfilesMode0ThresholdScaling;

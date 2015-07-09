@@ -1311,7 +1311,6 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
   assert(WhiteBoxAPI || TieredCompilation || comp_level == CompLevel_highest_tier, "only CompLevel_highest_tier must be used in non-tiered");
   // return quickly if possible
 
-  //marcel:
   // start by figuring out the new compile level in case the method is cached
   int cached_comp_level;
   if(CacheProfiles && ciCacheProfiles::is_initialized()) {
@@ -1332,9 +1331,9 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
       if(CacheProfilesMode==2 && (comp_level == CompLevel_full_profile && cached_comp_level == CompLevel_full_optimization)) {
         comp_level = CompLevel_limited_profile;
         if(PrintCacheProfiles) {
-          tty->print(">>>>>> FORCE COMPLEVEL %d, Hotcount: %d, OSR_BCI: %d :: ", comp_level,hot_count,osr_bci);
+          tty->print("CacheProfiles: Force Compilationlevel to %d, Hotcount: %d, OSR_BCI: %d :: ", comp_level,hot_count,osr_bci);
           method->print_name(tty);
-          tty->print_cr(" <<<<<<<");
+          tty->print_cr(" <");
         }
       // as long as we're not in mode 2
       // OR in mode 2 and a level 3 (with no level 4 profile available) or level 4 compilation (with either profiles)
@@ -1344,9 +1343,9 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
         // (not the other way around)
         if(comp_level < cached_comp_level) {
           if(PrintCacheProfiles) {
-            tty->print(">>>>>> PROMOTE COMPILE LVL: from %d to %d, Hotcount: %d, OSR_BCI: %d :: ",comp_level, cached_comp_level, hot_count,osr_bci);
+            tty->print("CacheProfiles: Promote Compilationlevel from %d to %d, Hotcount: %d, OSR_BCI: %d :: ",comp_level, cached_comp_level, hot_count,osr_bci);
             method->print_name(tty);
-            tty->print_cr(" <<<<<<<");
+            tty->print_cr(" <");
           }
           comp_level = cached_comp_level;
         }
@@ -1446,12 +1445,11 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
       return NULL;
     }
 
-    // marcel:
     // first, check whether the CacheProfiles flag is set, if not continue as usual
     if(CacheProfiles && ciCacheProfiles::is_initialized()) {
       // if it's set trigger replayCompilation in case it's a cached method
       // continue if method is cached and of level 3 or 4
-      // AND our compile level actually matches cache level (should always be the case, since we override that above)
+      // AND our compile level actually matches cache level (we can not use a LVL3 profile for LVL4 compilations)
       // AND finally check if method has not been compiled more than 10 time already (using the cached profile)
       // Note: this is independent of the cacheprofilesmode since it will lower the level to 2 if it
       //       does not want to use cached profiles
@@ -1460,9 +1458,9 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
           && (method->method_data() == NULL || (method->method_data() != NULL && method->method_data()->decompile_count() < 10)))
       {
         if(PrintCacheProfiles) {
-          tty->print(">>>>>> USE PROFILE FOR LVL: %d, Complevel: %d, Hotcount: %d, OSR_BCI: %d :: ",cached_comp_level, comp_level, hot_count,osr_bci);
+          tty->print("CacheProfiles: Use level %d profile for level %d compilation, Hotcount: %d, OSR_BCI: %d :: ",cached_comp_level, comp_level, hot_count,osr_bci);
           method->print_name(tty);
-          tty->print_cr(" <<<<<<<");
+          tty->print_cr(" <");
         }
         ciCacheProfilesBroker::replay(THREAD,method(),osr_bci);
         return osr_bci  == InvocationEntryBci ? method->code() : method->lookup_osr_nmethod_for(osr_bci, comp_level, false);
@@ -1470,9 +1468,9 @@ nmethod* CompileBroker::compile_method(methodHandle method, int osr_bci,
     }
     // if it's not in the cache or if we're using CacheProfileMode=2, just compile method base
     if(PrintCacheProfiles) {
-      tty->print(">>>>>> WITHOUT PROFILE Complevel: %d, Hotcount: %d, OSR_BCI: %d :: ",comp_level, hot_count,osr_bci);
+      tty->print("CacheProfiles: Not use profile for level %d compilation, Hotcount: %d, OSR_BCI: %d :: ",comp_level, hot_count,osr_bci);
       method->print_name(tty);
-      tty->print_cr(" <<<<<<<");
+      tty->print_cr(" <");
     }
     compile_method_base(method, osr_bci, comp_level, hot_method, hot_count, comment, THREAD);
   }

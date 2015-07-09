@@ -592,6 +592,9 @@ void ciCacheProfiles::initialize(TRAPS) {
     }
   }
   is_initialized(true);
+  if (PrintCacheProfiles) {
+    tty->print_cr("CacheProfiles: CachedProfiles initialized!");
+  }
 }
 
 bool ciCacheProfiles::is_initialized() {

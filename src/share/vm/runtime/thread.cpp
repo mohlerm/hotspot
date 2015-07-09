@@ -3527,7 +3527,7 @@ jint Threads::create_vm(JavaVMInitArgs* args, bool* canTryAgain) {
   // initialize compiler(s)
 #if defined(COMPILER1) || defined(COMPILER2) || defined(SHARK)
   CompileBroker::compilation_init();
-  // marcel: invoke initialization of CacheProfiles
+  // if used, invoke initialization of CacheProfiles
   if(CacheProfiles && !ciCacheProfiles::is_initialized()) {
     ciCacheProfiles::initialize(THREAD);
   }

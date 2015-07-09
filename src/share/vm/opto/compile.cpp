@@ -875,23 +875,9 @@ Compile::Compile( ciEnv* ci_env, C2Compiler* compiler, ciMethod* target, int osr
     env()->dump_inline_data(_compile_id);
   }
   // Dump profile to allow profile caching
-  if(env()->comp_level()>CompLevel_limited_profile) {
+  if(env()->comp_level()>CompLevel_limited_profile && env()->comp_level() >= DumpProfilesMinTier) {
     if ((DumpProfiles || method()->has_option("DumpProfile")) && (!method()->has_option("IgnoreDumpProfile"))) {
-  // marcel: ugly workaround to make Octane work...
-      const char* klassmethod = method()->holder()->name()->as_utf8();
-      int length = strlen(klassmethod);
-      if(length > 49) {
-        length = 49;
-      }
-      char* subbuff = NEW_RESOURCE_ARRAY(char,length+1);
-      memcpy( subbuff, klassmethod, length );
-      subbuff[length] = '\0';
-      if(strcmp(subbuff,"jdk/nashorn/internal/scripts/Script$Recompilation")==0 || strcmp(subbuff,"java/lang/invoke/LambdaForm$MH")==0 || strcmp(subbuff,"java/lang/invoke/LambdaForm$BMH")==0 || strcmp(subbuff,"java/lang/invoke/LambdaForm$DMH")==0 || strcmp(subbuff,"jdk/nashorn/internal/runtime/ScriptObject")==0) {
-        //tty->print("###Avoided: %s\n",method()->holder()->name()->as_utf8());
-      } else {
-        //tty->print("###Dump: %s\n",method()->holder()->name()->as_utf8());
-        env()->dump_cache_profiles(_compile_id, method()->name()->as_utf8());
-      }
+      env()->dump_cache_profiles(_compile_id, method()->name()->as_utf8());
     }
   }
 

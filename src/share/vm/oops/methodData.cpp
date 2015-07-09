@@ -1140,6 +1140,8 @@ void MethodData::init() {
   double scale = 1.0;
 
   if(CacheProfiles && ciCacheProfiles::is_initialized()) {
+    // in case the CacheProfile functionality is used:
+    // in mode0, check if method is cached and lower threshold automatically
     if(CacheProfilesMode==0 && ciCacheProfiles::is_cached(_method)) {
       scale = CacheProfilesMode0ThresholdScaling;
     }

@@ -3382,10 +3382,15 @@ class CommandLineFlags {
   experimental(bool, DumpProfiles, false,                                   \
           "Cache profiling information for future VM runs")                 \
                                                                             \
+  experimental(intx, DumpProfilesMinTier, 3,                                \
+          "Specifies the minimum compilation tier that dumps"               \
+          "method profiles. Use 3 or 4"                                     \
+          "since methods lvl<3 do not get dumped anyway")                   \
+                                                                            \
   experimental(bool, CacheProfiles, false,                                  \
           "Use profiling information")                                      \
                                                                             \
-  experimental(intx, CacheProfilesMode, 0,                                  \
+  experimental(intx, CacheProfilesMode, 2,                                  \
           "Mode in which CacheProfiling is operating: "                     \
           "0 - lower threshold and compile to C2 directly; "                \
           "1 - do not lower thresholds and"                                 \

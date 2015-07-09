@@ -714,7 +714,7 @@ JRT_END
 
 void Deoptimization::print_deoptimization_count() {
   ttyLocker ttyl;
-  tty->print_cr(">>> DEOPT COUNTER: %d <<<", _deoptimization_count);
+  tty->print_cr("Total number of deoptimizations: %d <<<", _deoptimization_count);
 }
 
 int Deoptimization::deoptimize_dependents() {

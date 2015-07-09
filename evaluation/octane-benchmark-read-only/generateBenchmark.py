@@ -1,7 +1,6 @@
 #!/usr/bin/python
-#array = ['run-richards.js', 'run-deltablue.js', 'run-crypto.js', 'run-raytrace.js','run-earleyboyer.js','run-regexp.js','run-splay.js','run-navierstokes.js','run-pdfjs.js','run-mandreel.js','run-gamebody.js','run-codeload.js','run-box2d.js','run-typescript.js']
+array = ['run-richards.js', 'run-deltablue.js', 'run-crypto.js', 'run-raytrace.js','run-earleyboyer.js','run-regexp.js','run-splay.js','run-navierstokes.js','run-pdfjs.js','run-mandreel.js','run-gameboy.js','run-codeload.js','run-box2d.js','run-typescript.js']
 #array = ['run.js']
-array = ['run-gameboy.js']
 oldsum = 0
 for bench in array:
     for i in range(1,61):

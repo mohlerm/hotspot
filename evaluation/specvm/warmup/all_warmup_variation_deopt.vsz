@@ -1,5 +1,5 @@
 # Veusz saved document (version 1.22)
-# Saved at 2015-06-21T10:13:25.089013
+# Saved at 2015-07-09T09:53:50.718507
 
 AddImportPath(u'/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/specvm/warmup')
 ImportFileCSV(u'results_warmup.csv', delimiter=';', linked=True)
@@ -60,11 +60,11 @@ To('..')
 Add('key', name='key1', autoadd=False)
 To('key1')
 Set('Border/hide', True)
-Set('title', u'deopt var. from baseline [1 operation]')
+Set('title', u'relative deopt. from baseline [1 operation]')
 Set('horzPosn', 'manual')
 Set('vertPosn', 'manual')
-Set('horzManual', 0.001399835025684759)
-Set('vertManual', 0.5910224321413551)
+Set('horzManual', 0.0024144470364540218)
+Set('vertManual', 0.8325157016385868)
 To('..')
 To('..')
 To('..')

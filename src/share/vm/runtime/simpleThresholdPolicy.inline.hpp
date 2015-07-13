@@ -30,12 +30,29 @@
 
 template<CompLevel level>
 bool SimpleThresholdPolicy::call_predicate_helper(int i, int b, double scale, Method* method) {
-  double threshold_scaling;
+  double threshold_scaling = 1.0;
 
   if(CacheProfiles && ciCacheProfiles::is_initialized()) {
-    if(CacheProfilesMode==0 && ciCacheProfiles::is_cached(method)) {
-      threshold_scaling = CacheProfilesMode0ThresholdScaling;
-      scale *= threshold_scaling;
+    if(CacheProfilesMode==0) {
+      switch(level) {
+      case CompLevel_none:
+      case CompLevel_limited_profile:
+        // if the compilation is Level 0 or 2 and therefore a Level 3
+        // compilation is next
+        // -> lower the Tier3 thresholds in case the method is cached
+        if(ciCacheProfiles::is_cached(method) >= CompLevel_full_profile) {
+          threshold_scaling = CacheProfilesMode0ThresholdScaling;
+          scale *= threshold_scaling;
+        }
+        break;
+      case CompLevel_full_profile:
+        // the Level 4 tresholds only get lowered if the profile is from C2
+        if(ciCacheProfiles::is_cached(method) == CompLevel_full_optimization) {
+          threshold_scaling = CacheProfilesMode0ThresholdScaling;
+          scale *= threshold_scaling;
+        }
+        break;
+      }
     }
   }
   if (CompilerOracle::has_option_value(method, "CompileThresholdScaling", threshold_scaling)) {
@@ -55,12 +72,29 @@ bool SimpleThresholdPolicy::call_predicate_helper(int i, int b, double scale, Me
 
 template<CompLevel level>
 bool SimpleThresholdPolicy::loop_predicate_helper(int i, int b, double scale, Method* method) {
-  double threshold_scaling;
+  double threshold_scaling = 1.0;
 
   if(CacheProfiles && ciCacheProfiles::is_initialized()) {
-    if(CacheProfilesMode==0 && ciCacheProfiles::is_cached(method)) {
-      threshold_scaling = CacheProfilesMode0ThresholdScaling;
-      scale *= threshold_scaling;
+    if(CacheProfilesMode==0) {
+      switch(level) {
+      case CompLevel_none:
+      case CompLevel_limited_profile:
+        // if the compilation is Level 0 or 2 and therefore a Level 3
+        // compilation is next
+        // -> lower the Tier3 thresholds in case the method is cached
+        if(ciCacheProfiles::is_cached(method) >= CompLevel_full_profile) {
+          threshold_scaling = CacheProfilesMode0ThresholdScaling;
+          scale *= threshold_scaling;
+        }
+        break;
+      case CompLevel_full_profile:
+        // the Level 4 tresholds only get lowered if the profile is from C2
+        if(ciCacheProfiles::is_cached(method) == CompLevel_full_optimization) {
+          threshold_scaling = CacheProfilesMode0ThresholdScaling;
+          scale *= threshold_scaling;
+        }
+        break;
+      }
     }
   }
   if (CompilerOracle::has_option_value(method, "CompileThresholdScaling", threshold_scaling)) {

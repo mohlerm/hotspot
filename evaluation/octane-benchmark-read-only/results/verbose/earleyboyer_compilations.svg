@@ -30,15 +30,15 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="593.43938"
+     inkscape:cx="436.86574"
      inkscape:cy="62.693687"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1600"
-     inkscape:window-height="900"
+     inkscape:window-width="796"
+     inkscape:window-height="864"
      inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-y="16"
      inkscape:window-maximized="0"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -52,7 +52,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -64,29 +64,38 @@
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/earleyboyer_mode0.png"
        xlink:href="earleyboyer_mode0.png"
-       width="566.25"
-       height="320.02087"
-       preserveAspectRatio="none"
-       id="image4187"
+       inkscape:export-ydpi="320"
+       inkscape:export-xdpi="320"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/earleyboyer_compilations.png"
+       y="493.1373"
        x="-745.71332"
-       y="493.1373" />
+       id="image4187"
+       preserveAspectRatio="none"
+       height="320.02087"
+       width="566.25" />
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/earleyboyer_mode1.png"
        xlink:href="earleyboyer_mode1.png"
-       width="567.1875"
-       height="318.75"
-       preserveAspectRatio="none"
-       id="image4241"
+       inkscape:export-ydpi="320"
+       inkscape:export-xdpi="320"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/earleyboyer_compilations.png"
+       y="492.84381"
        x="-361.35455"
-       y="492.84381" />
+       id="image4241"
+       preserveAspectRatio="none"
+       height="318.75"
+       width="567.1875" />
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/earleyboyer_mode2.png"
        xlink:href="earleyboyer_mode2.png"
-       width="567.77893"
-       height="320.02087"
-       preserveAspectRatio="none"
-       id="image4295"
+       inkscape:export-ydpi="320"
+       inkscape:export-xdpi="320"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/earleyboyer_compilations.png"
+       y="492.2287"
        x="23.481834"
-       y="492.2287" />
+       id="image4295"
+       preserveAspectRatio="none"
+       height="320.02087"
+       width="567.77893" />
   </g>
 </svg>

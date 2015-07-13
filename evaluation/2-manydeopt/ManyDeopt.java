@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.ArrayList;
 class ManyDeopt {
 
-  static boolean VERBOSE = true;
+  static boolean VERBOSE = false;
   public static List<Long> measurements = new ArrayList<Long>();
   public static void main(String argv[]) {
     if(VERBOSE) System.out.println("> START EXECUTION OF ManyDeopt.main() <");

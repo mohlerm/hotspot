@@ -14,7 +14,7 @@ from subprocess import call, check_call, check_output, CalledProcessError
 #-------------------
 # Select benchmarks to run
 RUN_BASELINE = True
-RUN_CREATE = True
+RUN_CREATE = False
 RUN_USE = True
 # Nr of runs each
 NROFRUNS = 1

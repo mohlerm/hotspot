@@ -17,7 +17,7 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="richards_compilations.svg"
-   inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/richards_compilations.png"
+   inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/richards_compilations.png"
    inkscape:export-xdpi="320"
    inkscape:export-ydpi="320">
   <defs
@@ -30,7 +30,7 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="0.49497475"
-     inkscape:cx="153.64465"
+     inkscape:cx="3423.3735"
      inkscape:cy="131.27676"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -39,10 +39,10 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1600"
-     inkscape:window-height="900"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-width="529"
+     inkscape:window-height="864"
+     inkscape:window-x="1067"
+     inkscape:window-y="16"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata7">
@@ -64,6 +64,9 @@
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/richards_mode0.png"
        xlink:href="richards_mode0.png"
+       inkscape:export-ydpi="320"
+       inkscape:export-xdpi="320"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/richards_compilations.png"
        y="368.44629"
        x="-28.682526"
        id="image4227"
@@ -73,6 +76,9 @@
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/richards_mode1.png"
        xlink:href="richards_mode1.png"
+       inkscape:export-ydpi="320"
+       inkscape:export-xdpi="320"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/richards_compilations.png"
        y="367.43613"
        x="356.18558"
        id="image4249"
@@ -82,6 +88,9 @@
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/richards_mode2.png"
        xlink:href="richards_mode2.png"
+       inkscape:export-ydpi="320"
+       inkscape:export-xdpi="320"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/richards_compilations.png"
        y="367.51935"
        x="740.245"
        id="image4311"

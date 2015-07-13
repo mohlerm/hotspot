@@ -1,4 +1,4 @@
-JAVA PROFILE 1.0.1, created Mon Jul  6 08:27:11 2015
+JAVA PROFILE 1.0.1, created Mon Jul 13 12:52:39 2015
 
 Copyright (c) 2003, 2005, Oracle and/or its affiliates. All rights reserved.
 
@@ -89,3 +89,234 @@ Ctrl-\ (on Solaris) or by typing Ctrl-Break (on Win32).
 
 --------
 
+THREAD START (obj=50000176, id = 200002, name="HPROF gc_finish watcher", group="system")
+THREAD START (obj=50000176, id = 200001, name="main", group="main")
+THREAD END (id = 200001)
+THREAD START (obj=50000176, id = 200003, name="DestroyJavaVM", group="main")
+THREAD END (id = 200003)
+TRACE 301488:
+	NoCompile.method1(NoCompile.java:Unknown line)
+	NoCompile.main(NoCompile.java:Unknown line)
+TRACE 300033:
+	java.util.concurrent.ConcurrentHashMap.putVal(ConcurrentHashMap.java:Unknown line)
+	java.util.concurrent.ConcurrentHashMap.putIfAbsent(ConcurrentHashMap.java:Unknown line)
+	java.lang.ClassLoader.getClassLoadingLock(ClassLoader.java:Unknown line)
+	java.lang.ClassLoader.loadClass(ClassLoader.java:Unknown line)
+TRACE 301469:
+	java.lang.Long$LongCache.<clinit>(Long.java:Unknown line)
+	java.lang.Long.valueOf(Long.java:Unknown line)
+	NoCompile.main(NoCompile.java:Unknown line)
+TRACE 300103:
+	java.util.Arrays.copyOf(Arrays.java:Unknown line)
+	java.lang.AbstractStringBuilder.expandCapacity(AbstractStringBuilder.java:Unknown line)
+	java.lang.AbstractStringBuilder.ensureCapacityInternal(AbstractStringBuilder.java:Unknown line)
+	java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:Unknown line)
+TRACE 300133:
+	java.lang.String.charAt(String.java:Unknown line)
+	java.io.UnixFileSystem.normalize(UnixFileSystem.java:Unknown line)
+	java.io.File.<init>(File.java:Unknown line)
+	sun.misc.URLClassPath$JImageLoader.<init>(URLClassPath.java:Unknown line)
+TRACE 300161:
+	java.lang.ThreadLocal.access$400(ThreadLocal.java:Unknown line)
+	java.lang.ThreadLocal$ThreadLocalMap.getEntry(ThreadLocal.java:Unknown line)
+	java.lang.ThreadLocal$ThreadLocalMap.access$000(ThreadLocal.java:Unknown line)
+	java.lang.ThreadLocal.get(ThreadLocal.java:Unknown line)
+TRACE 300238:
+	java.io.File.getParentFile(File.java:Unknown line)
+	sun.misc.URLClassPath$JImageLoader.<init>(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath$3.run(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath$3.run(URLClassPath.java:Unknown line)
+TRACE 300241:
+	java.lang.String.compareTo(String.java:Unknown line)
+	java.io.UnixFileSystem.compare(UnixFileSystem.java:Unknown line)
+	java.io.File.compareTo(File.java:Unknown line)
+	java.io.File.equals(File.java:Unknown line)
+TRACE 300284:
+	java.lang.StringCoding.encode(StringCoding.java:Unknown line)
+	java.lang.String.getBytes(String.java:Unknown line)
+	jdk.internal.jimage.UTF8String.stringToBytes(UTF8String.java:Unknown line)
+	jdk.internal.jimage.UTF8String.<init>(UTF8String.java:Unknown line)
+TRACE 300308:
+	jdk.internal.jimage.ImageReader.<clinit>(ImageReader.java:Unknown line)
+	sun.misc.URLClassPath$JImageLoader.<init>(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath$3.run(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath$3.run(URLClassPath.java:Unknown line)
+TRACE 300328:
+	java.io.UnixFileSystem.normalize(UnixFileSystem.java:Unknown line)
+	java.io.File.<init>(File.java:Unknown line)
+	java.lang.ClassLoader.loadLibrary(ClassLoader.java:Unknown line)
+	java.lang.Runtime.loadLibrary0(Runtime.java:Unknown line)
+TRACE 300433:
+	java.util.Stack.push(Stack.java:Unknown line)
+	java.lang.ClassLoader.loadLibrary0(ClassLoader.java:Unknown line)
+	java.lang.ClassLoader.loadLibrary(ClassLoader.java:Unknown line)
+	java.lang.Runtime.loadLibrary0(Runtime.java:Unknown line)
+TRACE 300493:
+	java.lang.String.charAt(String.java:Unknown line)
+	java.io.UnixFileSystem.normalize(UnixFileSystem.java:Unknown line)
+	java.io.File.<init>(File.java:Unknown line)
+	java.io.FileInputStream.<init>(FileInputStream.java:Unknown line)
+TRACE 300557:
+	jdk.internal.jimage.PReader.open(PReader.java:Unknown line)
+	jdk.internal.jimage.BasicImageReader.<init>(BasicImageReader.java:Unknown line)
+	jdk.internal.jimage.ImageReader.<init>(ImageReader.java:Unknown line)
+	jdk.internal.jimage.ImageReader.open(ImageReader.java:Unknown line)
+TRACE 300563:
+	sun.misc.URLClassPath$3.run(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath$3.run(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath.getLoader(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath.getLoader(URLClassPath.java:Unknown line)
+TRACE 300566:
+	sun.misc.URLClassPath.getLoader(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath.getLoader(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath.getResource(URLClassPath.java:Unknown line)
+	java.net.URLClassLoader$1.run(URLClassLoader.java:Unknown line)
+TRACE 300569:
+	java.net.URLClassLoader$1.run(URLClassLoader.java:Unknown line)
+	java.net.URLClassLoader$1.run(URLClassLoader.java:Unknown line)
+	java.net.URLClassLoader.findClass(URLClassLoader.java:Unknown line)
+	java.lang.ClassLoader.loadClass(ClassLoader.java:Unknown line)
+TRACE 300682:
+	java.lang.String.indexOf(String.java:Unknown line)
+	java.net.URLStreamHandler.parseURL(URLStreamHandler.java:Unknown line)
+	sun.net.www.protocol.file.Handler.parseURL(Handler.java:Unknown line)
+	java.net.URL.<init>(URL.java:Unknown line)
+TRACE 300794:
+	sun.misc.Resource.getByteBuffer(Resource.java:Unknown line)
+	java.net.URLClassLoader.defineClass(URLClassLoader.java:Unknown line)
+	java.net.URLClassLoader.access$100(URLClassLoader.java:Unknown line)
+	java.net.URLClassLoader$1.run(URLClassLoader.java:Unknown line)
+TRACE 300829:
+	sun.misc.Perf$GetPerfAction.run(Perf.java:Unknown line)
+	sun.misc.Perf$GetPerfAction.run(Perf.java:Unknown line)
+	sun.misc.PerfCounter.<clinit>(PerfCounter.java:Unknown line)
+	java.net.URLClassLoader.defineClass(URLClassLoader.java:Unknown line)
+TRACE 300857:
+	java.nio.ByteBuffer.order(ByteBuffer.java:Unknown line)
+	sun.misc.PerfCounter.<init>(PerfCounter.java:Unknown line)
+	sun.misc.PerfCounter.newPerfCounter(PerfCounter.java:Unknown line)
+	sun.misc.PerfCounter$CoreCounters.<clinit>(PerfCounter.java:Unknown line)
+TRACE 300879:
+	sun.misc.PerfCounter.<init>(PerfCounter.java:Unknown line)
+	sun.misc.PerfCounter.newPerfCounter(PerfCounter.java:Unknown line)
+	sun.misc.PerfCounter$CoreCounters.<clinit>(PerfCounter.java:Unknown line)
+	sun.misc.PerfCounter.getReadClassBytesTime(PerfCounter.java:Unknown line)
+TRACE 300961:
+	sun.net.www.protocol.file.Handler.createFileURLConnection(Handler.java:Unknown line)
+	sun.net.www.protocol.file.Handler.openConnection(Handler.java:Unknown line)
+	sun.net.www.protocol.file.Handler.openConnection(Handler.java:Unknown line)
+	java.net.URL.openConnection(URL.java:Unknown line)
+TRACE 300981:
+	java.lang.String.charAt(String.java:Unknown line)
+	java.io.UnixFileSystem.normalize(UnixFileSystem.java:Unknown line)
+	java.io.File.<init>(File.java:Unknown line)
+	java.io.FilePermission$1.run(FilePermission.java:Unknown line)
+TRACE 301002:
+	sun.net.www.protocol.file.FileURLConnection.getPermission(FileURLConnection.java:Unknown line)
+	java.net.URLClassLoader.getPermissions(URLClassLoader.java:Unknown line)
+	sun.misc.Launcher$AppClassLoader.getPermissions(Launcher.java:Unknown line)
+	java.security.SecureClassLoader.getProtectionDomain(SecureClassLoader.java:Unknown line)
+TRACE 301064:
+	java.security.Permissions.add(Permissions.java:Unknown line)
+	java.net.URLClassLoader.getPermissions(URLClassLoader.java:Unknown line)
+	sun.misc.Launcher$AppClassLoader.getPermissions(Launcher.java:Unknown line)
+	java.security.SecureClassLoader.getProtectionDomain(SecureClassLoader.java:Unknown line)
+TRACE 301171:
+	java.util.HashMap.put(HashMap.java:Unknown line)
+	java.util.HashSet.add(HashSet.java:Unknown line)
+	java.util.Collections$SynchronizedCollection.add(Collections.java:Unknown line)
+	java.lang.ClassLoader.checkPackageAccess(ClassLoader.java:Unknown line)
+TRACE 301271:
+	java.lang.ClassValue.<init>(ClassValue.java:Unknown line)
+	java.lang.invoke.MethodHandleImpl$4.<init>(MethodHandleImpl.java:Unknown line)
+	java.lang.invoke.MethodHandleImpl.<clinit>(MethodHandleImpl.java:Unknown line)
+	java.lang.invoke.MethodHandle.<clinit>(MethodHandle.java:Unknown line)
+TRACE 301273:
+	java.lang.invoke.MethodHandleImpl.<clinit>(MethodHandleImpl.java:Unknown line)
+	java.lang.invoke.MethodHandle.<clinit>(MethodHandle.java:Unknown line)
+TRACE 301311:
+	java.lang.invoke.MethodHandleStatics$1.run(MethodHandleStatics.java:Unknown line)
+	java.lang.invoke.MethodHandleStatics$1.run(MethodHandleStatics.java:Unknown line)
+	java.lang.invoke.MethodHandleStatics.<clinit>(MethodHandleStatics.java:Unknown line)
+	java.lang.invoke.MethodHandle.<clinit>(MethodHandle.java:Unknown line)
+TRACE 301340:
+	java.lang.invoke.MethodHandle.<clinit>(MethodHandle.java:Unknown line)
+TRACE 301352:
+	java.lang.System.getSecurityManager(System.java:Unknown line)
+	java.lang.System.getProperty(System.java:Unknown line)
+TRACE 301354:
+	java.util.Hashtable.get(Hashtable.java:Unknown line)
+	java.util.Properties.getProperty(Properties.java:Unknown line)
+	java.lang.System.getProperty(System.java:Unknown line)
+TRACE 301381:
+	java.lang.String.equals(String.java:Unknown line)
+	java.nio.charset.Charset.lookup(Charset.java:Unknown line)
+	java.nio.charset.Charset.isSupported(Charset.java:Unknown line)
+	sun.launcher.LauncherHelper.makePlatformString(LauncherHelper.java:Unknown line)
+TRACE 301409:
+	java.lang.Class.newReflectionData(Class.java:Unknown line)
+	java.lang.Class.reflectionData(Class.java:Unknown line)
+	java.lang.Class.privateGetDeclaredMethods(Class.java:Unknown line)
+	java.lang.Class.privateGetMethodRecursive(Class.java:Unknown line)
+TRACE 301418:
+	java.util.HashSet.add(HashSet.java:Unknown line)
+	java.util.Collections$SynchronizedCollection.add(Collections.java:Unknown line)
+	java.lang.ClassLoader.checkPackageAccess(ClassLoader.java:Unknown line)
+	java.lang.Class.privateGetDeclaredMethods(Class.java:Unknown line)
+TRACE 301441:
+	java.lang.Class.getMethod(Class.java:Unknown line)
+	sun.launcher.LauncherHelper.validateMainClass(LauncherHelper.java:Unknown line)
+	sun.launcher.LauncherHelper.checkAndLoadMain(LauncherHelper.java:Unknown line)
+TRACE 301447:
+	sun.launcher.LauncherHelper.validateMainClass(LauncherHelper.java:Unknown line)
+	sun.launcher.LauncherHelper.checkAndLoadMain(LauncherHelper.java:Unknown line)
+TRACE 301468:
+	java.lang.Long.<init>(Long.java:Unknown line)
+	java.lang.Long$LongCache.<clinit>(Long.java:Unknown line)
+	java.lang.Long.valueOf(Long.java:Unknown line)
+	NoCompile.main(NoCompile.java:Unknown line)
+TRACE 301489:
+	NoCompile.main(NoCompile.java:Unknown line)
+CPU TIME (ms) BEGIN (total = 1358) Mon Jul 13 12:52:41 2015
+rank   self  accum   count trace method
+   1 96.91% 96.91%     100 301488 NoCompile.method1
+   2  0.22% 97.13%      19 300033 java.util.concurrent.ConcurrentHashMap.putVal
+   3  0.15% 97.28%       1 301469 java.lang.Long$LongCache.<clinit>
+   4  0.07% 97.35%      25 300103 java.util.Arrays.copyOf
+   5  0.07% 97.42%     484 300133 java.lang.String.charAt
+   6  0.07% 97.50%      17 300161 java.lang.ThreadLocal.access$400
+   7  0.07% 97.57%       6 300238 java.io.File.getParentFile
+   8  0.07% 97.64%       6 300241 java.lang.String.compareTo
+   9  0.07% 97.72%       5 300284 java.lang.StringCoding.encode
+  10  0.07% 97.79%       1 300308 jdk.internal.jimage.ImageReader.<clinit>
+  11  0.07% 97.86%       2 300328 java.io.UnixFileSystem.normalize
+  12  0.07% 97.94%       1 300433 java.util.Stack.push
+  13  0.07% 98.01%     272 300493 java.lang.String.charAt
+  14  0.07% 98.09%       2 300557 jdk.internal.jimage.PReader.open
+  15  0.07% 98.16%       3 300563 sun.misc.URLClassPath$3.run
+  16  0.07% 98.23%       3 300566 sun.misc.URLClassPath.getLoader
+  17  0.07% 98.31%       2 300569 java.net.URLClassLoader$1.run
+  18  0.07% 98.38%       2 300682 java.lang.String.indexOf
+  19  0.07% 98.45%       1 300794 sun.misc.Resource.getByteBuffer
+  20  0.07% 98.53%       1 300829 sun.misc.Perf$GetPerfAction.run
+  21  0.07% 98.60%       6 300857 java.nio.ByteBuffer.order
+  22  0.07% 98.67%       6 300879 sun.misc.PerfCounter.<init>
+  23  0.07% 98.75%       1 300961 sun.net.www.protocol.file.Handler.createFileURLConnection
+  24  0.07% 98.82%     189 300981 java.lang.String.charAt
+  25  0.07% 98.90%       1 301002 sun.net.www.protocol.file.FileURLConnection.getPermission
+  26  0.07% 98.97%       1 301064 java.security.Permissions.add
+  27  0.07% 99.04%       7 301171 java.util.HashMap.put
+  28  0.07% 99.12%       1 301271 java.lang.ClassValue.<init>
+  29  0.07% 99.19%       1 301273 java.lang.invoke.MethodHandleImpl.<clinit>
+  30  0.07% 99.26%       1 301311 java.lang.invoke.MethodHandleStatics$1.run
+  31  0.07% 99.34%       1 301340 java.lang.invoke.MethodHandle.<clinit>
+  32  0.07% 99.41%      13 301352 java.lang.System.getSecurityManager
+  33  0.07% 99.48%      13 301354 java.util.Hashtable.get
+  34  0.07% 99.56%       1 301381 java.lang.String.equals
+  35  0.07% 99.63%       1 301409 java.lang.Class.newReflectionData
+  36  0.07% 99.71%       2 301418 java.util.HashSet.add
+  37  0.07% 99.78%       1 301441 java.lang.Class.getMethod
+  38  0.07% 99.85%       1 301447 sun.launcher.LauncherHelper.validateMainClass
+  39  0.07% 99.93%     256 301468 java.lang.Long.<init>
+  40  0.07% 100.00%       1 301489 NoCompile.main
+CPU TIME (ms) END

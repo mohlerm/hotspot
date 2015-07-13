@@ -16,7 +16,10 @@
    id="svg6405"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="sparselarge_compilations.svg">
+   sodipodi:docname="sparselarge_compilations.svg"
+   inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/sparselarge_compilations.png"
+   inkscape:export-xdpi="320"
+   inkscape:export-ydpi="320">
   <defs
      id="defs6407" />
   <sodipodi:namedview
@@ -27,8 +30,8 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="679.47276"
-     inkscape:cy="-33.843333"
+     inkscape:cx="565.32552"
+     inkscape:cy="6.5627689"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -49,7 +52,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -61,38 +64,38 @@
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/sparselarge_mode0.png"
        xlink:href="sparselarge_mode0.png"
-       inkscape:export-ydpi="320"
-       inkscape:export-xdpi="320"
-       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/sparselarge_compilations.png"
-       width="566.25"
-       height="320.02087"
-       preserveAspectRatio="none"
-       id="image4195"
+       y="125.69645"
        x="-1257.6985"
-       y="125.69645" />
+       id="image4195"
+       preserveAspectRatio="none"
+       height="320.02087"
+       width="566.25"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/sparselarge_compilations.png"
+       inkscape:export-xdpi="320"
+       inkscape:export-ydpi="320" />
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/sparselarge_mode1.png"
        xlink:href="sparselarge_mode1.png"
-       inkscape:export-ydpi="320"
-       inkscape:export-xdpi="320"
-       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/sparselarge_compilations.png"
-       width="567.1875"
-       height="318.75"
-       preserveAspectRatio="none"
-       id="image4257"
+       y="126.66657"
        x="-874.16974"
-       y="126.66657" />
+       id="image4257"
+       preserveAspectRatio="none"
+       height="318.75"
+       width="567.1875"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/sparselarge_compilations.png"
+       inkscape:export-xdpi="320"
+       inkscape:export-ydpi="320" />
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/sparselarge_mode2.png"
        xlink:href="sparselarge_mode2.png"
-       inkscape:export-ydpi="320"
-       inkscape:export-xdpi="320"
-       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/sparselarge_compilations.png"
-       width="566.25"
-       height="320.02087"
-       preserveAspectRatio="none"
-       id="image4303"
+       y="125.98216"
        x="-487.69852"
-       y="125.98216" />
+       id="image4303"
+       preserveAspectRatio="none"
+       height="320.02087"
+       width="566.25"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/sparselarge_compilations.png"
+       inkscape:export-xdpi="320"
+       inkscape:export-ydpi="320" />
   </g>
 </svg>

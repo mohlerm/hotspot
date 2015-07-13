@@ -16,7 +16,10 @@
    id="svg4872"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="navierstokes_compilations.svg">
+   sodipodi:docname="navierstokes_compilations.svg"
+   inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/navierstokes_compilations.png"
+   inkscape:export-xdpi="320"
+   inkscape:export-ydpi="320">
   <defs
      id="defs4874" />
   <sodipodi:namedview
@@ -27,7 +30,7 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="566.57552"
+     inkscape:cx="410.00188"
      inkscape:cy="95.750305"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -49,7 +52,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -61,38 +64,38 @@
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/navierstokes_mode0.png"
        xlink:href="navierstokes_mode0.png"
-       inkscape:export-ydpi="320"
-       inkscape:export-xdpi="320"
-       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/navierstokes_compilations.png"
-       width="566.25"
-       height="320.02087"
-       preserveAspectRatio="none"
-       id="image4311"
+       y="341.07654"
        x="-179.67856"
-       y="341.07654" />
+       id="image4311"
+       preserveAspectRatio="none"
+       height="320.02087"
+       width="566.25"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/navierstokes_compilations.png"
+       inkscape:export-xdpi="320"
+       inkscape:export-ydpi="320" />
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/navierstokes_mode1.png"
        xlink:href="navierstokes_mode1.png"
-       inkscape:export-ydpi="320"
-       inkscape:export-xdpi="320"
-       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/navierstokes_compilations.png"
-       width="567.77893"
-       height="320.02087"
-       preserveAspectRatio="none"
-       id="image4365"
+       y="340.07651"
        x="204.27126"
-       y="340.07651" />
+       id="image4365"
+       preserveAspectRatio="none"
+       height="320.02087"
+       width="567.77893"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/navierstokes_compilations.png"
+       inkscape:export-xdpi="320"
+       inkscape:export-ydpi="320" />
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/navierstokes_mode2.png"
        xlink:href="navierstokes_mode2.png"
-       inkscape:export-ydpi="320"
-       inkscape:export-xdpi="320"
-       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/navierstokes_compilations.png"
-       width="566.25"
-       height="320.02087"
-       preserveAspectRatio="none"
-       id="image4419"
+       y="340.93365"
        x="590.17859"
-       y="340.93365" />
+       id="image4419"
+       preserveAspectRatio="none"
+       height="320.02087"
+       width="566.25"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/navierstokes_compilations.png"
+       inkscape:export-xdpi="320"
+       inkscape:export-ydpi="320" />
   </g>
 </svg>

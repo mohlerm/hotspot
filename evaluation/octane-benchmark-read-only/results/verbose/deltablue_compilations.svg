@@ -17,7 +17,7 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="deltablue_compilations.svg"
-   inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/deltablue_compilations.png"
+   inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/deltablue_compilations.png"
    inkscape:export-xdpi="320"
    inkscape:export-ydpi="320">
   <defs
@@ -39,10 +39,10 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1600"
-     inkscape:window-height="900"
+     inkscape:window-width="796"
+     inkscape:window-height="864"
      inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-y="16"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata7">
@@ -52,7 +52,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -64,38 +64,38 @@
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/deltablue_mode0.png"
        xlink:href="deltablue_mode0.png"
-       inkscape:export-ydpi="320"
-       inkscape:export-xdpi="320"
-       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/deltablue_compilations.png"
-       width="567.1875"
-       height="318.75"
-       preserveAspectRatio="none"
-       id="image4187"
+       y="299.6857"
        x="-362.33188"
-       y="299.6857" />
+       id="image4187"
+       preserveAspectRatio="none"
+       height="318.75"
+       width="567.1875"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/deltablue_compilations.png"
+       inkscape:export-xdpi="320"
+       inkscape:export-ydpi="320" />
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/deltablue_mode1.png"
        xlink:href="deltablue_mode1.png"
-       inkscape:export-ydpi="320"
-       inkscape:export-xdpi="320"
-       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/deltablue_compilations.png"
-       width="567.77893"
-       height="318.75"
-       preserveAspectRatio="none"
-       id="image4241"
+       y="299.90906"
        x="22.631424"
-       y="299.90906" />
+       id="image4241"
+       preserveAspectRatio="none"
+       height="318.75"
+       width="567.77893"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/deltablue_compilations.png"
+       inkscape:export-xdpi="320"
+       inkscape:export-ydpi="320" />
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/deltablue_mode2.png"
        xlink:href="deltablue_mode2.png"
-       inkscape:export-ydpi="320"
-       inkscape:export-xdpi="320"
-       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/deltablue_compilations.png"
-       width="567.77893"
-       height="318.75"
-       preserveAspectRatio="none"
-       id="image4295"
+       y="299.82788"
        x="408.40817"
-       y="299.82788" />
+       id="image4295"
+       preserveAspectRatio="none"
+       height="318.75"
+       width="567.77893"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/deltablue_compilations.png"
+       inkscape:export-xdpi="320"
+       inkscape:export-ydpi="320" />
   </g>
 </svg>

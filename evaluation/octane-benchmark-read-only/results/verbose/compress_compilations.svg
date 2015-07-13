@@ -16,7 +16,10 @@
    id="svg5668"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="compress_compilations.svg">
+   sodipodi:docname="compress_compilations.svg"
+   inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/compress_compilations.png"
+   inkscape:export-xdpi="320"
+   inkscape:export-ydpi="320">
   <defs
      id="defs5670" />
   <sodipodi:namedview
@@ -26,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.98994949"
-     inkscape:cx="564.23934"
-     inkscape:cy="177.58816"
+     inkscape:zoom="0.175"
+     inkscape:cx="743.23239"
+     inkscape:cy="-566.99099"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -36,10 +39,10 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1600"
-     inkscape:window-height="900"
+     inkscape:window-width="796"
+     inkscape:window-height="864"
      inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-y="16"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata5673">
@@ -49,7 +52,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -61,6 +64,7 @@
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/compress_mode0.png"
        xlink:href="compress_mode0.png"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/compress_compilations.png"
        inkscape:export-ydpi="320"
        inkscape:export-xdpi="320"
        width="567.1875"
@@ -72,6 +76,7 @@
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/compress_mode1.png"
        xlink:href="compress_mode1.png"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/compress_compilations.png"
        inkscape:export-ydpi="320"
        inkscape:export-xdpi="320"
        width="567.1875"
@@ -83,6 +88,7 @@
     <image
        sodipodi:absref="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results/verbose/compress_mode2.png"
        xlink:href="compress_mode2.png"
+       inkscape:export-filename="/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/report/figures/compress_compilations.png"
        inkscape:export-ydpi="320"
        inkscape:export-xdpi="320"
        width="566.25"

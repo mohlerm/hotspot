@@ -194,9 +194,9 @@ INPUT ./figures/osr.png
 INPUT ./figures/osr.png
 INPUT motivation.tex
 INPUT motivation.tex
-INPUT figures/baseline_vs_usage.png
-INPUT ./figures/baseline_vs_usage.png
-INPUT ./figures/baseline_vs_usage.png
+INPUT figures/baseline_vs_usage_large.png
+INPUT ./figures/baseline_vs_usage_large.png
+INPUT ./figures/baseline_vs_usage_large.png
 INPUT /usr/share/texmf-dist/tex/latex/base/omlcmr.fd
 INPUT /usr/share/texmf-dist/tex/latex/base/omlcmr.fd
 INPUT figures/nocompile.png

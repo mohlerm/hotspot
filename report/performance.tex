@@ -22,10 +22,10 @@ The main goal of cached profiles is to improve the startup performance of the JV
 I will start by looking at SPECjvm since it offers ways to focus on the warmup. An individual description of each benchmark being used can be found in Appendix \ref{a:specjvm_benchmark}.
 \\\\
 The longer a program is running the less impact a faster warmup has. Considering most benchmarks include a warmup phase which does not count towards the final score simply running the complete benchmark suite is not an option.
-Instead I limited SPECjvm to 1 single operation which, depending on the benchmark take around 10 to 20 seconds.
+Instead I limited SPECjvm to 1 single operation which, depending on the benchmark take around 6 to 40 seconds.
 Additionally, the JVM gets restarted between each single benchmark to prevent methods shared between benchmarks being compiled already.
 \\\\
-I run each benchmark with all cached profiling features disabled. This run is called the \textit{baseline}     and displays the current openJDK 1.9.0 performance.    
+I run each benchmark with all cached profiling features disabled. This run is called the \textit{baseline} and displays the current openJDK 1.9.0 performance.    
 \\\\ 
 I then use a single benchmark run where I dump the profiles to disk. This run is not limited to a single operation and instead uses the default values of the benchmark. By default the benchmark is limited by time and runs for about 6 minutes. The idea is that these profiles include information that are usually not available during warmup and result in less deoptimizations and better code quality.
 \\\\
@@ -39,7 +39,7 @@ These profiles are then used in 3 individual runs using the introduced \texttt{-
   \end{center}
 \end{figure}
 Figures \ref{f:others_warmup} and \ref{f:scimark_warmup} shows the number of operations per minute, measured for each benchmark individually.
-The 
+Figure \ref{f:all_warmup_variation} summarizes the results by showing the relative performance compared to the baseline. 
 
 \begin{figure}[ht]
   \begin{center}

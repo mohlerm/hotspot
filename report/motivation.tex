@@ -58,8 +58,7 @@ class NoCompile {
 \\\\
 When OSR is enabled, the performance difference between using cached profiles and not using them vanishes.
 That happens because HotSpot realizes the hotness of the method and the simplicity of the method allows the JIT compiler to produce optimized code already. The interpreted version is replaced on the stack by the compiled version during he first method invocation. 
-The optimality of the compiled code is confirmed by the fact that no deoptimizations occur.
-This example appears rather artificial since the same performance can be achieved with OSR already but nevertheless shows the influence of early compilation.
+This example, although rather artificial, shows the influence of early compilation with OSR disabled.
 \section{Example 2: Benefit of fewer deoptimizations}
 \label{s:ex2}
 OSR is one of the core features of HotSpot to improve startup performance of a JVM and disabling that does not give us any practical results. We came up with a second more complex example sketched in Listing \ref{l:manydeopts}, that demonstrates the influence of cached profiles without disabling any HotSpot functionalities.
@@ -90,10 +89,9 @@ class ManyDeopts {
             count = count + 50000;
         }
         return count;
-   }
+    }
 }
 \end{lstlisting}
-\\\\\\\\\\\\
 \begin{figure}[ht!]
   \begin{center}
     \centering

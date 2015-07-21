@@ -1,4 +1,7 @@
-- Better datasctructure
-- Merging multiple profiles cleverly
-- editing profiles
-- improve read of profile file
+While this thesis provides a first look on implementing a system to reuse profiles from previous JVM runs it leaves room for several improvements.
+\begin{itemize}
+  \item The datastructure of the cached profiles is a simple C heap array. The lookup is $O(n)$ with $n$ being the number of cached method compilations. This could be improved to $O(nlog(n))$ by using a more complex tree-like data structure.
+  \item Additionally, all method compilations get dumped and stored. The system could be improved in a way, so only the last compilation record of a method is kept in the file. This would decrease the size of the cached profile file and decrease the parsing time.
+  \item Currently, only the profiles from a single run are used. A possible improvement is to use multiple executions for gathering the cached profiles and merge the profiling information to achieve even more complete profiles.
+  \item We think it could also be beneficial to be able to modify the cached profile. That would allow the JVM user to manually improve profiling information by using his knowledge of the method execution which might not be available to the compiler.
+\end{itemize}

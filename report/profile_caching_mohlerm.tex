@@ -44,6 +44,7 @@
 \usepackage[english]{babel}
 \usepackage{color}
 \usepackage{textcomp}
+\usepackage{pdfpages}
 
 % colors
 %\definecolor{orange}{rgb}{1,0.5,0}
@@ -117,6 +118,7 @@
 \label{c:Introduction}
 \input{introduction.tex}
 
+
 %\chapter*{Zusammenfassung}
 %Kurzfassung der Arbeit.
 
@@ -163,5 +165,8 @@
 % -------------------------------------------------------------------------------------------------
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliography{bibliography}
+
+% declaration of originality 
+\includepdf[pages=1]{Declaration-Originality.pdf}
 
 \end{document}

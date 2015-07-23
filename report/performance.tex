@@ -2,7 +2,7 @@ This section evaluates the performance of the cached profile implementation usin
 \section{Setup}
 \label{s:perf_setup}
 To provide reliable and comparable results all tests were done on a single node of the Data Center Observatory provided by ETH \cite{ethdco}.
-A node features 2 8-Core AMD Opteron 6212 CPUs running at 2600 MHz with 128 GB of DDR3 RAM.
+A node features 2 8-Core AMD Opteron 6212 CPUs running at 2600 MHz with 128 GB of DDR3 RAM and a solid state disk.
 The node is running Fedora 19 and GCC 4.8.3. All JDK builds got created on the node itself.
 \\\\
 To compare performance the following benchmarks were used:
@@ -99,50 +99,18 @@ We assume this is related to the increased load of the compile queue and will th
     \label{f:octane_variation}
   \end{center}
 \end{figure}
-
-
-% \section{Without Intrinsics}
-% \label{s:without_intrinsics}
-%
-% \begin{figure}[ht]
-%   \begin{center}
-%     \centering
-%     \includegraphics[width=1.0\textwidth]{figures/others_warmup_nointrinsics.png}
-%     \caption{SPECjvm benchmarks on all different modes without intrinsified methods}
-%     \label{f:others_warmup_nointrinsics}
-%   \end{center}
-% \end{figure}
-%
-% \begin{figure}[ht]
-%   \begin{center}
-%     \centering
-%     \includegraphics[width=1.0\textwidth]{figures/scimark_warmup_nointrinsics.png}
-%     \caption{SPECjvm scimark benchmarks on all different modes without intrinsified methods}
-%     \label{f:scimark_warmup_nointrinsics}
-%   \end{center}
-% \end{figure}
-%
-%
-% \begin{figure}[ht]
-%   \begin{center}
-%     \centering
-%     \includegraphics[width=1.0\textwidth]{figures/all_warmup_nointrinsics_variation.png}
-%     \caption{Relative performance from baseline for all SPECjvm benchmarks without intrinsified methods}
-%     \label{f:all_warmup_nointrinsics_variation}
-%   \end{center}
-% \end{figure}
-
-
 \section{Deoptimizations}
 \label{s:perf_deoptimizations}
 We are still eager to figure out where the performance increase and decrease come from.
-We aim to lower the time needed for warmup by compiling methods earlier and or at lower tiers but also expect to decrease the number of deoptimizations by having more complete profiles early, which ideally results in better compiled code quality.
-The total number of deoptimizations of the SPECjvm benchmarks is shown in Figure \ref{others_warmup_deopt} and Figure \ref{f:scimark_warmup_deopt}. The Octane numbers are drawn in Figure \ref{octane_deopt}.
+We aim to lower the time needed for warmup by compiling methods earlier and or at lower tiers but also expect to decrease the number of deoptimizations by having more complete profiles early, which ideally results in better compiled code quality. To measure the total amount of deoptimizations we added a new compiler flag \texttt{-XX:+PrintDeoptimizationCount}.
+The total number of deoptimizations of the SPECjvm benchmarks is shown in Figure \ref{f:others_warmup_deopt} and Figure \ref{f:scimark_warmup_deopt}. The Octane numbers are drawn in Figure \ref{f:octane_deopt}.
 Again, we also included graphs that show the number of deoptimizations relative to the baseline runs in Figure \ref{f:all_warmup_variation_deopt} and Figure \ref{f:octane_variation_deopt}.
 \\\\
-The measurements show, that when using Mode 1 or Mode 2, we are able to reduce the deoptimizations significantly in all benchmarks except one (gameboy). In Mode 0 there is a clear difference between SPECjvm and Octane. While in SPECjvm the number of deoptimizations is similar to the other modes, in Octane Mode 0 on average increases the number by 30\%. Mode 0 also had the worst performance for Octane and we assume the amount of deoptimizations to be one of the reasons for that regression.
+The measurements show, that when using Mode 1 or Mode 2, we are able to reduce the deoptimizations significantly in all benchmarks except one (gameboy). In Mode 0 there is a clear difference between SPECjvm and Octane. While in SPECjvm the number of deoptimizations is similar to the other modes, in Octane Mode 0 on average increases the number by 30\%. Mode 0 also has the worst performance for Octane and we assume the amount of deoptimizations to be one of the reasons for that regression.
 \\\\
-And while a low deoptimization number is a good indication of the increased code quality for methods being compiled with cached profiles we could not find a direct correlation between number of deoptimizations and the result on the performance.
+And while a low deoptimization number is a good indication of the increased code quality for methods being compiled with cached profiles we could not find a direct correlation between number of deoptimizations and the performance results.
+\\\\
+One possible reason is that the amount of deoptimizations does not necessarily describe the performance impact. Especially when considering multi-threaded systems there can be a huge number of deoptimizations in performance uncritical threads that are avoided by using cached profiles and therefore heavily reduce the total counter. But if there is one very important method in a performance critical thread, that has executions that are not reflected in the cached profiles, this method could trigger only very few deoptimizations but still influence performance significantly.
 \begin{figure}[ht]
   \begin{center}
     \centering
@@ -193,12 +161,42 @@ And while a low deoptimization number is a good indication of the increased code
 \clearpage
 \section{Effect on compile queue}
 \label{s:perf_compilequeue}
-
+When designing the different CacheProfilesModes, we thought that lowering the compilation thresholds will increase the load on the compiler, especially early in program execution. This results in the compiler not being able to handle all requests immediately and the compile queue fills up. This could delay execution of compiled methods and therefore decrease performance.
+\\\\
+We added a new HotSpot flag \texttt{-XX:+PrintCompileQueueSize} which allows us to trace the current number of methods that are scheduled for compilation. We selected 6 indidividual benchmarks and printed their C1 and C2 compile queue for all three CacheProfileModes in Figure \ref{f:octane_queue_richards_separate_c1} to Figure \ref{f:octane_queue_deltablue_separate_c2}.
+Keep in mind that the reason for the runs using cached profiles starting their compilations on later time stamps is because they need to parse the cached profile file first.
+The selected benchmarks and the reason why an individual analysis was performed are listed below:
+\begin{itemize}
+  \item \textbf{Octane Richards:} This benchmarks achieved the highest performance benefit from using cached profiles in all three modes. We are interested to see if the compile queue load differs from worse performing benchmarks.
+  \item \textbf{Octane EarleyBoyer:} This is a benchmark were \texttt{Mode 1} performs significantly better than the other two modes. Does the compile queue give as any indication why this is the case?
+  \item \textbf{Octane NavierStokes:} Navierstokes has a 8\% performance increase in \texttt{Mode 2} but a 25\% performance decrease in \texttt{Mode 0} and \texttt{Mode 1}. Motivation is the same as for EarleyBoyer.
+  \item \textbf{Octane Deltablue:} This benchmark achieves the highest performance loss from using cached profiles in all three modes. Together with the best benchmark (Richards) does the load on the compile queue give any indication of performance?
+  \item \textbf{SPECjvm compress:} Compress is the best performing SPECjvm benchmark when using cached profiles. 
+  \item \textbf{SPECjvm scimark.sparse.large:} This is the worst performing SPECjvm benchmark when using cached profiles. 
+\end{itemize}
+We realize that analyzing the compile queue does not really help us understanding the performance variations when using cached profiles.
+The graphs showing the C1 compile queue size over time do not significantly differ, neither from the baseline, nor is there a difference between the individual modes.
+The C2 compile queue graphes show different courses but we can not connect this with the benchmark performance.
+\\\\
+Figure \ref{f:octane_queue_richards_separate_c2} show the C2 compile queue of the Octane Richards benchmark. As expected, due to removing steps from the tiered compilation, we increased the load on C2 in \texttt{Mode 0} and \texttt{Mode 1} with compile queue peaks at around 20 scheduled compilations. Nevertheless, these modes achieve close a performance of close to 50\% better than the baseline. \texttt{Mode 2} which was designed to keep the original tiered compilation steps unmodified does not have these peaks but nevertheless achieves similar performance.
+\\\\
+EarleyBoyer's compile queue is displayed in Figure \ref{f:octane_queue_richards_separate_c2}. \texttt{Mode 1} performs better than the other two modes and compared to \texttt{Mode 0} seems to put even more pressure on the compile queue.
+It is interesting that in this particular benchmark even the baseline version puts a lot of pressure on the compile queue early on.
+\\\\
+In Figure \ref{f:octane_queue_navierstokes_separate_c2} we see NavierStokes' compile queue. \texttt{Mode 2} performs best but we could not derive any indications why this is the case from looking at the queue size.
+\\\\
+The Deltablue benchmark shown in Figure \ref{f:octane_queue_deltablue_separate_c2} has the worst performance when using cached profiles but the compile queue size looks very similar to the one of the Richards benchmark, where performance is significantly better.
+\\\\
+We will omit looking at the SPECjvm benchmarks since they do not offer any new insights. The graphs can be found in the Appendix \ref{a:additional_graphs}.
+\\\\
+The detailed analysis of the compile queue shows that our thoughts about the effect on the compile queue were not unfounded for most of the selected benchmarks. However, we were not able to relate these influences to actual performance effects. Especially, overloading the compile queue does not necessarily negatively affect performance.
+\\\\
+This indicates that the performance differences are even more related to the actual code quality.
 % --------------------------- Octane Richards Queue ------------------
 \begin{figure}[ht]
   \begin{center}
     \centering
-    \includegraphics[width=0.9\textwidth]{figures/octane_queue_richards_separate_c1.png}
+    \includegraphics[width=1.0\textwidth]{figures/octane_queue_richards_separate_c1.png}
     \caption{C1 Compile queue size over time Octane Richards benchmark}
     \label{f:octane_queue_richards_separate_c1}
   \end{center}
@@ -206,7 +204,7 @@ And while a low deoptimization number is a good indication of the increased code
 \begin{figure}[ht]
   \begin{center}
     \centering
-    \includegraphics[width=0.9\textwidth]{figures/octane_queue_richards_separate_c2.png}
+    \includegraphics[width=1.0\textwidth]{figures/octane_queue_richards_separate_c2.png}
     \caption{C2 Compile queue size over time Octane Richards benchmark}
     \label{f:octane_queue_richards_separate_c2}
   \end{center}
@@ -250,7 +248,7 @@ And while a low deoptimization number is a good indication of the increased code
   \begin{center}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/octane_queue_deltablue_separate_c1.png}
-    \caption{C1 Compile queue size over time Octane DeltaBlue benchmark}
+    \caption{C1 Compile queue size over time Octane Deltablue benchmark}
     \label{f:octane_queue_deltablue_separate_c1}
   \end{center}
 \end{figure}
@@ -258,46 +256,20 @@ And while a low deoptimization number is a good indication of the increased code
   \begin{center}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/octane_queue_deltablue_separate_c2.png}
-    \caption{C2 Compile queue size over time Octane DeltaBlue benchmark}
+    \caption{C2 Compile queue size over time Octane Deltablue benchmark}
     \label{f:octane_queue_deltablue_separate_c2}
   \end{center}
 \end{figure}
-% --------------------------- SPECjvm compress Queue ------------------
-\begin{figure}[ht]
-  \begin{center}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/spec_queue_compress_separate_c1.png}
-    \caption{C1 Compile queue size over time SPECjvm compress benchmark}
-    \label{f:spec_queue_compress_separate_c1}
-  \end{center}
-\end{figure}
-\begin{figure}[ht]
-  \begin{center}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/spec_queue_compress_separate_c2.png}
-    \caption{C2 Compile queue size over time SPECjvm compress benchmark}
-    \label{f:spec_queue_compress_separate_c2}
-  \end{center}
-\end{figure}
-% --------------------------- SPECjvm scimark.sparse.large Queue ------------------
-\begin{figure}[ht]
-  \begin{center}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/spec_queue_scirmarksparselarge_separate_c1.png}
-    \caption{C1 Compile queue size over time SPECjvm scimark.sparse.large benchmark}
-    \label{f:spec_queue_scirmarksparselarge_separate_c1}
-  \end{center}
-\end{figure}
-\begin{figure}[ht]
-  \begin{center}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/spec_queue_scirmarksparselarge_separate_c2.png}
-    \caption{C2 Compile queue size over time SPECjvm scimark.sparse.large benchmark}
-    \label{f:spec_queue_scirmarksparselarge_separate_c2}
-  \end{center}
-\end{figure}
+\clearpage
+
+\section{Number and type of compilations}
+\label{s:perf_compilenumber}
+In this section we take a look on how cached profile modify the ratio of C1 and C2 compilations and if there is a correlation between percentage of methods using cached profiles and the resulting performance.
+\\\\
+We continue focusing on the 6 individual benchmarks selected in Section \ref{s:perf_compilequeue}.
+We use the new HotSpot flag \texttt{-XX:+PrintCacheProfiles} that prints out the Level of each compilation and whether or not it uses cached profiles.
 % --------------------------- Queue Total ------------------
-\begin{figure}[ht]
+\begin{figure}[ht!]
   \begin{center}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/queue_total.png}
@@ -305,9 +277,24 @@ And while a low deoptimization number is a good indication of the increased code
     \label{f:queue_total}
   \end{center}
 \end{figure}
-
-\clearpage
-
+\\
+Figure \ref{f:queue_total} shows the total amount of compilations split in C1 and C2.
+We see that the Octane benchmarks and the SPECjvm benchmarks behave differently. While the 4 Octane ones achieve a lower amount of C1 compilations in \texttt{Mode 0} and \texttt{Mode 1}, \texttt{Mode 2} is similar to the baseline. The two SPECjvm benchmarks have more C1 compilations in \texttt{Mode 0}, less in \texttt{Mode 1} and the same amount in \texttt{Mode 2} compared to the baseline.
+\\\\
+The changes in the amount of C2 compilations are very similar in all benchmarks. Using \texttt{Mode 0} and \texttt{Mode 1} results in more C2 compilations than the baseline and \texttt{Mode 2} again achieves around the same.
+\\\\
+If we recall the differences between the modes these results make sense. \texttt{Mode 0} lowers the thresholds of C1 compilations in case the method has a cached profile and compiles with C2 instead. This reduces the number of C1 compilations in favor of more C2 compilations. \texttt{Mode 1} does not lower the thresholds but it still promotes some C1 compilations to C2 compilations which is also seen in the numbers.
+\texttt{Mode 2} leaves the tiered compilation completely untouched, we see that it also does not influence the total number of compilations significantly.
+\\\\
+Furthermore, we are interested how many of the compilations make use of cached profiles. Ideally, this should be 100\% but there could always me methods that have no cached profiles available because they have not been compiled when generating the profile.
+Additionally, we intentionally do not use any profiles for compilation Level 1 and Level 2 as described in Section \ref{s:usingprofiles}.
+The ReplayCompilation functionality does not support certain methods, e.g. lambda expressions. Since this CacheProfiles implementation is based on ReplayCompilation it will also not compile these methods using cached profiles. 
+\\\\
+In Figure \ref{f:richards_compilations} to Figure \ref{f:sparselarge_compilations} we show cake diagrams that visualize the portion of specific compilation types.
+The results show, that the proportions are very similar if we compare different benchmarks of the same CacheProfilesMode.
+\texttt{Mode 0} and \texttt{Mode 1} look similar with \texttt{Mode 1} invoking less compilations using cached profiles. 
+In \texttt{Mode 2} we see Level 2 compilations appearing due to the changed tiered compilation transitions. The number of Level 3 compilations is nearly unchanged compared to \texttt{Mode 1} because these are compilations of methods where no profiles from C2 compilations are available.
+The Level 2 compilations only happen if such a profile is available and usually result in another Level 4 compilation. 
 % --------------------------- Compilation cake Richards ------------------
 \begin{figure}[ht]
   \begin{center}
@@ -322,7 +309,7 @@ And while a low deoptimization number is a good indication of the increased code
   \begin{center}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/deltablue_compilations.png}
-    \caption{Ratio of compilations Octane DeltaBlue benchmark}
+    \caption{Ratio of compilations Octane Deltablue benchmark}
     \label{f:deltablue_compilations}
   \end{center}
 \end{figure}
@@ -362,3 +349,69 @@ And while a low deoptimization number is a good indication of the increased code
     \label{f:sparselarge_compilations}
   \end{center}
 \end{figure}
+\clearpage
+\section{Effect of interpreter profiles}
+\label{s:perf_interpreter_profiles}
+Our system makes use of two types of cached profiles. Profiles that are gathered by the interpreter and used by the C1 compiler and profiles that are gathered by a C1 compiled method and used when compiling with C2.
+\\\\
+We added a HotSpot flag that allows us to specify the minimum level of a compilation that dumps profiles (\texttt{-XX:DumpProfilesMinTier=}level).
+Previous measurements were done using Level 3 which dumps profiles during C1 and C2 compilations.
+\\\\
+However, we are also interested how the system performance changes when only C2 compiler profiles are used. The system will then only use cached profiles where a C2 compilation took place in the previous profile generation run. We use the same setup as before and run the individual SPECjvm (see Figure \ref{f:others_warmup_wo_i} and Octane (see Figure \ref{f:octane_wo_i} benchmarks. 
+\\\\
+Most of the benchmarks do not show significantly different results compared to Section \ref{s:perf_benchmark}, where both types of cached profiles where used. There are a few benchmarks where individual modes now improve the performance while having a performance drop when using C1 and C2 profiles (e.g. NavierStokes \texttt{Mode 0}). But we also experience the other way around for example in benchmark Splay \texttt{Mode 2}. In these individual cases, we believe that for example a benchmarks C1 compilation does not profit from having cached profiles and therefore using them will even decrease performance. This happens because methods are first compiled by using cached profiles and after ten deoptimizations are compiled using generated profiles.
+\\\\
+The results let us conclude that the performance differences to the baseline are mostly due to the code quality of C2 compilations. Even though the number of C1 compilations is usually a lot higher than the number of C2 compilations, C2 compilations seem more crucial to the methods performance.
+Since C2 is the maximum compilation level, a program might spend most of it's time in C2 compiled code.
+\\\\
+This again shows that it is very hard to predict JVM performance.
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/all_warmup_variation_wo_i.png}
+    \caption{Relative performance from baseline for all SPECjvm benchmarks without using cached interpreter profiles}
+    \label{f:others_warmup_wo_i}
+  \end{center}
+\end{figure}
+\begin{figure}[ht]
+  \begin{center}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/octane_variation_wo_i.png}
+    \caption{Relative performance from baseline for all Octane benchmarks without using cached interpreter profiles}
+    \label{f:octane_wo_i}
+  \end{center}
+\end{figure}
+\clearpage
+\section{Effect of intrinsified methods}
+\label{s:perf_intrinsics}
+This chapter takes a quick look at the influence of method intrinsics.
+The HotSpot JVM does not compile some common standard library methods. Instead it emits hand-written assembler code.
+TODO
+%
+% \begin{figure}[ht]
+%   \begin{center}
+%     \centering
+%     \includegraphics[width=1.0\textwidth]{figures/others_warmup_nointrinsics.png}
+%     \caption{SPECjvm benchmarks on all different modes without intrinsified methods}
+%     \label{f:others_warmup_nointrinsics}
+%   \end{center}
+% \end{figure}
+%
+% \begin{figure}[ht]
+%   \begin{center}
+%     \centering
+%     \includegraphics[width=1.0\textwidth]{figures/scimark_warmup_nointrinsics.png}
+%     \caption{SPECjvm scimark benchmarks on all different modes without intrinsified methods}
+%     \label{f:scimark_warmup_nointrinsics}
+%   \end{center}
+% \end{figure}
+%
+%
+% \begin{figure}[ht]
+%   \begin{center}
+%     \centering
+%     \includegraphics[width=1.0\textwidth]{figures/all_warmup_nointrinsics_variation.png}
+%     \caption{Relative performance from baseline for all SPECjvm benchmarks without intrinsified methods}
+%     \label{f:all_warmup_nointrinsics_variation}
+%   \end{center}
+% \end{figure}

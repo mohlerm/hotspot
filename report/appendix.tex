@@ -1,5 +1,5 @@
 \newpage
-\section{Tiered Compilation Thresholds}
+\section{Tiered compilation thresholds}
 \label{a:compilethresholds}
 \begin{table}[h]
   \centering
@@ -31,7 +31,7 @@
   \end{center}
 \end{table}
 \newpage
-\section{Cached Profile Example}
+\section{Cached profile example}
 \label{a:cacheprofileexample}
 \begin{lstlisting}[caption=Example of cached profiling information,label=l:cacheprofileexample,language=Java]
 # 189 ciObject found
@@ -48,7 +48,7 @@ ciMethodData NoCompile method1 (D)D 2 30002544 orig 280 152 101 83 95 3 127 0 0 
 compile NoCompile method1 (D)D -1 4 inline 24 0 -1 NoCompile method1 (D)D 1 20 java/lang/StringBuilder <init> ()V 2 10 java/lang/AbstractStringBuilder <init> (I)V 3 8 java/lang/Object <init> ()V 1 25 java/lang/StringBuilder append (Ljava/lang/String;)Ljava/lang/StringBuilder; 1 32 java/lang/StringBuilder append (Ljava/lang/String;)Ljava/lang/StringBuilder; 1 37 java/lang/StringBuilder append (Ljava/lang/String;)Ljava/lang/StringBuilder; 1 90 java/lang/StringBuilder <init> ()V 2 10 java/lang/AbstractStringBuilder <init> (I)V 3 8 java/lang/Object <init> ()V 1 95 java/lang/StringBuilder append (Ljava/lang/String;)Ljava/lang/StringBuilder; 1 109 java/lang/StringBuilder append (Ljava/lang/String;)Ljava/lang/StringBuilder; 1 114 java/lang/StringBuilder append (Ljava/lang/String;)Ljava/lang/StringBuilder; 1 121 java/lang/StringBuilder append (Ljava/lang/String;)Ljava/lang/StringBuilder; 1 126 java/lang/StringBuilder append (Ljava/lang/String;)Ljava/lang/StringBuilder; 1 140 java/lang/Long valueOf (J)Ljava/lang/Long; 2 48 java/lang/Long <init> (J)V 3 9 java/lang/Number <init> ()V 4 7 java/lang/Object <init> ()V 1 143 java/lang/Long longValue ()J 1 148 java/lang/Long valueOf (J)Ljava/lang/Long; 2 48 java/lang/Long <init> (J)V 3 9 java/lang/Number <init> ()V 4 7 java/lang/Object <init> ()V
 \end{lstlisting}
 
-\section{Code Changes}
+\section{Code changes}
 \label{a:codechanges}
 \begin{table}[ht!]
   \caption{Code lines changed, inserted, deleted, modified and unchanged}
@@ -65,7 +65,7 @@ compile NoCompile method1 (D)D -1 4 inline 24 0 -1 NoCompile method1 (D)D 1 20 j
 \end{table}
 TODO
 
-\section{SPECjvm Benchmark}
+\section{SPECjvm benchmark}
 \label{a:specjvm_benchmark}
 This list gives a short description of the benchmarks that are part of the SPECjvm 2008 Benchmark Suite.
 The list is directly taken from \url{https://www.spec.org/jvm2008/docs/benchmarks/index.html} and put in as a reference.
@@ -92,7 +92,7 @@ Result verification for XML.transform is somewhat more complex than for other of
 XML.validation exercises the JRE's implementation of javax.xml.validation (and associated APIs) by validating XML instance documents against XML schemata (.xsd files). The schemata and XML documents are several real life examples that vary in size (1KB to 607KB) and in the XML schema features that are used most heavily. One "operation" of XML.validation consists of processing each style sheet / document pair, accessing the XML document as a DOM source and a SAX source. As in XML.transform, some of the input pairs are processed multiple times during one operation so that each input pair contributes about equally to the time taken for a single operation. 
 \end{itemize}
 
-\section{Octane Benchmark}
+\section{Octane benchmark}
 \label{a:octane_benchmark}
 What follows is an overview of the benchmarks Octane consists of.
 The original list can be found on \url{https://developers.google.com/octane/benchmark}.
@@ -169,7 +169,7 @@ The original list can be found on \url{https://developers.google.com/octane/benc
     \item Main focus: \textit{run complex, heavy applications}
   \end{itemize}
 \end{itemize}
-\section{Additional Graphs}
+\section{Additional graphs}
 \label{a:additional_graphs}
 % --------------------------- SPECjvm compress Queue ------------------
 \begin{figure}[ht]

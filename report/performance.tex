@@ -1,41 +1,43 @@
-This section evaluates the performance of the cached profile implementation using modern benchmark suites. The goal is to provide indicators on the performance influence and try to analyze where this performance influence comes from. Since we try to decrease warmup time and decrease the number of deoptimizations 
+This section evaluates the performance of the cached profile implementation using two modern benchmark suites. The goal is to provide indicators of the performance influence and analyze where this performance influence comes from.
 \section{Setup}
 \label{s:perf_setup}
-To provide reliable and comparable results all tests were done on a single node of the Data Center Observatory provided by ETH \cite{ethdco}.
-A node features 2 8-Core AMD Opteron 6212 CPUs running at 2600 MHz with 128 GB of DDR3 RAM and a solid state disk.
-The node is running Fedora 19 and GCC 4.8.3. All JDK builds got created on the node itself.
+To provide reliable and comparable results, all benchmarks were executed on single nodes of the Data Center Observatory provided by ETH \cite{ethdco}.
+A node features 2 8-Core AMD Opteron 6212 CPUs running at 2600 MHz with 128 GB of DDR3 RAM and a solid state disk for storage.
+The nodes are running Fedora 19 and GCC 4.8.3. All JDK builds were compiled on the nodes itself. The benchmarks were each executed on a dedicated node to prevent any influence of inter node performance differences.
 \\\\
-To compare performance the following benchmarks were used:
+To compare performance the following benchmark suites were used:
 \begin{enumerate}
-  \item \textbf{SPECjvm 2008:} A benchmark suite developed by Standard Performance Evaluation Corporation for measuring the performance of the Java Runtime Environment \cite{specjvm}.  I use version 2008 and I run a subset of 17 out of a total of 21 benchmarks. 4 are omitted due to incompatibility with openJDK 1.9.0.
+  \item \textbf{SPECjvm 2008:} A benchmark suite developed by Standard Performance Evaluation Corporation for measuring the performance of the Java Runtime Environment \cite{specjvm}.  We use version 2008 and we run a subset of 17 out of a total of 21 benchmarks. 4 are omitted due to incompatibility with openJDK 1.9.0.
   \\
-  Once finished, SPECjvm prints out the number of operations per minute. This is used to compare the performance and higher is better.
-  \item \textbf{Octane 2.0:} A benchmark developed by Google to measure the performance of JavaScript code found in large, real-world applications \cite{octane}. Octane runs on Nashorn, a JavaScript Engine on top of Hotspot. The version used is 2.0 and consists of 17 individual benchmarks of which 16 are used.
+  SPECjvm reports the number of operations per minute (ops/m). This is used to compare the performance and more ops/m equals better performance.
+  \item \textbf{Octane 2.0:} A benchmark developed by Google to measure the performance of JavaScript code found in large, real-world applications \cite{octane}. Octane runs on Nashorn, a JavaScript Engine of Hotspot. The version used is 2.0 and consists of 17 individual benchmarks of which 16 are used. One benchmark is not compatible with openJDK 1.9.0. 
   \\
-  Octane gives each benchmark a score reflecting the performance, the higher the score, the better the performance.
+  Octane gives each benchmark execution a score reflecting the performance. the higher the score, the better the performance.
 \end{enumerate}
-The benchmarking process was automated using a number of self-written python scripts. The graphs in this chapter always show the arithmetic mean of 50 runs and the error bars display the 95\% confidence intervals.
+A more detailed description of the benchmark suites used in this performance evaluation can be found in Appendix \ref{a:specjvm_benchmark}.
+\\\\
+The benchmark process was automated using a number of self-written python scripts. Unless specified otherwise, the graphs in this chapter always show the arithmetic mean of 50 runs and the error bars display the 95\% confidence intervals.
 
 \section{Benchmark performance}
 \label{s:perf_benchmark}
-The main goal of cached profiles is to improve the startup performance of the JVM. Having a rich profile from an earlier execution will allow the JIT compiler to use a highly optimized version right from the beginning.
-We expect the modes to produce different results. The following list suggests reasons for these performance differences:
+The main goal of cached profiles is to improve the warmup performance of the JVM. Having a rich profile from an earlier execution will allow the JIT compiler to use a highly optimized version early in method execution.
+\\\\
+The different CacheProfilesModes were implemented to being able to compare the performance influence of certain design decisions. We expect the modes to produce different results and the following list suggests reasons for these performance differences:
 \begin{itemize}
-  \item Some benchmarks might profit from compiling methods very early and therefore favor Mode 0.
-  \item That could however result in many early compilations that overload the compilation queue resulting in worse performance. In this case Mode 1 will perform better than Mode 0.
-  \item In case a cached profile can not be used (i.e. the limit of 10 deoptimizations was reached) the JVM needs to use freshly generated profiles. In case the thresholds were lowered (Mode 0) this compilation might have happened very early and only very incomplete profiles were available. This effect is less a problem when Mode 1 is used.
-  \item Mode 2 keeps the steps of the original tiered compilation and is considered the most conservative mode. It puts the same load on the compile queue than the baseline version.
+  \item If the cached profiles fit nicely to the current method execution compiling these methods earlier than in the baseline will save executions at lower tiers and decrease the time needed for warmup. Benchmarks with these properties should achieve a performance improvement and favor \texttt{Mode 0}.
+  \item In case many methods are compiled early this could overload the compile queue and delay compilation of these methods. Also, if the cached profile does not fit the current method execution (the limit of 10 deoptimization was reached) the JVM will eventually use freshly generated profiles. These profiles could be very sparse when using lowered compilation thresholds. In these scenarios we expect \texttt{Mode 1} to outperfom \texttt{Mode 0}.
+  \item \texttt{Mode 2} keeps the steps of the original tiered compilation and is considered the most conservative mode. \texttt{Mode 2} also does not modify the compilation thresholds and therefore puts the same load on the compile queue than the baseline version. When using this mode we can exclude the effect of earlier compilation and the performance only originates from the faster C1 phase and the better code quality in C2.
 \end{itemize}
-I will start by looking at SPECjvm since it offers ways to focus on the warmup. An individual description of each benchmark being used can be found in Appendix \ref{a:specjvm_benchmark}.
+
 \subsection{SPECjvm warmup performance}
 \label{s:perf_specjvm_warmup}
-The longer a program is running the less impact a faster warmup has. Considering most benchmarks include a warmup phase which does not count towards the final score simply running the complete benchmark suite is not an option.
-Instead I limited SPECjvm to 1 single operation which, depending on the benchmark take around 6 to 40 seconds.
+The longer a program is running, the less impact a faster warmup has.  Considering most benchmarks include a warmup phase which does not count towards the final score simply running the complete benchmark suite is not an option.
+Instead, we limited SPECjvm to 1 single operation which, depending on the benchmark take around 6 to 40 seconds.
 Additionally, the JVM gets restarted between each single benchmark to prevent methods shared between benchmarks being compiled already.
 \\\\
-I run each benchmark with all cached profiling features disabled. This run is called the \textit{baseline} and displays the current openJDK 1.9.0 performance.    
+We run each benchmark with all cached profiling features disabled. This run is called the \textit{baseline} and displays the current openJDK 1.9.0 performance.    
 \\\\ 
-I then use a single benchmark run where I dump the profiles to disk. This run is not limited to a single operation and instead uses the default values of the benchmark. By default the benchmark is limited by time and runs for about 6 minutes. The idea is that these profiles include information that are usually not available during warmup and result in less deoptimizations and better code quality.
+We then use a single benchmark run where we configure the JVM to dump the profiles to disk. This run is not limited to a single operation and instead uses the default values of the benchmark. By default the benchmark is limited by time and runs for about 6 minutes. The idea is that these profiles include information that are usually not available during warmup and result in less deoptimizations and better code quality.
 \\\\
 These profiles are then used in 3 individual runs using the introduced \texttt{-XX:CacheProfiles} flag. Each run is using one of the 3 different CacheProfilesModes.
 \begin{figure}[ht]
@@ -384,9 +386,15 @@ This again shows that it is very hard to predict JVM performance.
 \clearpage
 \section{Effect of intrinsified methods}
 \label{s:perf_intrinsics}
-This chapter takes a quick look at the influence of method intrinsics.
-The HotSpot JVM does not compile some common standard library methods. Instead it emits hand-written assembler code.
-TODO
+Most modern JVMs implement use \textit{method intrinsics} to further optimize commonly used Java core library methods \cite{intrinsics_talk}.
+This means that the JIT compiler will not compile the method based on the Java bytecode, but instead replace it with a predefined, hand-written, and manually optimized assembly code snippet. The current list of methods where intrinsics are available can be found in the code reference \cite{code_intrinsics}.
+\\\\
+Intrinsics are mostly used in C1 and C2 compilations and the emitted code is independent of the current available profiling information.
+This means, if many methods of a benchmark are intrinsified, the influence of profiles and therefore cached profiles as well decreases.
+We want to know whether this has a large influence on the performance of our cached profiles. An intrinsified method has no advantage of having a rich profiles available but will still be influenced by modified compilation thresholds. E.g. lowering the threshold will intrinsify methods earlier and therefore speed up execution, independent of the cached profile.
+\\\\
+The results of both benchmark suites with disabled method instrinsics can be found in Figures X and Figure Y.
+We see that there are small performance differences in individual benchmarks but we can not conclude a major influence to the behavior of cached profiles and their influence on performance.
 %
 % \begin{figure}[ht]
 %   \begin{center}

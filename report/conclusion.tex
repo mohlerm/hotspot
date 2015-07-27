@@ -1,10 +1,11 @@
 Current Java Virtual Machines (JVM) like HotSpot gather profiling information about executed methods to improve the quality of the compiled code.
-This thesis presents a way to cache these profiling information, so they can be reused in future runs of the JVM.
+This thesis presents a way to cache these profiling information to disk, so they can be reused in future runs of the JVM.
 \\\\
-The expected benefits are a faster warmup of the JVM because the JVM does not need to spend time profiling the code and can use cached profiles directly.
+The expected advantage is a faster warmup of the JVM because the JVM does not need to spend time profiling the code and can use cached profiles directly.
 Furthermore, since the cached profiles originate from previous compilations where extensive profiling already happened, compilations using these profiles produce more optimized code which decreases the amount of deoptimizations.
 \\\\
 We show, using two benchmark suites, that cached profiles can indeed improve warmup performance and significantly lower the amount of deoptimizations.
+In addition, we tested individual benchmarks for the impact of cached profiles on the load of the compile queue and the amount and type of compilations. Results show, that both do not give clear indications on the performance.
 \\\\
 The ideas and functionality is implemented in the HotSpot JVM (openJDK9). It provides the user of the JVM several choices to use the system and allows fine-grained selection of the cached methods.
-We believe that this can be a valuable asset in scenarios where a fast JVM warmup is appreciated and greatly help to decrease performance fluctuations of JIT compiled code.
+We believe, that cached profiles are a valuable asset in scenarios where a fast JVM warmup is needed and we have shown that caching profiles can significantly decrease performance fluctuations of JIT compiled code.

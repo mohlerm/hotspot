@@ -235,6 +235,9 @@ INPUT ./figures/scimark_warmup.png
 INPUT figures/all_warmup_variation.png
 INPUT ./figures/all_warmup_variation.png
 INPUT ./figures/all_warmup_variation.png
+INPUT figures/all_full_variation.png
+INPUT ./figures/all_full_variation.png
+INPUT ./figures/all_full_variation.png
 INPUT figures/octane.png
 INPUT ./figures/octane.png
 INPUT ./figures/octane.png
@@ -307,6 +310,12 @@ INPUT ./figures/all_warmup_variation_wo_i.png
 INPUT figures/octane_variation_wo_i.png
 INPUT ./figures/octane_variation_wo_i.png
 INPUT ./figures/octane_variation_wo_i.png
+INPUT figures/all_warmup_noi_variation.png
+INPUT ./figures/all_warmup_noi_variation.png
+INPUT ./figures/all_warmup_noi_variation.png
+INPUT figures/octane_noi_variation.png
+INPUT ./figures/octane_noi_variation.png
+INPUT ./figures/octane_noi_variation.png
 INPUT improvements.tex
 INPUT improvements.tex
 INPUT conclusion.tex

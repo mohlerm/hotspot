@@ -90,6 +90,7 @@ As mentioned previously, a method's compile information could have been dumped m
 Because a profile dumped by the C1 compiler can not be used by the C2 compiler and the other way around, the level of the profile matters as it influences the compile level transitions described in Section \ref{s:cacheprofilesmode}.
 And since profiling information only grows, the compilation that happened last contains the richest profile and is considered the best.
 This is based on the fact that the richer the profile, the more information about the method execution is known and influences the compiled version of that method. For example, a profile for a method might include data for all its branches and can therefore help avoid running into uncommon traps and trigger deoptimizations.
+Unfortunately, the last profile might not necessarily be the best to use. It can happen, that a cached profile includes classes that are not yet loaded and therefore some optimizations are not possible. In this case an earlier profile could be better.
 \\\\
 The \texttt{CompileRecord} as well as the lists of method information and profiles are implemented as an array located in HotSpot's heap space.
 They get initialized with a length of 8 and grow when needed. This choice has been done for simplicity and leaves room for further improvements.
@@ -97,7 +98,7 @@ They get initialized with a length of 8 and grow when needed. This choice has be
 \section{Using cached profiles}
 \label{s:usingprofiles}
 The implementation offers three different modes: \texttt{Mode 0}, \texttt{Mode 1}, and \texttt{Mode 2}, that differ in the way they use the cached profiles.
-The following paragraph applies to all three modes and I will discuss the differences of the modes in detail in Section \ref{s:cacheprofilesmode}.
+The following paragraph applies to all three modes and we will discuss the differences of the modes in detail in Section \ref{s:cacheprofilesmode}.
 \\\\
 The idea is to modify the compiler to use cached profiles if available and continue as usual otherwise.
 A simplified graphical overview of the program flow for compiling a method with the changes introduced in this thesis can be found in Figure \ref{f:programflow}.
@@ -111,7 +112,7 @@ A simplified graphical overview of the program flow for compiling a method with 
 \end{figure}\\
 As mentioned before, once compilation thresholds are exceeded a method is scheduled for compilation. This means that the JVM will invoke a method called \texttt{compile\_method()}, located in the \texttt{compileBroker} class. This method tests if certain conditions hold, for example, it checks if the compile queue is not full or if there is already another compilation of that particular method running.
 We extended this method with a call to \texttt{ciCacheProfiles::is\_cached(Method* method)} which does a linear scan through the \texttt{CompileRecord} array data structure. The method returns either 0 if the method is not cached or returns an integer value, reflecting the compile level, in case a cached profile of this method is available. Because only methods compiled with level 3 or 4 are cached, this call to \texttt{is\_cached()} only gets executed if the compilation request is also of level 3 or higher.\\\\
-Depending on the compilation level of the profile, the level of the requested compilation, and the \texttt{CacheProfileMode}, the \texttt{compileBroker} then schedules either a compilation using freshly gathered profiles or calls into \texttt{ciCacheProfilesBroker} to replay the compilation, based on a cached profile. In contrast to cached profiles, fresh profiles describe profiles gathered during the current run of the JVM. Since these decisions are different in each mode, I describe them in detail in the next section.
+Depending on the compilation level of the profile, the level of the requested compilation, and the \texttt{CacheProfileMode}, the \texttt{compileBroker} then schedules either a compilation using freshly gathered profiles or calls into \texttt{ciCacheProfilesBroker} to replay the compilation, based on a cached profile. In contrast to cached profiles, fresh profiles describe profiles gathered during the current run of the JVM. Since these decisions are different in each mode, a detailed description is provided in the next section.
 In case the method is not cached, the execution continues like in the baseline version.
 Otherwise, the \texttt{ciCacheProfilesBroker} class then initializes the replay environment and retrieves the compile record from \texttt{ciCacheProfiles}. Subsequently, the needed cached profiles get loaded to make sure they are used by the following compilation. \texttt{ciCacheProfilesBroker} then returns the execution to the \texttt{compileBroker}, which continues with the steps needed to compile the method. Again some constraints are checked (e.g. if there is another compilation of the same method finished in the meantime) and a new compile job is added to the compile queue. Eventually the method is compiled using the cached profiles.
 \\\\

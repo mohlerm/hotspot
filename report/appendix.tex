@@ -56,15 +56,38 @@ compile NoCompile method1 (D)D -1 4 inline 24 0 -1 NoCompile method1 (D)D 1 20 j
   \begin{center}
     \begin{tabular}{|l|c|c|c|c|c|}
     \hline
-      class & changed & inserted & deleted & modified & unchanged \\ \hline
-      src/share/vm/ci/ciClassList.hpp & 2 & 2 & 0 & 0 & 121\\ \hline
-      src/share/vm/ci/ciEnv.cpp & 58 & 56 & 0 & 2 & 1283 \\ \hline
-      src/share/vm/ci/ciEnv.hpp & 5 & 5 & 0 & 0 & 469 \\ \hline
+      class (in src/share/vm/) & changed & inserted & deleted & modified & unchg. \\ \hline
+      ci/c1\_Compilation.cpp & 6 & 6 & 0 & 0 & 708\\ \hline
+      ci/ciClassList.hpp & 2 & 2 & 0 & 0 & 121\\ \hline
+      ci/ciEnv.cpp & 58 & 56 & 0 & 2 & 1283 \\ \hline
+      ci/ciEnv.hpp & 5 & 5 & 0 & 0 & 469 \\ \hline
+      ci/ciMethod.cpp & 4 & 4 & 0 & 0 & 1480 \\ \hline
+      ci/ciMethod.hpp & 1 & 1 & 0 & 0 & 350 \\ \hline
+      ci/ciMethodData.cpp & 4 & 4 & 0 & 0 & 797 \\ \hline
+      ci/ciMethodData.hpp & 1 & 1 & 0 & 0 & 595 \\ \hline
+      compiler/compileBroker.cpp & 78 & 77 & 1 & 0 & 2401 \\ \hline
+      compiler/compileBroker.hpp & 2 & 2 & 0 & 0 & 478 \\ \hline
+      interpreter/invocationCounter.hpp & 2 & 2 & 0 & 0 & 156 \\ \hline
+      oops/instanceKlass.hpp & 2 & 2 & 0 & 0 & 1383 \\ \hline
+      oops/methodCounters.cpp & 14 & 13 & 1 & 0 & 74 \\ \hline
+      oops/methodCounters.hpp & 4 & 4 & 0 & 0 & 208 \\ \hline
+      oops/methodData.cpp & 9 & 9 & 0 & 0 & 1686 \\ \hline
+      opto/compile.cpp & 9 & 9 & 0 & 0 & 4418 \\ \hline
+      prims/jvmtiExport.hpp & 2 & 2 & 0 & 0 & 542 \\ \hline 
+      runtime/advancedThresholdPolicy.cpp & 5 & 5 & 0 & 0 & 537 \\ \hline
+      runtime/deoptimization.cpp & 15 & 15 & 0 & 0 & 2043 \\ \hline
+      runtime/deoptimization.hpp & 7 & 7 & 0 & 0 & 407 \\ \hline
+      runtime/globals.hpp & 41 & 38 & 0 & 3 & 3967 \\ \hline
+      runtime/java.cpp & 8 & 8 & 0 & 0 & 744 \\ \hline
+      runtime/simpleThresholdPolicy.inline.hpp & 51 & 49 & 0 & 2 & 80 \\ \hline
+      /runtime/thread.cpp & 7 & 7 & 0 & 0 & 4585 \\ \hline  
+      /ci/ciCacheProfiles.cpp & 801 & 801 & 0 & 0 & 0 \\ \hline  
+      /ci/ciCacheProfiles.hpp & 337 & 337 & 0 & 0 & 0 \\ \hline 
+      /ci/ciCacheProfilesBroker.cpp & 292 & 292 & 0 & 0 & 0 \\ \hline 
+      /ci/ciCacheProfilesBroker.hpp & 79 & 79 & 0 & 0 & 0 \\ \hline 
     \end{tabular}
   \end{center}
 \end{table}
-TODO
-
 \section{SPECjvm benchmark}
 \label{a:specjvm_benchmark}
 This list gives a short description of the benchmarks that are part of the SPECjvm 2008 Benchmark Suite.

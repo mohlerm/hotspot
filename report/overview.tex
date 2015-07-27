@@ -71,8 +71,8 @@ The JVM then stops execution of that method and returns control back to the inte
 
 \section{On-Stack replacement}
 \label{s:onstackreplacement}
-Since the JVM does not only count method invocations but also loop back branches (see also Section \ref{s:compilethresholds}) it can happen that a method is compiled while it is still running and the compiled method is ready before the method has finished.
-Instead of waiting for the next method invocation, HotSpot can replace the method directly on the program stack. The JVM sets up a new stack frame for the compiled method which replaces the interpreters stack frame and execution will continue using the native method.
+In case a method contains a long running loop, counting the method invocations is not enough to determine the hotness of the method. The program still spends a significant amount of time in that method but because the invocation counter does not increase, no compilation is scheduled.
+Therefore, HotSpot also counts loop back branches and when a threshold (see also Section \ref{s:compilethresholds}) is reached a compilation is invoked. The JVM then replaces the method's code directly on the program stack. HotSpot sets up a new stack frame for the compiled method which replaces the interpreters stack frame and execution will continue using the native method.
 \\\\
 This process is called \textit{on-stack replacement} and usually shortened to OSR. The Figure \ref{f:osr} presented in a talk by T. Rodriguez and K. Russel \cite{client_compiler_talk} gives a graphical representation.
 The benefits of OSR will become more obvious when looking at the first example in Chapter \ref{c:motivation}.

@@ -1,5 +1,5 @@
 # Veusz saved document (version 1.22)
-# Saved at 2015-07-23T13:35:10.062294
+# Saved at 2015-07-29T17:08:00.668427
 
 AddImportPath(u'/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/octane-benchmark-read-only/results')
 ImportFileCSV(u'results.csv', delimiter=';', linked=True)
@@ -68,8 +68,8 @@ Set('vertManual', 0.0)
 To('..')
 Add('line', name='line1', autoadd=False)
 To('line1')
-Set('xPos', [0.353])
-Set('yPos', [0.998])
+Set('xPos', [0.3507])
+Set('yPos', [0.9968])
 Set('length', [0.533])
 Set('angle', [90.0])
 To('..')

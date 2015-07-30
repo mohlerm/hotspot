@@ -1,5 +1,5 @@
 # Veusz saved document (version 1.22)
-# Saved at 2015-07-23T12:02:45.816185
+# Saved at 2015-07-30T09:36:00.855468
 
 AddImportPath(u'/home/marcel/cloud/ETH/6thSemesterFS15/BachelorThesis/hs-comp/hotspot/evaluation/specvm/onlyc2/warmup')
 ImportFileCSV(u'results_warmup.csv', delimiter=';', linked=True)

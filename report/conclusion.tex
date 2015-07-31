@@ -1,12 +1,12 @@
 Modern Java Virtual Machines (JVM) like HotSpot gather profiling information about executed methods to improve the quality of the compiled code.
 This thesis presents several approaches to reuse profiling information, that have been dumped to disk in previous executions of the JVM.
 \\\\
-The expected advantage is a faster warmup of the Virtual Machine, because the JVM does not need to spend time profiling the code and can use cached profiles directly.
+The expected advantage is a faster warmup of the Java Virtual Machine, because the JVM does not need to spend time profiling the code and can use cached profiles directly.
 Furthermore, since the cached profiles originate from previous compilations, where extensive profiling already happened, compilations using these profiles produce more optimized code, which decreases the amount of deoptimizations.
 \\\\
-We show, using two benchmark suites, that cached profiles can indeed improve warmup performance and significantly lower the amount of deoptimizations.
-Therefore, we believe, that cached profiles are a valuable asset in scenarios where a fast JVM warmup is needed and performance fluctuations during tiered compilation want to be avoided.
+We show, using two benchmark suites, that cached profiles can indeed improve warmup performance and significantly lower the amount of deoptimizations as well as reduce the time spent in the JIT compilers.
+Therefore, we believe, that cached profiles are a valuable asset in scenarios where a fast JVM warmup is needed and performance fluctuations during tiered compilation are desired to be avoided.
 \\\\
-In addition, we tested individual benchmarks for the impact of cached profiles on the load of the compile queue, the amount and type of compilations, and the time spent in the compilers. The results show, that neither of them gives one-to-one correspondence between the examined factor and performance. However, the results provide indications, where the performance increase or decrease could come from.
+In addition, we evaluated the performance of our approach with individual benchmarks for the impact of cached profiles on the load of the compile queue and the amount and type of compilations. The results show, that neither of them gives one-to-one correspondence between the examined factor and performance. However, the results provide indications, where the performance increase or decrease could come from.
 \\\\
-The functionality is implemented in the HotSpot JVM (openJDK9). It provides the user of the JVM several choices on how to use the system and allows fine-grained selection of the cached methods.
+The functionality is implemented in the HotSpot JVM (OpenJDK9). It provides the user of the JVM several choices on how to use the system.

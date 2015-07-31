@@ -80,7 +80,7 @@ A method can be compiled multiple times and at different tiers, thus compilation
 \section{Initializing cached profiles}
 \label{s:initializingprofiles}
 The information dumped in step \ref{s:creatingprofiles} can now be used in a next run of that particular program.
-To specify that profiles are available, we introduce a new compiler flag \texttt{-XX:+CacheProfiles} that enables the use of previously generated profiles. By default, it reads from a file called \textit{cached\_profiles.dat} but a different file can be specified using \texttt{-XX:CacheProfilesFile=other\_file.dat}.
+To specify that profiles are available, we introduce a new compiler flag \texttt{-XX:+CacheProfiles} that enables the use of previously generated profiles. By default, it reads from a file called \textit{cached\_profiles.dat} but a different file can be specified using:\\ \texttt{-XX:CacheProfilesFile=other\_file.dat}.
 \\\\
 Before any cached profiles can be used the virtual machine has to parse that file and organize the profiles and compile information in a data structure. This data structure is completely kept in memory during the whole execution of the JVM to avoid multiple disk accesses.
 The parsing process is invoked during boot up of the JVM, directly after the compileBroker gets initialized. This happens before any methods are executed and blocks the main thread of the JVM until finished.

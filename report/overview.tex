@@ -23,7 +23,7 @@ The standard behavior of HotSpot is to proceed with Level 3 (Tier 3). The method
 C1's goal is to provide a fast compilation with a low memory footprint.
 The client compiler performs simple optimizations such as constant folding, null check elimination, and method inlining based on the information gathered during interpretation. 
 Most of the classes and methods have already been used in the interpreter, allowing C1 to inline them to avoid costly invocations.
-More importantly, information about the program flow and state are gathered. These information contain for example which branches get taken or the final types of dynamically typed objects. 
+More importantly, information about the program flow and state are gathered. This information contain for example which branches get taken or the final types of dynamically typed objects. 
 For example, if certain branches were not taken during execution, further compilations might abstain from compiling these branches and replace them with static code to provide a faster method execution time (see the example in Listing \ref{l:branchexample}). The uncommon branch includes an \textit{uncommon trap} which notifies the JVM that an assumption does not hold anymore. This then leads to so called \textit{deoptimizations} which are further explained in the separate Section \ref{s:deoptimizations}.
 \begin{lstlisting}[float,caption=Example that shows potential compilation based on profiling information,label=l:branchexample,language=Java]
 public static void m(int i) {
@@ -64,7 +64,7 @@ Starting with the interpreter results in instantaneous execution (i.e. a method 
 \label{s:deoptimizations}
 Ideally a method is compiled by making use of as much profiling information as possible.
 For example, since the profiling information is usually gathered in Levels 0 and 3, it can happen that a method compiled by C2 wants to execute a branch it never used before (again see Figure \ref{l:branchexample}).
-In this case the information about this branch are not available in the profile and therefore have not been compiled into the C2-compiled code.
+In this case the information about this branch is not available in the profile and therefore have not been compiled into the C2-compiled code.
 This is done to allow further even more optimistic optimization and to keep the compiled code smaller. So instead, the compiler places an uncommon trap at unused branches or unloaded classes which will get triggered in case they actually get used at a later time during execution.
 \\\\
 The JVM then stops execution of that method and returns control back to the interpreter. This process is called \textit{deoptimization} and considered very expensive. The previous interpreter state has to be restored and the method will be executed using the slow interpreter. Eventually the method might be recompiled with the newly gained information.

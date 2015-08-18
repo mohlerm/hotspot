@@ -27,7 +27,7 @@ We use a simple class that invokes a method one hundred times. The method consis
 Since OSR is disabled and a compilation to level 3 is triggered after 200 invocations this method never leaves the interpreter. We call this run the \textit{baseline}.
 To show the influence of cached profiles we use a compiler flag to lower the compile threshold explicitly and, using the functionality written for this thesis, tell HotSpot to cache the profile.
 In a next execution we use these profiles and achieve a significantly lower time spend executing the cached method as one can see in Figure \ref{f:nocompile}.
-This increase comes mainly from the fact that having a cached profile available allows the JVM to compile highly optimized code for hot methods earlier (at a lower threshold) since there is no need to gather the profiling information first.
+This decrease comes mainly from the fact that having a cached profile available allows the JVM to compile highly optimized code for hot methods earlier (at a lower threshold) since there is no need to gather the profiling information first.
 \\\\
 Since the example is rather simple neither the baseline nor the profile usage run trigger any deoptimizations. This makes sense because after the first invocation, all the code paths of the method have been taken already and are therefore known to the interpreter and saved in the profile.
 \begin{lstlisting}[float,caption=Simple method that does not get compiled,label=l:nocompile,language=Java]
@@ -56,7 +56,7 @@ class NoCompile {
 \end{figure}
 \\\\
 When OSR is enabled, the performance difference between using cached profiles and not using them vanishes.
-That happens because HotSpot realizes the hotness of the method while it is being executed and the simplicity of the method allows the JIT compiler to produce optimized code already. The interpreted version is replaced on the stack by the compiled version during he first method invocation. 
+That happens because HotSpot realizes the hotness of the method while it is being executed and the simplicity of the method allows the JIT compiler to produce optimized code already. The interpreted version is replaced on the stack by the compiled version during the first method invocation. 
 This example, although rather artificial, shows the influence of early compilation with OSR disabled.
 \section{Example 2: Benefit of fewer deoptimizations}
 \label{s:ex2}
@@ -112,6 +112,6 @@ The reasons are deoptimizations, that occur for example due to uncommon branch p
 In the past, Azul Systems' clients used techniques to warm up the JVM, for example doing fake trades prior to market opening. However this does not solve the problem sufficiently well, since the JVM optimizes for these fake trades and still runs into deoptimizations once actual trades happen, because the code includes methods or specific code snippets that differ between the fake and the real trades.
 \\\\
 ReadyNow!\texttrademark\ is a rich set of improvements how a JVM can overcome this issues. It includes attempts to reduce the number of deoptimizations in general and other not further specified optimizations.
-As one of the core features Azul Systems\textregistered\ implemented the ability to log optimization statistics and decisions and reuse this logs in future runs. This is similar to the approach presented in this thesis. However they do not record the actual optimization but the learning and the reasons why certain optimizations happen. This gives them the ability to give feedback to the user of the JVM whether or not certain optimizations have been applied. They also provide APIs for developers to interact with the system and allow further fine-grained custom-designed optimizations.
+As one of the core features Azul Systems\textregistered\ implemented the ability to log optimization statistics and decisions and reuse these logs in future runs. This is similar to the approach presented in this thesis. However they do not record the actual optimization but the learning and the reasons why certain optimizations happen. This gives them the ability to give feedback to the user of the JVM whether or not certain optimizations have been applied. They also provide APIs for developers to interact with the system and allow further fine-grained custom-designed optimizations.
 \\\\
 Unfortunately, Azul Systems does not provide any numbers about how their JVM actually improves performance when executing a software application or any analysis where the speedup originates from in detail.

@@ -108,7 +108,7 @@ Zing\textregistered\ includes a feature set they call ReadyNow!\texttrademark\ \
 Their system has been designed with financial markets in mind and to overcome the issue of slow performance in the beginning and performance drops during execution.
 \\\\
 Azul Systems clients reported that their production code usually experiences a significant performance decrease as soon as the market goes live and the clients start trading.
-The reasons are deoptimizations, that occur for example due to uncommon branch paths being taken or yet unused methods being invoked.
+The reasons are deoptimizations that occur for example due to uncommon branch paths being taken or yet unused methods being invoked.
 In the past, Azul Systems' clients used techniques to warm up the JVM, for example doing fake trades prior to market opening. However this does not solve the problem sufficiently well, since the JVM optimizes for these fake trades and still runs into deoptimizations once actual trades happen, because the code includes methods or specific code snippets that differ between the fake and the real trades.
 \\\\
 ReadyNow!\texttrademark\ is a rich set of improvements how a JVM can overcome this issues. It includes attempts to reduce the number of deoptimizations in general and other not further specified optimizations.

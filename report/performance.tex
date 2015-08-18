@@ -2,8 +2,8 @@ This section evaluates the performance of the cached profile implementation usin
 \section{Setup}
 \label{s:perf_setup}
 To provide reliable and comparable results, all benchmarks are executed on a single node of the Data Center Observatory provided by ETH \cite{ethdco}.
-A node features two 8-Core AMD Opteron 6212 CPUs clocked at 2600 MHz with 128 GB of DDR3 RAM and a solid state disk for storage.
-A node is running Fedora 19 with Linux kernel 3.14.27 and GCC 4.8.3. All JDK builds are compiled on the nodes itself. We use multiple nodes, each benchmark suite is executed on a dedicated node to prevent any influence of inter-node performance differences.
+A node features two 8-Core AMD Opteron 6212 CPUs clocked at 2.6 GHz with 128 GB of DDR3 RAM and a solid-state drive for storage.
+The nodes are running Fedora 19 with Linux kernel 3.14.27 and GCC 4.8.3. All JDK builds are compiled on the nodes itself. We use multiple nodes but each benchmark suite is executed on a dedicated node to prevent any influence of inter-node performance differences.
 \\\\
 The following benchmark suites are used:
 \begin{enumerate}
@@ -54,7 +54,6 @@ The profiles gathered are then used in three individual runs by specifying the \
     \label{f:scimark_warmup}
   \end{center}
 \end{figure}
-
 \begin{figure}[ht!]
   \begin{center}
     \centering
@@ -63,19 +62,19 @@ The profiles gathered are then used in three individual runs by specifying the \
     \label{f:all_warmup_variation}
   \end{center}
 \end{figure}
-Figures \ref{f:others_warmup} and \ref{f:scimark_warmup} show the number of operations per minute measured for each benchmark individually. Note, that operations per minute is not to be confused with the previously mentioned limit of \textit{1 operation} of the benchmark itself.
-Figure \ref{f:all_warmup_variation} summarizes the results by showing the relative performance compared to the baseline.
-Note that we omit the "scimark." suffix of the SPECjvm scimark benchmarks for better readability.
+\\
+Figures \ref{f:others_warmup} and \ref{f:scimark_warmup} show the number of operations per minute measured for each benchmark individually. Note that operations per minute is not to be confused with the previously mentioned limit of \textit{1 operation} of the benchmark itself.
+Figure \ref{f:all_warmup_variation} summarizes the results by showing the relative performance compared to the baseline. We omit the 'scimark.' prefix of the SPECjvm scimark benchmarks for better readability.
 \\\\
-The individual benchmarks show different effects on performance. We see a performance increase up to around 34\% in the compress benchmark (Mode 1) and a performance decrease of down to 20\% in scimark.sparse.large (Mode 0).
+The individual benchmarks show different effects on performance. We see a performance increase up to around 34\% in the compress benchmark (\texttt{Mode 1}) and a performance decrease of down to 20\% in scimark.sparse.large \texttt{(Mode 0}).
 \\\\
 Interestingly, the performance differences between the modes are not the same when comparing the individual benchmarks. For example, in crypto.rsa, \texttt{Mode 0} clearly performs worst but in scimark.sparse.small it performs best.
-JVM performance is known to be hard to predict and understand \cite{georges2007statistically}. It seems not to be different when cached profiles are used. On average the performance of the benchmark warmup is improved by 2.6\%, 3.4\%, and 2.7\% for Mode 0, Mode 1 and Mode 2.
+JVM performance is known to be hard to predict and understand \cite{georges2007statistically}. It seems not to be different when cached profiles are used. On average the performance of the benchmark warmup is improved by 2.6\%, 3.4\%, and 2.7\% for \texttt{Mode 0}, \texttt{Mode 1} and \texttt{Mode 2}.
 \\\\
 Between the three different modes there is no clear winner. Each mode wins and loses in certain benchmarks against the others in terms of performance. However, in 12 out of 17 benchmarks at least one of the CacheProfileModes improves performance. 
 \\\\
-As stated before, we expect the influence of cached profiles to be low, when running SPECjvm for the standard duration. Figure \ref{f:all_full_variation} shows the relative performance for all SPECjvm benchmarks running the default duration of 6 minutes.
-We see that for most benchmarks, the influence is not significant. That means, using the cached profiles neither increases nor decreases the performance of the long running benchmarks.
+As stated before, we expect the influence of cached profiles to be low, when running SPECjvm for the standard duration. Figure \ref{f:all_full_variation} shows the relative performance for all SPECjvm benchmarks running the default duration of 6 minutes. Since the benchmarks run for a longer time, we use the average of 10 runs instead of 50.
+We see that for most benchmarks, the influence is not significant. That means, using the cached profiles neither increases nor decreases the performance of the long running benchmarks. 
 However, in sunflow and derby, the performance is worse, especially in \texttt{Mode 0} and \texttt{Mode 1}. Both benchmarks achieve better performance than the baseline when only looking at the warmup. We assume that in these two cases the cached profiles actually help improving the warmup performance, but the code compiled based on these profiles does not contain the same optimizations as the baseline.
 \begin{figure}[ht]
   \begin{center}
@@ -90,9 +89,9 @@ However, in sunflow and derby, the performance is worse, especially in \texttt{M
 Since the individual Octane benchmarks are rather short-running (most of them run for between 4 and 30 seconds) and there is no simple way to run a fixed number of iterations, we run the Octane benchmarks completely. We show performance readings for individual benchmarks. The rest of the setup is identical to SPECjvm in Section \ref{s:perf_specjvm_warmup}.
 \\\\
 The Octane scores are shown in Figure \ref{f:octane} and a relative comparison with the baseline in Figure \ref{f:octane_variation}.
-Compared to SPECjvm the Octane performance is more scattered. The Richards benchmark increases by around 50\% in Mode 0 while NavierStokes decreases by around 25\% in Mode 1. In most benchmarks (9 out of 14) Mode 0 performs worst.
-\texttt{Mode 1} and \texttt{Mode 2} generally perform a little bit better, but in total only 6 out of 14 benchmarks result in a performance improvement in at least one mode.
-On average the performance differences over all individual benchmarks compared to the baseline are -5.9\%, 0.6\%, and 0.1\% for Mode 0, Mode 1 and Mode 2.
+Compared to SPECjvm the Octane performance is more scattered. The Richards benchmark increases by around 50\% in \texttt{Mode 0} while NavierStokes decreases by around 25\% in \texttt{Mode 1}. In most benchmarks (9 out of 14) \texttt{Mode 0} performs worst.
+\texttt{Mode 1} and \texttt{Mode 2} generally perform better, but in total only 6 out of 14 benchmarks result in a performance improvement in at least one mode.
+On average the performance differences over all individual benchmarks compared to the baseline are -5.9\%, 0.6\%, and 0.1\% for \texttt{Mode 0}, \texttt{Mode 1} and \texttt{Mode 2}.
 \begin{figure}[ht]
   \begin{center}
     \centering
@@ -170,7 +169,7 @@ When designing the different CacheProfilesModes, we thought that lowering the co
 We added a new HotSpot flag \texttt{-XX:+PrintCompileQueueSize}, which allows us to trace the current number of methods that are scheduled for compilation. We selected 6 individual benchmarks and printed their C1 and C2 compile queue for all three CacheProfileModes in Figure \ref{f:octane_queue_richards_separate_c1} to Figure \ref{f:octane_queue_deltablue_separate_c2}.
 The selected benchmarks and the reason why an individual analysis was performed are listed below:
 \begin{itemize}
-  \item \textbf{Octane Richards:} This benchmarks achieved the highest performance benefit from using cached profiles in all three modes. We are interested to see if the compile queue load differs from worse performing benchmarks.
+  \item \textbf{Octane Richards:} This benchmarks achieves the highest performance benefit from using cached profiles in all three modes. We are interested to see if the compile queue load differs from worse performing benchmarks.
   \item \textbf{Octane EarleyBoyer:} This is a benchmark, where \texttt{Mode 1} performs significantly better than the other two modes. We chose this to benchmark, whether \texttt{Mode 1} shows a different compile queue behavior.
   \item \textbf{Octane NavierStokes:} Navierstokes has a 8\% performance increase in \texttt{Mode 2} but a 25\% performance decrease in \texttt{Mode 0} and \texttt{Mode 1}. Motivation is the same as EarleyBoyer, except we focus on \texttt{Mode 2}.
   \item \textbf{Octane Deltablue:} This benchmark achieves the highest performance loss from using cached profiles in all three modes. Together with the best performing benchmark (Richards) we are interested, if the load on the compile queue indicates any performances differences.
@@ -184,7 +183,7 @@ The graphs that show the C1 compile queue size over time, do not significantly d
 \\\\
 For C2, we can not correlate the variation of the compile queue size over time with the benchmark performance.
 \\\\
-Figure \ref{f:octane_queue_richards_separate_c2} shows the C2 compile queue of the Octane Richards benchmark. As expected, due to removing steps from the tiered compilation, we increased the load on C2 in \texttt{Mode 0} and \texttt{Mode 1} with compile queue peaks at around 20 scheduled compilations. Nevertheless, these modes have a performance increase of close to 50\% better than the baseline. \texttt{Mode 2}, which was designed to keep the original tiered compilation steps unmodified, does not have similar peaks but nevertheless achieves similar performance.
+Figure \ref{f:octane_queue_richards_separate_c2} shows the C2 compile queue of the Octane Richards benchmark. As expected, due to removing steps from the tiered compilation, we increase the load on C2 in \texttt{Mode 0} and \texttt{Mode 1} with compile queue peaks at around 20 scheduled compilations. Nevertheless, these modes have a performance increase of close to 50\% better than the baseline. \texttt{Mode 2}, which was designed to keep the original tiered compilation steps unmodified, does not have similar peaks but nevertheless achieves similar performance.
 \\\\
 EarleyBoyer's compile queue is displayed in Figure \ref{f:octane_queue_richards_separate_c2}. \texttt{Mode 1} performs better than the other two modes and compared to \texttt{Mode 0} puts even more pressure on the compile queue.
 It is interesting that in this particular benchmark even the baseline version puts a lot of pressure on the compile queue early on.
@@ -287,11 +286,11 @@ We see that the Octane benchmarks and the SPECjvm benchmarks behave differently.
 \\\\
 The changes of the amount of C2 compilations are very similar in all benchmarks. Using \texttt{Mode 0} and \texttt{Mode 1} results in more C2 compilations than the baseline and \texttt{Mode 2} achieves around the same amount as the baseline.
 \\\\
-If we recall the differences between the modes, these results make sense. \texttt{Mode 0} lowers the thresholds of C1 compilations in case the method has a cached profile and compiles with C2 instead. This reduces the number of C1 compilations in favor of more C2 compilations. \texttt{Mode 1} does not lower the thresholds but it still promotes some C1 compilations to C2 compilations due to the fact that C1 requests of methods with a cached profile get compiled with C2 immediately.
+If we recall the differences between the modes, these results make sense. \texttt{Mode 0} lowers the thresholds of C1 compilations in case the method has a cached profile and compiles with C2 instead. This reduces the number of C1 compilations in favor of more C2 compilations. \texttt{Mode 1} does not lower the thresholds but it still promotes some C1 compilations to C2 compilations due to the fact that C1 compile requests of methods with a cached profile get compiled with C2 immediately.
 \texttt{Mode 2} leaves the tiered compilation completely untouched and therefore has very similar compilation numbers to the baseline.
 \\\\
 Furthermore, we are interested in how many of the compilations use cached profiles. We want to be as close to 100\% as possible, but the experiments show that around 65\%-70\% of the compilations use cached profiles.
-The reason is that the compilation replay functionality does not support certain methods, e.g. lambda expressions. For lambda expressions, the JVM generates classes during runtime. Because the class names might differ it is hard to correlate cached profiles to classes of lambda expressions. Since the profile caching implementation is based on compilation replay, it will also not compile these methods using cached profiles. 
+The reason is that the compilation replay functionality does not support certain methods, e.g. lambda expressions. For lambda expressions, the JVM generates classes during runtime and because the class names might differ it is hard to correlate cached profiles to classes of lambda expressions. Since the profile caching implementation is based on compilation replay, it will also not compile these methods using cached profiles. 
 Additionally, we do not use any profiles for compilation Level 1 and Level 2 as described in Section \ref{s:usingprofiles}.
 \\\\
 In Figure \ref{f:richards_compilations} to Figure \ref{f:sparselarge_compilations} we show pie charts, which visualize the portion of specific compilation types.
@@ -303,7 +302,7 @@ The Level 2 compilations only happen if a C2 profile is cached and usually resul
 \begin{figure}[ht]
   \begin{center}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/richards_compilations.png}
+    \includegraphics[width=0.9\textwidth]{figures/richards_compilations.png}
     \caption{Ratio of compilations for Octane Richards benchmark}
     \label{f:richards_compilations}
   \end{center}
@@ -312,7 +311,7 @@ The Level 2 compilations only happen if a C2 profile is cached and usually resul
 \begin{figure}[ht]
   \begin{center}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/deltablue_compilations.png}
+    \includegraphics[width=0.9\textwidth]{figures/deltablue_compilations.png}
     \caption{Ratio of compilations for Octane Deltablue benchmark}
     \label{f:deltablue_compilations}
   \end{center}
@@ -321,7 +320,7 @@ The Level 2 compilations only happen if a C2 profile is cached and usually resul
 \begin{figure}[ht]
   \begin{center}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/earleyboyer_compilations.png}
+    \includegraphics[width=0.9\textwidth]{figures/earleyboyer_compilations.png}
     \caption{Ratio of compilations for Octane EarleyBoyer benchmark}
     \label{f:earleyboyer_compilations}
   \end{center}
@@ -330,7 +329,7 @@ The Level 2 compilations only happen if a C2 profile is cached and usually resul
 \begin{figure}[ht]
   \begin{center}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/navierstokes_compilations.png}
+    \includegraphics[width=0.9\textwidth]{figures/navierstokes_compilations.png}
     \caption{Ratio of compilations for Octane NavierStokes benchmark}
     \label{f:navierstokes_compilations}
   \end{center}
@@ -339,7 +338,7 @@ The Level 2 compilations only happen if a C2 profile is cached and usually resul
 \begin{figure}[ht]
   \begin{center}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/compress_compilations.png}
+    \includegraphics[width=0.9\textwidth]{figures/compress_compilations.png}
     \caption{Ratio of compilations for SPECjvm compress benchmark}
     \label{f:compress_compilations}
   \end{center}
@@ -348,7 +347,7 @@ The Level 2 compilations only happen if a C2 profile is cached and usually resul
 \begin{figure}[ht]
   \begin{center}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/sparselarge_compilations.png}
+    \includegraphics[width=0.9\textwidth]{figures/sparselarge_compilations.png}
     \caption{Ratio of compilations for SPECjvm sparse.large benchmark}
     \label{f:sparselarge_compilations}
   \end{center}
@@ -363,7 +362,7 @@ However, we are interested to know, whether using cached profiles also results i
 We use the built-in JVM flag \texttt{-XX:+CITime} which prints out detailed timing information about the C1 and C2 compiler.
 We restrict our analysis to the total time spent in both compilers and take a look at all benchmarks again.
 \\\\
-Figure \ref{f:all_variation_compiletime_c1} shows the time spent in the C1 compiler for all SPECjvm benchmarks relative to the baseline. The results for all three modes are different. \texttt{Mode 0} increases the time in all benchmarks except mpegaudio. Even in benchmarks that achieve better performance in \texttt{Mode 0} than in the baseline (e.g. compress achieved a 30\% performance increase), the C1 compiler time is 50\% higher. The one exception, mpegaudio, had a performance loss of around 7\% when using cached profiles.
+Figure \ref{f:all_variation_compiletime_c1} shows the time spent in the C1 compiler for all SPECjvm benchmarks relative to the baseline. The results for all three modes are different. \texttt{Mode 0} increases the time in all benchmarks except mpegaudio. Even in benchmarks that achieve better performance in \texttt{Mode 0} than in the baseline (e.g. compress achieves a 30\% performance increase), the C1 compiler time is 50\% higher. The one exception, mpegaudio, has a performance loss of around 7\% when using cached profiles.
 In contrast, \texttt{Mode 1} significantly reduces the time spent in the C1 compiler in all SPECjvm benchmarks. There is again no correlation between decrease of compile time and performance.
 \texttt{Mode 2} has the lowest impact on the compile time, which in most cases is not significant.
 \begin{figure}[ht!]
@@ -407,9 +406,9 @@ We repeat the analysis for the Octane benchmarks and the results are drawn for C
 For C1, \texttt{Mode 0} again increases the time spent in the compiler. However, the average increase of time is 10\%, while SPECjvm averages at a much higher percentage of 47\%.
 \texttt{Mode 1} achieves the highest decrease and \texttt{Mode 2} has again less significant impact.
 \\\\
-In contrary to SPEVjvm, in Octane all modes decrease C2 compile time on average. There are a few expections, like Raytrace and Box2D, but in most benchmarks even \texttt{Mode 0} reduces the time spent in C2. Mode 1 has the most impact (-21\% on average), followed by Mode 2 (-10\% on average) and Mode 1 (-4\% on average).
+In contrary to SPEVjvm, in Octane all modes decrease C2 compile time on average. There are a few expections, like Raytrace and Box2D, but in most benchmarks even \texttt{Mode 0} reduces the time spent in C2. \texttt{Mode 1} has the most impact (-21\% on average), followed by \texttt{Mode 2} (-10\% on average) and \texttt{Mode 0} (-4\% on average).
 \\\\
-Since more time spent in the compiler could actually mean more compilations or longer compilations, let us recall the number of compilations discussed in Section \ref{s:perf_compilenumber}. For \texttt{Mode 0}, we experience a lower number of C1 compilations compared to the baseline in the Octane benchmarks and a higher number in SPECjvm. However, the actual time spent in C1 increases in both benchmark suites. We conclude that, especially in Octane, individual C1 compilations take longer, when cached profiles are involved. \texttt{Mode 1} invokes less C1 compilations in all benchmarks and the total time also decreased. Based on these benchmarks, we can not tell if per compilation time also decreased. In \texttt{Mode 2}, the number of C1 compilations does not change significantly compared to the baseline and the impact on the total compile time was also small.
+Since more time spent in the compiler could actually mean more compilations or longer compilations, let us recall the number of compilations discussed in Section \ref{s:perf_compilenumber}. For \texttt{Mode 0}, we experience a lower number of C1 compilations compared to the baseline in the Octane benchmarks and a higher number in SPECjvm. However, the actual time spent in C1 increases in both benchmark suites. We conclude that, especially in Octane, individual C1 compilations take longer, when cached profiles are involved. \texttt{Mode 1} invokes less C1 compilations in all benchmarks and the total time also decreased. Based on these benchmarks, we can not tell if the time per compilation also decreased. In \texttt{Mode 2}, the number of C1 compilations does not change significantly compared to the baseline and the impact on the total compile time is also small.
 \\\\
 \texttt{Mode 0} puts more load on C2 than the baseline which can explain the increase of compile time for the SPECjvm benchmarks. On the other hand, the Octane ones spend less time in C2 and, together with more compilations, this means that the time per compilation decreases. The results for \texttt{Mode 1} are similar but the increase in number of compilations is less. In SPECjvm, the impact on compile time is also less (there are even benchmarks, where compile time decreases) but higher for the Octane benchmarks. The number of C2 compilations does not differ much when cached profiles in \texttt{Mode 2} are used. Nevertheless, in all benchmarks less time is spent in the C2 compiler.
 \\\\
@@ -450,13 +449,11 @@ Most modern JVMs use \textit{method intrinsics} to further optimize commonly use
 This means that the JIT compiler does not compile the method based on the Java bytecode but instead replaces it with a predefined, and manually optimized assembly code snippet. The current list of methods where intrinsics are available can be found in the code reference \cite{code_intrinsics}.
 \\\\
 Intrinsics are mostly used in C1 and C2 compilations and the emitted code is independent of the currently available profiling information.
-This means, if many methods of a benchmark are intrinsified, the influence of profiles, and therefore cached profiles as well, decreases.
+If many methods of a benchmark are intrinsified, the influence of profiles, and therefore cached profiles as well, decreases.
 We want to know, whether this could be an issue in the benchmarks we looked at. A compilation of an intrinsified method has no advantage of having a rich profiling information but will still be influenced by modified compilation thresholds. For example, lowering the threshold will intrinsify methods earlier and therefore speed up execution.
 \\\\
 The results of both benchmark suites with disabled method instrinsics can be found in Figures \ref{f:all_warmup_noi_variation} and Figure \ref{f:octane_noi_variation}.
 For SPECjvm, we see that there are small performance differences in individual benchmarks but we can not conclude a major influence to the behavior of cached profiles and their influence on performance. Note that the serial benchmark does not work with disabled intrinsics.
-\\\\
-Most of the Octane benchmarks do not work when intrinsics are disabled and the ones that work run a lot slower. We think in these benchmarks other unconsidered side effects occur and an analysis regarding cached profiles would not be accurate.
 \begin{figure}[ht]
   \begin{center}
     \centering
@@ -465,6 +462,8 @@ Most of the Octane benchmarks do not work when intrinsics are disabled and the o
     \label{f:all_warmup_noi_variation}
   \end{center}
 \end{figure}
+\\
+Most of the Octane benchmarks do not work when intrinsics are disabled and the ones that work run a lot slower. We think in these benchmarks other unconsidered side effects occur and an analysis regarding cached profiles would not be accurate.
 \begin{figure}[ht]
   \begin{center}
     \centering

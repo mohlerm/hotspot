@@ -69,7 +69,7 @@ This is done to allow further even more optimistic optimization and to keep the 
 \\\\
 The JVM then stops execution of that method and returns control back to the interpreter. This process is called \textit{deoptimization} and considered very expensive. The previous interpreter state has to be restored and the method will be executed using the slow interpreter. Eventually the method might be recompiled with the newly gained information.
 
-\section{On-Stack replacement}
+\section{On-stack replacement}
 \label{s:onstackreplacement}
 In case a method contains a long running loop, counting the method invocations is not enough to determine the hotness of the method. The program still spends a significant amount of time in that method but because the invocation counter does not increase, no compilation is scheduled.
 Therefore, HotSpot also counts loop back branches and when a threshold (see also Section \ref{s:compilethresholds}) is reached, a compilation is invoked. The JVM then replaces the method's code directly on the program stack. HotSpot sets up a new stack frame for the compiled method which replaces the interpreters stack frame and execution will continue using the native method.
